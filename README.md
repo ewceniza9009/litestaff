@@ -113,12 +113,14 @@ To use the application, copy the following configuration into your `appsettings.
 
 ## 📸 Screenshots
 
-![Screenshot 2025-06-21 104959](https://github.com/user-attachments/assets/a9639f10-fbab-4624-bfda-e110548f1198)
-![image](https://github.com/user-attachments/assets/84f1c92c-bbf4-4b01-81f5-c62df9c3b36b)
-![Screenshot 2025-06-21 105649](https://github.com/user-attachments/assets/533bbc03-d677-4473-a058-45e477c664b3)
-![image](https://github.com/user-attachments/assets/d01a5971-118c-4206-8c76-5c76b7f4c442)
-![Screenshot 2025-06-21 105427](https://github.com/user-attachments/assets/d0671f07-2c21-4b36-a896-45222315868d)
-![Screenshot 2025-06-21 105950](https://github.com/user-attachments/assets/c1a92f4f-6b8c-4a3b-8747-de4664e45b26)
+![image](https://github.com/user-attachments/assets/0c4c52e4-92e7-4bda-b312-369f17955b85)
+![image](https://github.com/user-attachments/assets/d224eba4-0852-4806-b4cc-50c031c770af)
+![image](https://github.com/user-attachments/assets/0b76d89f-fde0-42ee-8c1a-8601f85c5f23)
+![image](https://github.com/user-attachments/assets/2ecfbc00-ffdb-4cdf-bc4c-8fa5d74dca62)
+![image](https://github.com/user-attachments/assets/8dc4e4a3-1a46-4a8e-abb3-89097b1b70ea)
+![image](https://github.com/user-attachments/assets/4896c1ff-76c1-4bb4-b80f-f3b5ee894ee8)
+![image](https://github.com/user-attachments/assets/711bce56-6e2b-4fce-8556-4c671fceed63)
+![image](https://github.com/user-attachments/assets/fa989ee3-376f-48a6-a848-6aa58b196b43)
 
 ## 🤝 Contributing
 
