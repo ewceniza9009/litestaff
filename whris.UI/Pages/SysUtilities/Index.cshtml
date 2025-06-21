@@ -1,0 +1,116 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Utilities";
+}
+
+<style>
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<div class="indexView" onload="LoadForm()">
+    <form id="frmDetail" method="post" style="margin-top: 10px">
+        <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+            <div class="col-md-6">
+                <h5 class="title-color" style="margin-top: 10px;"><i class="fas fa-flask"></i> Utilities</h5>
+            </div>
+
+            <div class="col-md-6" style="padding: 0px">
+                <div class="float-end">
+                    <div class="hstack gap-3 float end">
+                        <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index" >
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 10px">
+            <div class="col-md-6">
+                <div class="form-group row" hidden>
+                    <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                    <div class="col-md-10">
+                        <kendo-textbox name="Id" placeholder="Id" value="1" style="width: 20%">
+                        </kendo-textbox>
+                    </div>
+                </div>
+                 <div class="form-group row">
+                    <button id="btnUploadEmployees" class="btn btn-primary  cmd-buttons col-md-4" style="width: 250px">
+                        <span class="btn-label">
+                            <i class="fa fa-people-group"></i>
+                        </span>
+                        Upload Employees
+                    </button>
+                    <div class="col-md-8">
+                        <input type="file" accept=".xlsx, .xls, .txt, .csv" class="form-control" id="file" name="file" style="width: 100%">
+                    </div>
+                 </div>
+               
+                <div class="form-group row">
+                    <button class="btn btn-danger" style="width: 250px"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete All Transactions
+                    </button>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+                @*<a id="btnSave"
+                    class="btn btn-primary  cmd-buttons"
+                    asp-page-handler="DownLoadZip">
+                    <span class="btn-label">
+                        <i class="fa fa-download"></i>
+                    </span>
+                    Download test files.
+                </a>*@
+                <div class="form-group row">
+                    <button id="btnSave" class="btn btn-primary  cmd-buttons col-md-6" style="width: 250px" onclick="CmdDownloadTestFiles()">
+                        <span class="btn-label">
+                            <i class="fa fa-download"></i>
+                        </span>
+                        Download test files
+                    </button>
+
+                    @*<div class="text-end col-md-6">
+                        <button id="btnSave1"
+                                class="btn btn-primary  cmd-buttons"
+                                type="button">
+                            <span class="btn-label">
+                                <i id="btnProcessGear" class="fa fa-gear"></i>
+                                <i id="btnProcessSpin" class="fa fa-spinner fa-spin" hidden></i>
+                            </span>
+                            Process
+                        </button>
+                        <button id="btnShow"
+                                class="btn btn-primary  cmd-buttons"
+                                type="button">
+                            Show
+                        </button>
+
+                        <button id="btnHide"
+                                class="btn btn-primary  cmd-buttons"
+                                type="button">
+                            Hide
+                        </button>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </form>    
+</div>
+
+@section Scripts {
+    <script src="~/Pages/SysUtilities/Index.cshtml.js"></script>
+}

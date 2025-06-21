@@ -1,0 +1,34 @@
+name: 'Security Build Check'
+
+# This workflow runs on every push to the main branch
+on:
+  push:
+    branches:
+      - main # Or 'master', depending on your branch name
+
+jobs:
+  verify-security-step:
+    runs-on: ubuntu-latest # Use a clean Linux machine for the check
+
+    steps:
+    # 1. Check out the code from the repository
+    - name: 'Checkout code'
+      uses: actions/checkout@v3
+
+    # 2. Check for the mandatory security line in the project file
+    - name: 'Verify vr.exe security step exists'
+      run: |
+        # This command searches for the security line in the csproj file.
+        # If the line is NOT found, grep will fail, which causes the entire workflow to fail.
+        grep '<Exec Command="&quot;$(ProjectDir)ThirdParty\\vr.exe&quot;' whris.UI/whris.UI.csproj
+
+        if [ $? -ne 0 ]; then
+          echo "SECURITY ALERT: The mandatory vr.exe build step was removed from the project file. Build REJECTED."
+          exit 1
+        else
+          echo "Security step successfully verified."
+        fi
+
+    # 3. If the check passes, you can add your actual build step here
+    # - name: 'Build Project'
+    #   run: dotnet build --configuration Release whris.UI/whris.UI.csproj

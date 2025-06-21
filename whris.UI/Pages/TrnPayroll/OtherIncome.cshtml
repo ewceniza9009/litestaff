@@ -1,0 +1,55 @@
+﻿@page
+@using whris.Data.Models;
+@model OtherIncomeModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll No.: </label>
+            <div class="col-md-10">
+                <input class="form-control" name="F1" value="@Model.PayrollNo" style="width: 20%;" disabled/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Employee.: </label>
+            <div class="col-md-10">
+                <input class="form-control" name="F2" value="@Model.Employee" style="width: 60%;" disabled/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Other Income.: </label>
+            <div class="col-md-10">
+                <input class="form-control" name="F3" value="@Model.OtherIncome" style="width: 20%;" disabled />
+            </div>
+        </div>
+
+        <div class="row" style="margin: 5px">
+            @(Html.Kendo().Grid(Model.PayrollOtherIncomeLines)
+                .Name("gridOtherIncome")
+                .Columns(columns =>
+                {
+                    columns.Bound(column => column.OtherIncomeText).Title("Other Income");
+                    columns.Bound(column => column.Amount).Title("Amount").Width(170);
+                    columns.Bound(column => column.Id).Visible(false).Title("Id");
+                    
+                })
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Scrollable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+                    model.Id(p => p.Id);
+                    model.Field(p => p.OtherIncomeText).Editable(false);
+                    model.Field(p => p.Amount).Editable(true);
+                })))
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,70 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Accounting Report";
+}
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fas fa-print"></i> Accounting Reporting</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            @(Html.Kendo().ListBox()
+                .Name("RptDtrReportList")
+                .DataValueField("Value")
+                .DataTextField("Text")
+                .HtmlAttributes(new { @style = "width: 100%; height: 80vh" })
+                .Selectable(ListBoxSelectable.Single)
+                .Events(ev => ev.Change("ListBoxChange"))
+                .BindTo(Model.Reports))
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Number: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PayrollId" style="width: 20%"
+                                    placeholder="Payroll Number"
+                                    datatextfield="PayrollNumber"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.PayrollNumbers">
+                    </kendo-combobox>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Pages/RptAccounting/Index.cshtml.js"></script>
+}
+

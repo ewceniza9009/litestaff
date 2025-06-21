@@ -1,0 +1,659 @@
+﻿@page
+@model whris.UI.Pages.LandingPageModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LITECLERK - Cloud Payroll</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="~/css/landingpage.css" rel="stylesheet" />
+
+    <style>
+        :root {
+                             
+                    
+            --navbar-height: 60px;                 
+        }
+
+        html {
+            scroll-snap-type: y mandatory;               
+            scroll-padding-top: var(--navbar-height);             
+        }
+        section,         
+        footer.footer-section            {
+            scroll-snap-align: start;                 
+        }
+                      
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        section {
+            width: 100vw;
+            padding: 4rem 0;           
+            box-sizing: border-box;
+            overflow-x: hidden;             
+        }
+
+        .hero-section,
+        .app-intro-section,
+        .features-section,
+        .reviews-section,
+        .why-choose-section,
+        .footer-section {
+            min-height: 100vh;                   
+            width: 100%;
+            display: flex;
+            align-items: center;               
+            justify-content: center;               
+        }
+                          
+        .footer-section {
+            min-height: auto;
+        }
+                  
+        .animate-me {
+            opacity: 0;
+            transform: translateY(40px);
+                                    
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+            .animate-me.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+                animation: fadeInUpAnimation 1s ease forwards;
+            }
+
+                .animate-me.is-visible .animate-child {
+                    opacity: 0;       
+                    transform: translateY(20px);
+                    animation: fadeInUpAnimation 0.7s ease forwards;
+                }
+
+                    .animate-me.is-visible .animate-child:nth-child(1) {
+                        animation-delay: 0.1s;
+                    }
+
+                    .animate-me.is-visible .animate-child:nth-child(2) {
+                        animation-delay: 0.2s;
+                    }
+
+                    .animate-me.is-visible .animate-child:nth-child(3) {
+                        animation-delay: 0.3s;
+                    }
+
+                    .animate-me.is-visible .animate-child:nth-child(4) {
+                        animation-delay: 0.4s;
+                    }
+
+                    .animate-me.is-visible .animate-child:nth-child(5) {
+                        animation-delay: 0.5s;
+                    }
+                        
+
+
+        @@keyframes fadeInUpAnimation {
+            to
+
+        {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        }
+                    
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="@Url.Content("~/images/liteclerklogo.png")" alt="Liteclerk Logo" height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#app-intro">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviews">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Page("/Account/Login", new { area = "Identity" })">Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero-section text-white">
+        <div class="blue-glow-effect"></div>
+        <div class="hero-animation-container">
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-md-12 hero-text-content animate-me">
+                    <p class="lead mb-2 animate-child">Liteclerk Cloud Payroll</p>
+                    <h1 class="mb-3 display-2 animate-child">Smarter Payroll.</h1>
+                    <h1 class="mb-3 display-2 animate-child">Less Work.</h1>
+                    <h1 class="mb-3 display-2 animate-child">More Accuracy.</h1>
+                </div>
+                <div class="col-lg-5 col-md-12 text-center text-lg-center mt-4 mt-lg-0 animate-me">
+                    <img src="@Url.Content("~/images/liteclerklandingimage.png")" alt="Woman using Liteclerk app" class="img-fluid hero-image animate-child" style="border-radius: 70px; animation-delay: 0.2s;"> 
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="app-intro" class="app-intro-section py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 animate-me">
+                    <div class="app-description-box p-4 p-md-5 text-white" style="height: 500px">
+                        <h2 class="mb-3 display-3 animate-child">Liteclerk<br>Cloud Payroll</h2>
+                        <p style="margin-top: 100px" class="animate-child">Say goodbye to manual payroll headaches. Liteclerk Cloud Payroll automates your entire payroll process—from DTR computation to payslip generation—so you can focus on what really matters: growing your business.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center animate-me">
+                    <img src="@Url.Content("~/images/lightclerkapponphone.png")" alt="Liteclerk app on phone and laptop" class="img-fluid mb-4 app-showcase-image animate-child" style="border-radius: 70px">
+                    <div class="app-store-buttons animate-child" style="animation-delay: 0.1s;">
+                        <a href="#" class="me-2"><img src="@Url.Content("~/images/getitongoogle.png")" alt="Get it on Google Play" height="100"></a>
+                        <a href="#" class="me-2"><img src="@Url.Content("~/images/getitonapple.png")" alt="Download on the App Store" height="70"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section py-5 text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 mb-4 mb-lg-0 animate-me">
+                    <h2 class="mb-4 display-5 animate-child">Features</h2>
+                    <a href="#demo" class="btn btn-light btn-lg rounded-pill px-4 py-2 animate-child">Request for demo</a>
+                </div>
+                <div class="col-lg-8 animate-me">
+                    <div class="features-list-box p-4 p-md-5">
+                        <div class="feature-item mb-4 animate-child">
+                            <div class="feature-icon me-3 fs-2 lh-1">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Automated DTR & Payroll Processing</h5>
+                                <p class="mb-0">Save time and eliminate errors. Our system seamlessly calculates employee hours, overtime, and deductions—instantly generating accurate payrolls with a single click.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item mb-4 animate-child">
+                            <div class="feature-icon me-3 fs-2 lh-1">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Scales with Your Business</h5>
+                                <p class="mb-0">Built to grow with you. Whether you have 50 or 5,000 employees, Liteclerk Cloud Payroll is designed to handle high-volume operations without slowing down or compromising on performance.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item mb-4 animate-child">
+                            <div class="feature-icon me-3 fs-2 lh-1">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Mobile Access for Every Employee</h5>
+                                <p class="mb-0">Give your team the convenience they deserve. Each employee gets access to a dedicated mobile app.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item animate-child">
+                            <div class="feature-icon me-3 fs-2 lh-1">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Secure. Reliable. Cloud-Based.</h5>
+                                <p class="mb-0">Access payroll data anytime, anywhere—without worrying about backups or downtime. Your data is encrypted and stored in the cloud with enterprise-grade security.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews-section py-5">
+        <div class="blue-glow-effect-center"></div>
+        <div class="container">
+            <h2 class="mb-5 display-5 animate-me">Reviews</h2> 
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 animate-me">
+                    <div class="review-card p-4 animate-child">
+                        <img src="@Url.Content("~/images/cebucubeicelogo.png")" alt="Cebu Cube Ice Logo" class="review-logo mb-3">
+                        <h5 class="fw-bold" style="margin-bottom: 20px;">Cebu Cube Ice Inc.</h5>
+                        <p><i>One of the standout features of the system is its payroll system. It takes care of computations, tax deductions, and payslip generation with impressive accuracy. This has made our payroll process much smoother, saving us a lot of time and helping us avoid the usual errors that come with manual work. </i></p>
+                        <p>*** Accounting Head - Mary Charmane ***</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-me" style="animation-delay: 0.1s;">
+                    <div class="review-card p-4 animate-child">
+                        <img src="@Url.Content("~/images/cgrilogo.png")" alt="Cebu Golden Restaurant Inc." class="review-logo mb-3">
+                        <h5 class="fw-bold" style="margin-bottom: 20px;">Cebu Golden Restaurant Inc.</h5>
+                        <p><i>Overall, Streetsmart’s HR Payroll System has been a valuable addition to our operations. It has made our HR tasks more efficient and accurate, helping us save time and avoid unnecessary stress.</i></p>
+                        <p>*** HR Head - Marian Therese ***</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-me" style="animation-delay: 0.2s;">
+                    <div class="review-card p-4 animate-child">
+                        <img src="@Url.Content("~/images/cebutastylechonlogo.png")" alt="Cebu's Tasty Lechon Logo" class="review-logo mb-3"">
+                        <h5 class="fw-bold" style="margin-bottom: 20px;">Cebu's Tasty Lechon</h5>
+                        <p><i>What we appreciate most, though, is the team behind it—they’re always quick to help, genuinely kind, and clearly care about making sure things work well for us. We’d happily recommend it to other small and mid-sized businesses looking for a system they can rely on—and a team they can count on, too.</i></p>
+                        <p>*** Owner - Gay, Martinez ***</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-choose" class="why-choose-section py-5 text-white">
+        <div class="blue-glow-effect-right"></div>
+        <div class="container position-relative">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 animate-me">
+                    <h2 class="mb-4 display-2 animate-child">Why Choose<br>Liteclerk Cloud Payroll?</h2>
+                    <a href="#demo" class="btn btn-light btn-lg rounded-pill px-4 py-2 animate-child">Request for demo</a>
+                </div>
+                <div class="col-lg-6 animate-me">
+                    <video src="@Url.Content("~/images/liteclerkpayrollvideo.mp4")"
+                           class="img-fluid rounded mb-4 why-choose-image animate-child"
+                           controls
+                           loop
+                           muted
+                           playsinline
+                           poster="@Url.Content("~/images/liteclerkpayrollvideothumbnail.png")">
+
+                        Your browser does not support the video tag. This video shows working on payroll with Liteclerk.
+                    </video>
+                    <ul class="list-unstyled why-choose-list">
+                        <li class="animate-child"><i class="fas fa-check-circle me-2"></i> Hassle-free payroll generation.</li>
+                        <li class="animate-child"><i class="fas fa-check-circle me-2"></i> Real-time attendance integration.</li>
+                        <li class="animate-child"><i class="fas fa-check-circle me-2"></i> Mobile-first experience for employees.</li>
+                        <li class="animate-child"><i class="fas fa-check-circle me-2"></i> Easy onboarding with local support.</li>
+                        <li class="animate-child"><i class="fas fa-check-circle me-2"></i> Designed for Philippine compliance and reporting.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer-section py-5 text-white-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0 animate-me">
+                    <img src="@Url.Content("~/images/liteclerklogo.png")" alt="Liteclerk Logo" height="40" class="mb-3 animate-child">
+                    <p class="mb-1 animate-child">White Heart Lane, Fernandez Compound, J. Fortich St., Banawa, Cebu City, Philippines</p>
+                    <p class="mb-1 animate-child">+63 945 380 5565</p>
+                    <p class="animate-child"><a href="mailto:sales@liteclerk.com" class="text-white-50 text-decoration-none">sales@liteclerk.com</a></p>
+                </div>
+                <div class="col-lg-6 text-lg-end animate-me">
+                    <p class="mb-2 animate-child">Follow Us:</p>
+                    <span class="animate-child">
+                        <a href="https://www.facebook.com/liteclerkcorp" class="social-icon text-white-50 fs-3 me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.facebook.com/liteclerkcorp" class="social-icon text-white-50 fs-3 me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/liteclerkcorp" class="social-icon text-white-50 fs-3"><i class="fab fa-discord"></i></a>
+                    </span>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <p class="text-center text-muted small">© <script>document.write(new Date().getFullYear())</script> Liteclerk. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                      
+            document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                                  
+                        const navbarHeight = document.querySelector('.navbar.fixed-top')?.offsetHeight || 0;
+                        const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                        const offsetPosition = elementPosition - navbarHeight;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                          
+                    }
+                });
+            });
+                  
+            const navbar = document.querySelector('.navbar');
+            const handleScroll = () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            };
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
+
+            const animatedElements = document.querySelectorAll('.animate-me');
+
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                                              
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,         
+                                                
+            });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+            setTimeout(() => {               
+                animatedElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom >= 0 &&
+                        rect.left < window.innerWidth && rect.right >= 0) {
+                        if (getComputedStyle(el).display !== 'none' && getComputedStyle(el).visibility !== 'hidden') {
+                           if(!el.classList.contains('is-visible')) {               
+                                el.classList.add('is-visible');
+                           }
+                        }
+                    }
+                });
+            }, 100);
+
+            // HERO SECTION ANIMATION START
+            const heroSection = document.getElementById('hero');
+            const animationContainer = heroSection.querySelector('.hero-animation-container');
+
+            if (heroSection && animationContainer) {
+                animationContainer.innerHTML = '';
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg");
+                const viewBoxWidth = 1200;
+                const viewBoxHeight = 700;
+                svg.setAttribute("viewBox", `0 0 ${viewBoxWidth} ${viewBoxHeight}`);
+                svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+                animationContainer.appendChild(svg);
+
+                const mergeLinesGroup = document.createElementNS(svgNS, "g");
+                mergeLinesGroup.setAttribute("id", "merge-lines-group");
+                svg.appendChild(mergeLinesGroup);
+                const elements = { hexagons: [], mergeLines: {} };
+                const baseHexRadius = 50;
+                const interactionDistance = 120;
+                const mergeLineMaxOpacity = 0.6;
+
+                // --- NEW: Animation parameters for drifting ---
+                const driftSpeedFactor = 0.1; // Lower for slower drift, higher for faster
+                const driftRange = 15;      // Max pixels a hexagon can drift from its original spot
+
+                function getHexagonPoints(cx, cy, size) {
+                    let points = "";
+                    for (let i = 0; i < 6; i++) {
+                        const angleRad = Math.PI / 180 * (60 * i);
+                        const x = cx + size * Math.cos(angleRad);
+                        const y = cy + size * Math.sin(angleRad);
+                        points += `${x.toFixed(2)},${y.toFixed(2)} `;
+                    }
+                    return points.trim();
+                }
+
+                function createSVGElement(type, attributes) {
+                    const el = document.createElementNS(svgNS, type);
+                    for (const key in attributes) { el.setAttribute(key, attributes[key]); }
+                    return el;
+                }
+
+                const hexDefinitions = [
+                    { id: "L1", cx: 120, cy: 180, type: "secondary", sizeFactor: 1.1, mergesWith: ["L2", "L3"] },
+                    { id: "L2", cx: 250, cy: 120, type: "primary" },
+                    { id: "L3", cx: 80,  cy: 300, type: "secondary", sizeFactor: 0.8, mergesWith: ["L5"] },
+                    { id: "L4", cx: 300, cy: 280, type: "secondary" },
+                    { id: "L5", cx: 150, cy: 450, type: "primary", sizeFactor: 1.2 },
+                    { id: "L6", cx: 380, cy: 420, type: "secondary", mergesWith: ["L4", "L7"] },
+                    { id: "L7", cx: 220, cy: 580, type: "secondary", sizeFactor: 0.9 },
+                    { id: "L8", cx: 50,  cy: 550, type: "primary" },
+                    { id: "L9", cx: 400, cy: 50,  type: "secondary", sizeFactor: 0.7, mergesWith: ["L2"] },
+                    { id: "L10", cx: 40, cy: 80, type: "secondary", mergesWith: ["L1", "L8"]},
+
+                    { id: "R1", cx: 980,  cy: 150, type: "primary", sizeFactor: 1, mergesWith: ["R2", "R3"] },
+                    { id: "R2", cx: 1100, cy: 100, type: "secondary", sizeFactor: 0.8 },
+                    { id: "R3", cx: 1050, cy: 300, type: "secondary" },
+                    { id: "R4", cx: 1180, cy: 220, type: "primary", sizeFactor: 1.1, mergesWith: ["R2", "R8"] },
+                    { id: "R5", cx: 920,  cy: 480, type: "secondary", mergesWith: ["R6", "R9"] },
+                    { id: "R6", cx: 1080, cy: 420, type: "primary", sizeFactor: 0.9 },
+                    { id: "R7", cx: 1150, cy: 550, type: "secondary", mergesWith: ["R6", "R10"]},
+                    { id: "R8", cx: 1230, cy: 350, type: "secondary", sizeFactor: 1.2 },
+                    { id: "R9", cx: 880, cy: 600, type: "primary" },
+                    { id: "R10", cx: 1190, cy: 650, type: "secondary", sizeFactor: 0.7}
+                ];
+
+                hexDefinitions.forEach(def => {
+                    const currentHexRadius = baseHexRadius * (def.sizeFactor || 1);
+                    const points = getHexagonPoints(def.cx, def.cy, currentHexRadius);
+                    const hexagon = createSVGElement("polygon", {
+                        id: def.id, points: points,
+                        class: `svg-hexagon ${def.type === 'primary' ? 'primary-h' : ''}`
+                    });
+                    svg.appendChild(hexagon);
+                    elements.hexagons.push({
+                        el: hexagon,
+                        id: def.id,
+                        cx: def.cx,
+                        cy: def.cy,
+                        // --- NEW: Store original position and add velocity for drifting ---
+                        original_cx: def.cx,
+                        original_cy: def.cy,
+                        dx: (Math.random() - 0.5) * 2 * driftSpeedFactor, // Random initial x velocity
+                        dy: (Math.random() - 0.5) * 2 * driftSpeedFactor, // Random initial y velocity
+                        // --- End NEW ---
+                        type: def.type,
+                        radius: currentHexRadius,
+                        mergesWith: def.mergesWith || []
+                    });
+                });
+
+                elements.hexagons.forEach(hexObj1 => {
+                    if (hexObj1.mergesWith.length > 0) {
+                        hexObj1.mergesWith.forEach(partnerId => {
+                            const hexObj2 = elements.hexagons.find(h => h.id === partnerId);
+                            if (hexObj2) {
+                                const lineKey = [hexObj1.id, hexObj2.id].sort().join('-');
+                                if (!elements.mergeLines[lineKey]) {
+                                    const line = createSVGElement("line", {
+                                        x1: hexObj1.cx,
+                                        y1: hexObj1.cy,
+                                        x2: hexObj2.cx,
+                                        y2: hexObj2.cy,
+                                        class: "merge-line"
+                                    });
+                                    line.style.opacity = "0";
+                                    mergeLinesGroup.appendChild(line);
+                                    elements.mergeLines[lineKey] = {
+                                        el: line,
+                                        hex1Id: hexObj1.id,
+                                        hex2Id: hexObj2.id
+                                    };
+                                }
+                            }
+                        });
+                    }
+                });
+
+                let heroRect = heroSection.getBoundingClientRect();
+
+                function handleMouseMove(e) {
+                    if (!elements.hexagons.length) return;
+
+                    const svgPoint = svg.createSVGPoint();
+                    svgPoint.x = e.clientX; svgPoint.y = e.clientY;
+                    const svgMouseCoords = svgPoint.matrixTransform(svg.getScreenCTM().inverse());
+                    const mouseX = svgMouseCoords.x; const mouseY = svgMouseCoords.y;
+
+                    elements.hexagons.forEach(hexObj => {
+                        // Distance calculation now uses the potentially animated hexObj.cx and hexObj.cy
+                        const dist = Math.sqrt(Math.pow(hexObj.cx - mouseX, 2) + Math.pow(hexObj.cy - mouseY, 2));
+                        const isPrimary = hexObj.type === 'primary';
+
+                        const baseStrokeWidth = isPrimary ? 1.2 : 1;
+                        const baseOpacity = isPrimary ? 0.8 : 0.7;
+                        const baseStrokeColor = isPrimary ? 'rgba(106, 197, 243, 0.35)' : 'rgba(173, 216, 230, 0.2)';
+
+                        if (dist < interactionDistance) {
+                            const proximity = 1 - (dist / interactionDistance);
+                            hexObj.el.style.strokeWidth = (baseStrokeWidth + proximity * 1.5).toFixed(2) + "px";
+                            hexObj.el.style.opacity = (baseOpacity + proximity * 0.3).toFixed(2);
+                            hexObj.el.style.transform = `scale(${(1 + proximity * 0.1).toFixed(3)})`;
+                            hexObj.el.style.stroke = isPrimary ? 'rgba(128, 217, 255, 0.7)' : 'rgba(200, 230, 255, 0.6)';
+                        } else {
+                            hexObj.el.style.strokeWidth = baseStrokeWidth + "px";
+                            hexObj.el.style.opacity = baseOpacity.toString();
+                            hexObj.el.style.transform = "scale(1)";
+                            hexObj.el.style.stroke = baseStrokeColor;
+                        }
+                    });
+
+                    Object.values(elements.mergeLines).forEach(lineObj => {
+                        const hexObj1 = elements.hexagons.find(h => h.id === lineObj.hex1Id);
+                        const hexObj2 = elements.hexagons.find(h => h.id === lineObj.hex2Id);
+
+                        if (hexObj1 && hexObj2) {
+                            // Distance calculation for lines also uses animated hexObj.cx and hexObj.cy
+                            const dist1 = Math.sqrt(Math.pow(hexObj1.cx - mouseX, 2) + Math.pow(hexObj1.cy - mouseY, 2));
+                            const dist2 = Math.sqrt(Math.pow(hexObj2.cx - mouseX, 2) + Math.pow(hexObj2.cy - mouseY, 2));
+
+                            let lineOpacityValue = 0;
+                            if (dist1 < interactionDistance) {
+                                lineOpacityValue = Math.max(lineOpacityValue, (1 - (dist1 / interactionDistance)) * mergeLineMaxOpacity);
+                            }
+                            if (dist2 < interactionDistance) {
+                                lineOpacityValue = Math.max(lineOpacityValue, (1 - (dist2 / interactionDistance)) * mergeLineMaxOpacity);
+                            }
+                            lineObj.el.style.opacity = lineOpacityValue.toFixed(2);
+                        }
+                    });
+                }
+
+                function handleMouseLeave() {
+                    elements.hexagons.forEach(hexObj => {
+                        const isPrimary = hexObj.type === 'primary';
+                        hexObj.el.style.strokeWidth = (isPrimary ? 1.2 : 1) + "px";
+                        hexObj.el.style.opacity = (isPrimary ? 0.8 : 0.7).toString();
+                        hexObj.el.style.transform = "scale(1)";
+                        hexObj.el.style.stroke = isPrimary ? 'rgba(106, 197, 243, 0.35)' : 'rgba(173, 216, 230, 0.2)';
+                    });
+
+                    Object.values(elements.mergeLines).forEach(lineObj => {
+                        lineObj.el.style.opacity = "0";
+                    });
+                }
+
+                // --- NEW: Animation function for hexagon drift ---
+                function animateHexagonsDrift() {
+                    elements.hexagons.forEach(hexObj => {
+                        // Update position
+                        hexObj.cx += hexObj.dx;
+                        hexObj.cy += hexObj.dy;
+
+                        // Boundary check against original position + driftRange
+                        if (hexObj.cx > hexObj.original_cx + driftRange || hexObj.cx < hexObj.original_cx - driftRange) {
+                            hexObj.dx *= -1; // Reverse direction
+                            hexObj.cx = Math.max(hexObj.original_cx - driftRange, Math.min(hexObj.cx, hexObj.original_cx + driftRange)); // Clamp position
+                        }
+                        if (hexObj.cy > hexObj.original_cy + driftRange || hexObj.cy < hexObj.original_cy - driftRange) {
+                            hexObj.dy *= -1; // Reverse direction
+                            hexObj.cy = Math.max(hexObj.original_cy - driftRange, Math.min(hexObj.cy, hexObj.original_cy + driftRange)); // Clamp position
+                        }
+
+                        // Boundary check against SVG viewBox edges (optional, but good practice)
+                        // Ensure the center of the hexagon doesn't go too close to the edge, considering its radius.
+                        const minX = hexObj.radius;
+                        const maxX = viewBoxWidth - hexObj.radius;
+                        const minY = hexObj.radius;
+                        const maxY = viewBoxHeight - hexObj.radius;
+
+                        if (hexObj.cx < minX || hexObj.cx > maxX) {
+                            hexObj.dx *= -1;
+                            hexObj.cx = Math.max(minX, Math.min(hexObj.cx, maxX));
+                        }
+                        if (hexObj.cy < minY || hexObj.cy > maxY) {
+                            hexObj.dy *= -1;
+                            hexObj.cy = Math.max(minY, Math.min(hexObj.cy, maxY));
+                        }
+
+
+                        // Update the SVG polygon points
+                        const newPoints = getHexagonPoints(hexObj.cx, hexObj.cy, hexObj.radius);
+                        hexObj.el.setAttribute("points", newPoints);
+                    });
+
+                    // Update merge lines to follow hexagons
+                    Object.values(elements.mergeLines).forEach(lineObj => {
+                        const hexObj1 = elements.hexagons.find(h => h.id === lineObj.hex1Id);
+                        const hexObj2 = elements.hexagons.find(h => h.id === lineObj.hex2Id);
+                        if (hexObj1 && hexObj2) {
+                            lineObj.el.setAttribute('x1', hexObj1.cx.toFixed(2));
+                            lineObj.el.setAttribute('y1', hexObj1.cy.toFixed(2));
+                            lineObj.el.setAttribute('x2', hexObj2.cx.toFixed(2));
+                            lineObj.el.setAttribute('y2', hexObj2.cy.toFixed(2));
+                        }
+                    });
+
+                    requestAnimationFrame(animateHexagonsDrift); // Loop the animation
+                }
+                // --- End NEW ---
+
+                window.addEventListener('resize', () => {
+                    heroRect = heroSection.getBoundingClientRect();
+                });
+                heroSection.addEventListener('mousemove', handleMouseMove);
+                heroSection.addEventListener('mouseleave', handleMouseLeave);
+
+                // --- NEW: Start the hexagon drift animation ---
+                if (elements.hexagons.length > 0) {
+                    animateHexagonsDrift();
+                }
+                // --- End NEW ---
+            }
+            // HERO SECTION ANIMATION END
+        });
+    </script>
+</body>
+</html>

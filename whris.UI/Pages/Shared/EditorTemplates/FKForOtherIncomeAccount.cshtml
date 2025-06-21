@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Account")
+    .DataTextField("Account")
+    .DataValueField("Id")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.Account#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/MstOtherIncome/Index?handler=Accounts");
+        })
+        .ServerFiltering(false);
+    })
+)

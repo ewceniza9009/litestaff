@@ -1,0 +1,69 @@
+﻿@page
+@model ComputeModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Department: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="ComputeDepartmentId" style="width: 100%"
+                                datatextfield="Department"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.DepartmentCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="ComputeEmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="ComputeDateStart" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="ComputeDateEnd" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnSave"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdDtrCompute()">
+                    <span class="btn-label">
+                        <i id="btnComputeGear" class="fa fa-gear"></i>
+                        <i id="btnComputeSpin" class="fa fa-spinner fa-spin" hidden></i>
+                    </span>
+                    Compute
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

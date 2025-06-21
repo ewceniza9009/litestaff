@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-whris.UI-01827b4c-80c6-4a02-b80d-6620f02d531a</UserSecretsId>
+        <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="IMPORTANT_BACKUPS\**" />
+      <Content Remove="IMPORTANT_BACKUPS\**" />
+      <EmbeddedResource Remove="IMPORTANT_BACKUPS\**" />
+      <None Remove="IMPORTANT_BACKUPS\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Reports\RepDemographics.cs" />
+        <Compile Remove="Reports\RepDemographics.Designer.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="Reports\RepDemographics.resx" />
+    </ItemGroup>
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="wwwroot\Uploads\Placeholder.txt" />
+    </ItemGroup>
+    <ItemGroup>
+		<PackageReference Include="Google_GenerativeAI" Version="2.5.10" />
+        <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+        <PackageReference Include="Dapper" Version="2.0.123" />
+        <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="22.2.3" />
+        <PackageReference Include="EPPlusFree" Version="4.5.3.8" />
+        <PackageReference Include="MediatR" Version="11.1.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.2" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.3" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
+        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
+        <PackageReference Include="SharpZipLib" Version="1.4.2" />
+        <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2022.3.913" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\whris.Application\whris.Application.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="whris.Data">
+            <HintPath>..\whris.Lib\Data\whris.Data.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Update="Pages\TrnPayroll\OtherIncome.cshtml">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="wwwroot\images\UserAvatar.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Reports\RepAbsences.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepNoneATMReport.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepLeaveDetail.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepLeaveLedgerSummary.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepLoanDeduction.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepLoanLedger.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepPayrollOtherIncome.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepPayrollWithDepartments.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepEmployeeList.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepPayslipLengthwise.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+        <Compile Update="Reports\RepPayrollWithHrs.cs">
+            <SubType>XtraReport</SubType>
+        </Compile>
+    </ItemGroup>
+    <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+	<PropertyGroup>
+		<SecurityReceiptFile>$(IntermediateOutputPath)vr_exec.receipt</SecurityReceiptFile>
+	</PropertyGroup>
+
+	<Target Name="CleanSecurityReceipt" BeforeTargets="BeforeBuild">
+		<Message Text="Deleting old security receipt file (if any)..." Importance="normal" />
+		<Delete Files="$(SecurityReceiptFile)" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="VBB" BeforeTargets="BeforeBuild" DependsOnTargets="CleanSecurityReceipt">
+		<PropertyGroup>
+			<WhrisDllPath>$([System.IO.Path]::GetFullPath('$(ProjectDir)..\whris.Lib\Data\whris.Data.dll'))</WhrisDllPath>
+		</PropertyGroup>
+
+		<Exec Command="&quot;$(ProjectDir)ThirdParty\vr.exe&quot; &quot;$(WhrisDllPath)&quot; &amp;&amp; echo. &gt; &quot;$(SecurityReceiptFile)&quot;" WorkingDirectory="$(ProjectDir)" IgnoreExitCode="false" />
+		<Message Text="Security tool vr.exe executed successfully." Importance="high" />
+	</Target>
+
+	<Target Name="VerifySecurityReceipt" AfterTargets="Build">
+		<Error Text="SECURITY VIOLATION: The mandatory security tool (vr.exe) did not run or failed to complete. Build is invalid."
+			   Condition="!Exists('$(SecurityReceiptFile)')" />
+		<Message Text="Security tool execution successfully verified by receipt." Importance="high" Condition="Exists('$(SecurityReceiptFile)')" />
+	</Target>
+</Project>

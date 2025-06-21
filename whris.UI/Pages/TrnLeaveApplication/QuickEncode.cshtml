@@ -1,0 +1,99 @@
+﻿@page
+@model QuickEncodeModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+            <div class="col-md-9">
+                <kendo-datepicker name="EncodeDateStart" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 40%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+            <div class="col-md-9">
+                <kendo-datepicker name="EncodeDateEnd" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 40%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-9">
+                <kendo-combobox name="EncodeEmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Leave: </label>
+            <div class="col-md-9">
+                <kendo-combobox name="EncodeLeaveId" style="width: 60%"
+                                datatextfield="Leave"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.LeaveSetupCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">No Of Hours: </label>
+            <div class="col-md-9">
+                <input id="EncodeNoOfHours" class="form-control" placeholder="No Of Hours" name="EncodeNoOfHours" data-inputmask="'alias': 'currency'" style="width: 40%; text-align: end" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">With Pay?: </label>
+            <div class="col-md-9">
+                <kendo-checkbox name="EncodeWithPay" size=ComponentSize.Medium rounded=Rounded.Medium on-change="onCheckboxChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Is Debit to Ledger?: </label>
+            <div class="col-md-9">
+                <kendo-checkbox name="EncodeDebit" size=ComponentSize.Medium rounded=Rounded.Medium on-change="onCheckboxChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+            <div class="col-md-9">
+                <kendo-textbox name="EncodeRemarks" placeholder="Remarks">
+                </kendo-textbox>
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnSave"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdLeaveApplicationQuickEncode()">
+                    <span class="btn-label">
+                        <i class="fa fa-gear"></i>
+                    </span>
+                    Process
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

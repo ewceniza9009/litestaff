@@ -1,0 +1,88 @@
+﻿@page
+@using whris.Application.Queries.TrnDtr;
+@model MissingPunchesModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Number: </label>
+            <div class="col-md-10">
+                <input class="form-control" name="F1" value="@Model.DtrNumber" style="width: 20%;" disabled />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+            <div class="col-md-10">
+                <input class="form-control" name="F1" value="@Model.Remarks" style="width: 100%;" disabled />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold; color: blue">Search Employee: </label>
+            <div class="col-md-10">
+                <input class="form-control" id="SearchEmployeeOnMissingPunches" style="width: 100%;" onchange="onSearchEmployeeOnMissingPunches()" onblur="onSearchEmployeeOnMissingPunches()" />
+            </div>
+        </div>
+
+        <div class="row" style="margin: 5px">
+            @(Html.Kendo().Grid<MissingPunches.Record>()
+                .Name("gridMissingPunches")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Employee).Width(200).Title("Employee");
+                    columns.Bound(x => x.ShiftCode).Width(200).Title("Shift Code");
+                    columns.Bound(x => x.Date).Width(120).Title("Date");
+                    columns.Bound(x => x.Day).Width(120).Title("Day");
+                    columns.Bound(x => x.TimeIn1).Format("{0:hh:mm tt}").Width(180).Title("Time In 1").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeIn1CellChanged(this)" });
+                    columns.Bound(x => x.TimeOut1).Format("{0:hh:mm tt}").Width(180).Title("Time Out 1").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeOut1CellChanged(this)" });
+                    columns.Bound(x => x.TimeIn2).Format("{0:hh:mm tt}").Width(180).Title("Time In 2").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeIn2CellChanged(this)" });
+                    columns.Bound(x => x.TimeOut2).Format("{0:hh:mm tt}").Width(180).Title("Time Out 2").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeOut2CellChanged(this)" });
+                    columns.Bound(x => x.Dtrremarks).Width(140).Title("Remarks").HtmlAttributes(new { @class = "cell-input" });
+                    columns.Bound(x => x.Is4Swipes).Width(140).Title("4 Swipes")
+                        .ClientTemplate("<input disable: disabled type='checkbox' #= Is4Swipes ? checked='checked' : '' # />")
+                        .Width(80); 
+
+                })
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Scrollable()
+                .Pageable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+                    model.Id(p => p.Id);
+                    model.Field(p => p.Employee).Editable(false);
+                    model.Field(p => p.ShiftCode).Editable(false);
+                    model.Field(p => p.Date).Editable(false);
+                    model.Field(p => p.Day).Editable(false);
+                    model.Field(p => p.TimeIn1).Editable(true);
+                    model.Field(p => p.TimeOut1).Editable(true);
+                    model.Field(p => p.TimeIn2).Editable(true);
+                    model.Field(p => p.TimeOut2).Editable(true);
+                    model.Field(p => p.Is4Swipes).Editable(false);
+                })
+                .ServerOperation(true)
+                .PageSize(20)
+                .Read(read => read.Url($@"/TrnDtr/MissingPunches?handler=GetMissingPunches&dtrId={Model.Id}")
+                .Data("forgeryToken2")))
+                )
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnEdit"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdDtrMissingPunches()">
+                    <span class="btn-label">
+                        <i class="fa fa-gear"></i>
+                    </span>
+                    Edit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

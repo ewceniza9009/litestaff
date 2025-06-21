@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Day")
+    .DataTextField("DayName")
+    .DataValueField("DayName")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.DayName#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/MstShiftCode/Detail?handler=Days");
+        })
+        .ServerFiltering(false);
+    })
+)

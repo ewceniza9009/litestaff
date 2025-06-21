@@ -1,0 +1,425 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "System Tables";
+}
+
+<style>
+    #MstPayrollGroups {
+        height: 70vh;
+    }
+
+    #MstPayrollTypes {
+        height: 70vh;
+    }
+
+    #MstDepartments {
+        height: 70vh;
+    }
+
+    #MstPositions {
+        height: 70vh;
+    }
+
+    #MstAccounts {
+        height: 70vh;
+    }
+
+    #MstReligions {
+        height: 70vh;
+    }
+
+    #MstCitizenships {
+        height: 70vh;
+    }
+
+    #MstZipCodes {
+        height: 70vh;
+    }
+
+    #MstDivisions {
+        height: 70vh;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+
+@*<div class="row" style="width: 181vh">*@
+<div class="row">
+    <form id="frmDetail" method="post" style="margin-top: 10px">
+        <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+            <div class="col-md-6">
+                <h5 class="title-color"><i class="fa fa-table-cells"></i> System Tables (Editable)</h5>
+            </div>
+
+            <div class="col-md-6" style="padding: 0px">
+                <div class="float-end">
+                    <div class="hstack gap-3 float end">
+                        <button id="btnSave"
+                                class="btn btn-primary"
+                                type="button"
+                                onclick="CmdSave()">
+                            <span class="btn-label">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            Save
+                        </button>
+
+                        <button class="btn btn-light cmd-buttons"
+                                type="button"
+                                onclick="CmdHome()">
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" hidden>
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-sm-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.Tables.Id" readonly="true" style="width: 100px; background-color: lightgray;">
+                    </kendo-textbox>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <kendo-tabstrip name="itemTabs" style="margin-top: 5px; width: 100%" on-select="tabStripOnSelect">
+                <popup-animation>
+                    <open effects="fade:in" />
+                </popup-animation>
+                <items>
+                    <tabstrip-item text="Payroll Group" selected="true">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstPayrollGroups)
+                                .Name("MstPayrollGroups")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Payroll Group")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddPayrollGroup(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollGroup").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.PayrollGroup)
+                                    .Title("Payroll Group")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Payroll Type">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstPayrollTypes)
+                                .Name("MstPayrollTypes")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Payroll Type")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddPayrollType(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollType").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.PayrollType)
+                                    .Title("Payroll Type")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Department">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstDepartments)
+                                .Name("MstDepartments")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Department")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddDepartment(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteDepartment").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.Department)
+                                    .Title("Department")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Position">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstPositions)
+                                .Name("MstPositions")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Position")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddPosition(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePosition").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.Position)
+                                    .Title("Position")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Chart of Accounts">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstAccounts)
+                                .Name("MstAccounts")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Account")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddAccount(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteAccount").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.AccountCode)
+                                    .Title("AccountCode")
+                                    .Filterable(false)
+                                    .Width(150);
+                                    columns.Bound(x => x.Account)
+                                    .Title("Account")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Religion">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstReligions)
+                                .Name("MstReligions")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Religion")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddReligion(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteReligion").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.Religion)
+                                    .Title("Religion")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Citizenship">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstCitizenships)
+                                .Name("MstCitizenships")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Citizenship")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddCitizenship(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteCitizenship").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.Citizenship)
+                                    .Title("Citizenship")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Zip Code">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstZipCodes)
+                                .Name("MstZipCodes")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Zip Code")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddZipCode(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteZipCode").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.ZipCode)
+                                    .Title("Zip Code")
+                                    .Filterable(false)
+                                    .Width(150);
+                                    columns.Bound(x => x.Location)
+                                    .Title("Location")
+                                    .Filterable(false)
+                                    .Width(500); 
+                                    columns.Bound(x => x.Area)
+                                    .Title("Area")
+                                    .Filterable(false)
+                                    .Width(150);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                    <tabstrip-item text="Division">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.Tables.MstDivisions)
+                                .Name("MstDivisions")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Division")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddDivision(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteDivision").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.Division)
+                                    .Title("Division")
+                                    .Filterable(false)
+                                    .Width(500);
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                </items>
+            </kendo-tabstrip>
+        </div>
+    </form>
+</div>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>
+
+@section Scripts {
+    <script src="~/Pages/SysTables/Index.cshtml.js"></script>
+}

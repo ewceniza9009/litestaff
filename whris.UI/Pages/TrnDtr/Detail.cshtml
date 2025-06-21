@@ -1,0 +1,560 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions
+{
+
+}
+
+<style>
+   /* body{
+      margin:0;
+      overflow:hidden;
+    }*/
+
+    #TrnDtrlines {
+        height: 50vh;/*
+        max-width: 95vw;
+        min-width: 85vw;*/
+        width: 95vw;
+    }
+
+    .k-grid-header .k-header {
+        position: relative;
+        cursor: default;
+        text-align: center;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: initial;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-fingerprint"></i> DTR Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="row float-end">
+                <div class="hstack gap-3 float end">
+                    <label style="padding-top: 0px; font-weight: bold;"> | Edit RD: </label>
+
+                    <kendo-checkbox name="IsComputeRestDay" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsComputeRestDay" on-change="onCheckboxChange" />
+
+                    <label style="padding-top: 0px; font-weight: bold;"> | </label>
+
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdQuickEdit()">
+                        Quick Edit
+                    </button>
+
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdQuickShift()">
+                        Quick Shift
+                    </button>
+
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdCompute()">
+                        Compute
+                    </button>
+
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdProcess()">
+                        Process
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary  cmd-buttons"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            @*<i class="fa fa-lock"></i>*@
+                            <i id="btnSaveLock" class="fa fa-lock"></i>
+                            <i id="btnSaveSpin" class="fa fa-spinner fa-spin" hidden></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row" hidden>
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.DtrDetail.Id" style="width: 20%">
+                    </kendo-textbox>
+                    <kendo-checkbox name="isAdmin" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.IsAdmin" />
+                    <kendo-checkbox name="canEditDtrTime" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.CanEditDtrTime" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Period: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PeriodId" style="width: 20%"
+                                    placeholder="Period"
+                                    datatextfield="Period"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.PeriodId"
+                                    min-length="3"
+                                    height="520"
+                                    enable="false"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.PeriodCmbDs">
+                    </kendo-combobox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Number: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Dtrnumber" placeholder="DTR Number" enable="false" value="@Model.DtrDetail.Dtrnumber" style="width: 20%">
+                    </kendo-textbox>
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdMissingPunches()">
+                        Get Missing Punches
+                    </button>
+                    <label style="padding-top: 5px; margin-right: 5px; font-weight: bold;"> | w/ Remarks Only: </label>
+                    <kendo-checkbox name="WithRemarks"
+                                    id="WithRemarks"
+                                    size=ComponentSize.Medium
+                                    rounded=Rounded.Medium />
+                    <label style="padding-top: 5px; margin-right: 5px; font-weight: bold;"> | w/ In-Active: </label>
+                    <kendo-checkbox name="InActive"
+                                    id="InActive"
+                                    size=ComponentSize.Medium
+                                    rounded=Rounded.Medium />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Date: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="Dtrdate" placeholder="DTR Date" value="@Model.DtrDetail.Dtrdate" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Group: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PayrollGroupId" style="width: 40%"
+                                    placeholder="Payroll Group"
+                                    datatextfield="PayrollGroup"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.PayrollGroupId"
+                                    min-length="3"
+                                    height="520"
+                                    enable="false"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.PayrollGroupCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateStart" placeholder="Date Start" value="@Model.DtrDetail.DateStart" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateEnd" placeholder="Date End" value="@Model.DtrDetail.DateEnd" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Remarks" placeholder="Remarks" value="@Model.DtrDetail.Remarks" style="width: 100%">
+                    </kendo-textbox>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Overtime: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="OvertTimeId" style="width: 35%"
+                                    placeholder="Overtime"
+                                    datatextfield="Otnumber"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.OvertTimeId"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.OvertimeCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Leave Application: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="LeaveApplicationId" style="width: 35%"
+                                    placeholder="Leave"
+                                    datatextfield="Lanumber"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.LeaveApplicationId"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.LeaveCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Change Shift: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="ChangeShiftId" style="width: 35%"
+                                    placeholder="Change Shift"
+                                    datatextfield="Csnumber"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.ChangeShiftId"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.ChangeShiftCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Prepared By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PreparedBy" style="width: 35%"
+                                    placeholder="Prepared By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.PreparedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Checked By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="CheckedBy" style="width: 35%"
+                                    placeholder="Checked By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.CheckedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Approved By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="ApprovedBy" style="width: 35%"
+                                    placeholder="Approved By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.DtrDetail.ApprovedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked/Is Approved: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsLocked" on-change="onCheckboxChange" />
+                    <kendo-checkbox name="IsApproved" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsApproved" on-change="onIsApprovedCheckboxChange" />
+
+                    <div style="width: 40%; padding-right: 1.2vw; text-align: left !important; float: inline-end !important; float: right !important;">
+                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 100%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div>
+        @(
+            Html.Kendo().Grid<TrnDtrLineDto>()
+            .Name("TrnDtrlines")
+            .Scrollable()
+            .ToolBar(x =>
+            {
+                x.Custom().Text("Add DTR Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddDtrLine(); return false;" });
+                x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
+                x.Excel();
+                x.Pdf();
+            })
+            .Excel(excel => excel.FileName("DTR Lines.xlsx").AllPages(true).Filterable(true))
+            .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound").CellClose("onCellEdited"))
+            .Columns(columns =>
+            {
+                @* columns.Command(command => command.Custom("Delete")
+                .IconClass("k-icon k-i-x")
+                .Click("CmdDeleteDtrLine"))
+                .Width(110)
+                .Locked(true)
+                .Lockable(true); *@
+                columns.Bound(x => x.EmployeeId).Title("Employee")
+                    .Filterable(false)
+                    .EditorTemplateName("FKForDTREmployee")
+                    .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoEmployeeDetail(#= data.EmployeeId#)'>#= GetEmployeeText(data) #</a>")
+                    .Width(280)
+                    .Locked(true)
+                    .Lockable(true);
+                @* columns.Bound(x => x.EmployeeName).Title("Employee")
+                .Filterable(false)
+                .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoEmployeeDetail(#= data.EmployeeId#)'>#= GetEmployeeText(data) #</a>")
+                .Width(280)
+                .Locked(true)
+                .Lockable(true); *@
+                columns.Bound(x => x.ShiftCodeId).Title("Shift Code")
+                    .Filterable(false)
+                    .EditorTemplateName("FKForDTRShiftCode")
+                    .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoShiftCodeDetail(#= data.ShiftCodeId#)'>#= GetShiftCodeText(data) #</a>")
+                    .Width(250)
+                    .Locked(true)
+                    .Lockable(true); 
+                columns.Bound(x => x.Date)
+                    .Width(180)
+                    .Locked(true)
+                    .Lockable(true);
+                columns.Group(y => y.Title("Day")
+                    .Locked(true)
+                    .Lockable(true)
+                    .HtmlAttributes(new { style = "text-align:center;" })
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.DayTypeId).Title("Type").Filterable(false).EditorTemplateName("FKForDTRDayType").ClientTemplate("#= GetDayTypeText(data) #").Width(190);
+                        z.Bound(x => x.DayMultiplier).Title("M").Filterable(false).Width(100).HtmlAttributes(new { @style = "text-align: end;" });
+                    }));
+                columns.Bound(x => x.RestDay).Title("Rest Day").ClientTemplate("<input type='checkbox' #= RestDay ? checked='checked' : '' # disabled/>").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                columns.Bound(x => x.TimeIn1).Format("{0:hh:mm tt}").Width(180).Title("Time In 1");
+                columns.Bound(x => x.TimeOut1).Format("{0:hh:mm tt}").Width(180).Title("Time Out 1");
+                columns.Bound(x => x.TimeIn2).Format("{0:hh:mm tt}").Width(180).Title("Time In 2");
+                columns.Bound(x => x.TimeOut2).Format("{0:hh:mm tt}").Width(180).Title("Time Out 2");
+                columns.Bound(x => x.Dtrremarks).Width(180).Title("Remarks");
+                columns.Group(y => y.Title("DTR Status")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.OfficialBusiness).Title("OB")
+                    .ClientTemplate("<input type='checkbox' #= OfficialBusiness ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.OnLeave).Title("OL")
+                    .ClientTemplate("<input type='checkbox' #= OnLeave ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.Absent).Title("A")
+                    .ClientTemplate("<input type='checkbox' #= Absent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.HalfdayAbsent).Title("HA")
+                    .ClientTemplate("<input type='checkbox' #= HalfdayAbsent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                    }));
+                columns.Group(y => y.Title("Work Hours")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.RegularHours).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.NightHours).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeHours).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeNightHours).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.GrossTotalHours).Title("Total").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    }));
+                columns.Group(y => y.Title("Tardy Hours")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.TardyLateHours).Title("Late").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.TardyUndertimeHours).Title("UT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                    }));
+                columns.Bound(x => x.NetTotalHours).Title("Net Hours").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                columns.Group(y => y.Title("Rate per Hour")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.RatePerHour).Title("Reg").Filterable(false).Width(100);
+                        z.Bound(x => x.RatePerNightHour).Title("Night").Filterable(false).Width(100);
+                        z.Bound(x => x.RatePerOvertimeHour).Title("OT").Filterable(false).Width(100);
+                        z.Bound(x => x.RatePerOvertimeNightHour).Title("OTN").Filterable(false).Width(100);
+                    }));
+                columns.Group(y => y.Title("Amount")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.RegularAmount).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.NightAmount).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeAmount).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeNightAmount).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+
+                    }));
+                columns.Bound(x => x.TotalAmount).Title("Total Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                columns.Bound(x => x.RatePerHourTardy).Title("Tardy Rate per Hour").Filterable(false).Width(100);
+                columns.Bound(x => x.TardyAmount).Title("Tardy Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                columns.Bound(x => x.RatePerAbsentDay).Title("Absent Rate per Day").Filterable(false).Width(100);
+                columns.Bound(x => x.AbsentAmount).Title("Absent Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                columns.Bound(x => x.NetAmount).Title("Net Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                columns.Template("").Title("");
+                columns.Bound(x => x.Id).Filterable(false).Hidden();
+                columns.Bound(x => x.IsDeleted).Hidden();
+                columns.Bound(x => x.IsEdited).Hidden();
+            })
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .Navigatable()
+            .Selectable(x => x.Mode(GridSelectionMode.Single))
+            .Pageable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("ReadDtrLines", "Dtr", new { Id = Model.DtrDetail.Id }).Data("forgeryToken"))
+            .ServerOperation(true)
+            .PageSize(45)
+            .Aggregates(aggregates =>
+            {
+                aggregates.Add(p => p.RegularHours).Sum();
+                aggregates.Add(p => p.NightHours).Sum();
+                aggregates.Add(p => p.OvertimeHours).Sum();
+                aggregates.Add(p => p.OvertimeNightHours).Sum();
+                aggregates.Add(p => p.GrossTotalHours).Sum();
+                aggregates.Add(p => p.TardyLateHours).Sum();
+                aggregates.Add(p => p.TardyUndertimeHours).Sum();
+                aggregates.Add(p => p.NetTotalHours).Sum();
+                aggregates.Add(p => p.RegularAmount).Sum();
+                aggregates.Add(p => p.NightAmount).Sum();
+                aggregates.Add(p => p.OvertimeAmount).Sum();
+                aggregates.Add(p => p.OvertimeNightAmount).Sum();
+                aggregates.Add(p => p.TotalAmount).Sum();
+                aggregates.Add(p => p.TardyAmount).Sum();
+                aggregates.Add(p => p.AbsentAmount).Sum();
+                aggregates.Add(p => p.NetAmount).Sum();
+            })
+            .Model(model =>
+            {
+                model.Id(p => p.Id);
+                model.Field(x => x.EmployeeId).Editable(false);
+                model.Field(x => x.ShiftCodeId).Editable(false);
+                model.Field(x => x.Date).Editable(false);
+                model.Field(x => x.DayTypeId).Editable(false);
+                model.Field(x => x.DayMultiplier).Editable(false);
+                model.Field(x => x.RestDay).Editable(false);
+                model.Field(x => x.TimeIn1);
+                model.Field(x => x.TimeOut1);
+                model.Field(x => x.TimeIn2);
+                model.Field(x => x.TimeOut2);
+                model.Field(x => x.Dtrremarks);
+                model.Field(x => x.OfficialBusiness);
+                model.Field(x => x.OnLeave);
+                model.Field(x => x.Absent);
+                model.Field(x => x.HalfdayAbsent);
+                model.Field(x => x.RegularHours).Editable(false);
+                model.Field(x => x.NightHours).Editable(false);
+                model.Field(x => x.OvertimeHours).Editable(false);
+                model.Field(x => x.OvertimeNightHours).Editable(false);
+                model.Field(x => x.GrossTotalHours).Editable(false);
+                model.Field(x => x.TardyLateHours).Editable(false);
+                model.Field(x => x.TardyUndertimeHours).Editable(false);
+                model.Field(x => x.NetTotalHours).Editable(false);
+                model.Field(x => x.RatePerHour).Editable(false);
+                model.Field(x => x.RatePerNightHour).Editable(false);
+                model.Field(x => x.RatePerOvertimeHour).Editable(false);
+                model.Field(x => x.RatePerOvertimeNightHour).Editable(false);
+                model.Field(x => x.RegularAmount).Editable(false);
+                model.Field(x => x.NightAmount).Editable(false);
+                model.Field(x => x.OvertimeNightAmount).Editable(false);
+                model.Field(x => x.TotalAmount).Editable(false);
+                model.Field(x => x.RatePerHourTardy).Editable(false);
+                model.Field(x => x.TardyAmount).Editable(false);
+                model.Field(x => x.RatePerAbsentDay).Editable(false);
+                model.Field(x => x.AbsentAmount).Editable(false);
+                model.Field(x => x.NetAmount).Editable(false);
+            })
+            .Sort(x => x.Add("EmployeeName").Ascending()
+            )
+            )
+            )
+   </div>
+    <div id="TrnDtrlinesMobile" style="width: 95vw; height: 50vh; margin-top: 100px;">
+        <text class="text-center" style="font-family: 'Roboto Slab', serif;">Cannot view the grid please use desktop...</text>
+    </div>
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>
+

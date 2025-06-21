@@ -1,0 +1,85 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<style>
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fas fa-gear"></i> Settings</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+
+                    <button id="btnSave"
+                            class="btn btn-primary  cmd-buttons"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Current Period: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="CurrentPeriodId" style="width: 20%"
+                                    placeholder="Current Period"
+                                    datatextfield="Period"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.Periods">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Defualt OT Limit (Hrs): </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Defualt OT limit (Hrs)" id="DefualtOvertimeLimitHours" data-inputmask="'alias': 'currency'" style="width: 20%; text-align: end" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Include OT Time In: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox id="IncludeTimeInOT" size=ComponentSize.Medium rounded=Rounded.Medium on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Pages/SysSettings/Index.cshtml.js"></script>
+}

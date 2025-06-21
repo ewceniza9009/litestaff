@@ -1,0 +1,49 @@
+﻿@page
+@model whris.UI.Pages.MstEmployee.MemoModel
+@{
+    Layout = null;
+}
+
+@*<kendo-textarea name="invitation" style="width: 100%" required="true" data-required-msg="Please enter a text." data-max-msg="Enter value between 1 and 200"*@
+<kendo-textarea name="MemoContent" style="width: 100%; height:500px" 
+    placeholder="Enter your content here..."
+    rows="10"
+    value="@Model.EmployeeMemo.MemoContent">
+</kendo-textarea>
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Prepared By: </label>
+            <div class="col-md-10">
+                <kendo-combobox name="PreparedBy" style="width: 60%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                value="@Model.EmployeeMemo.PreparedBy"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.UserCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Approved By: </label>
+            <div class="col-md-10">
+                <kendo-combobox name="ApprovedBy" style="width: 60%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                value="@Model.EmployeeMemo.ApprovedBy"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.UserCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+    </div>
+</div>

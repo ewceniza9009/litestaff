@@ -1,0 +1,2153 @@
+﻿/* ==========================================================================
+   CSS Variables (Theme Colors)
+   ========================================================================== */
+
+:root {
+    /* Primary Palette */
+    --primary-color: #3c8eb3;
+    --primary-color-hover: #317694;
+    --primary-color-alpha-low: rgba(60, 142, 179, 0.05);
+    --primary-text-color: #ffffff; /* For text on primary backgrounds */
+    /* Accent & Action Colors */
+    --accent-bg-light: #eef7ff; /* Pinned icon, insights bg */
+    --link-color: #007bff; /* Links, contenteditable border */
+    --success-color: #92c252; /* Export button, success states */
+    --success-color-hover: #15672d;
+    --danger-color: #dc3545; /* PDF export, error states */
+    --danger-color-hover: #c82333;
+    --warning-color: #ffc107; /* Toast warning */
+    --info-color: #17a2b8; /* Toast info */
+    /* Backgrounds */
+    --body-bg: #ffffff; /* Main page background if needed */
+    --page-container-bg: #ffffff;
+    --sidebar-bg: #f7f7f7;
+    --chat-area-bg: #ffffff;
+    --chat-title-bg: #f8f9fa;
+    --input-wrapper-bg: #f9fafb;
+    --user-bubble-bg: var(--primary-color);
+    --bot-bubble-bg: #f1f3f5;
+    --message-control-bg: #f8f9fa; /* Toggle visibility button */
+    --message-control-hover-bg: #e9ecef;
+    --tooltip-bg: lightsteelblue;
+    --control-button-bg: #f0f0f0;
+    --control-button-bg-hover: #e0e0e0;
+    --active-control-button-bg: var(--primary-color);
+    --active-control-button-text: var(--primary-text-color);
+    --modal-bg: rgba(0, 0, 0, 0.5);
+    --modal-content-bg: #fefefe;
+    --table-header-bg: #f9fafb;
+    --table-row-hover-bg: #f3f4f6;
+    --sql-container-bg: #ffffff; /* Explicit for Prism, might be themed by Prism */
+    --sql-log-record-bg: #f8f9fa;
+    --mermaid-diagram-bg: #f9f9f9;
+    --toast-success-bg: var(--success-color);
+    --toast-warning-bg: var(--warning-color);
+    --toast-error-bg: var(--danger-color);
+    --toast-info-bg: var(--info-color);
+    --empty-state-prompt-bg: #f8f9fa;
+    --empty-state-prompt-hover-bg: #f1f3f5;
+    /* Text Colors */
+    --text-color-dark: #333333;
+    --text-color-medium: #555555;
+    --text-color-muted: #6c757d;
+    --text-color-light: var(--primary-text-color); /* For text on dark/primary backgrounds */
+    --text-color-on-user-bubble: var(--primary-text-color);
+    --text-color-on-bot-bubble: var(--text-color-dark);
+    --text-color-black: #000000;
+    --user-message-sender-info-color: #e0f7fa;
+    --bot-message-sender-info-color: var(--text-color-medium);
+    --table-text-color: #374151;
+    --table-header-text-color: #111827;
+    --axis-label-color: var(--text-color-dark);
+    --tick-text-color: var(--text-color-dark);
+    --empty-state-text-color: var(--text-color-muted);
+    --empty-state-header-color: #343a40;
+    --empty-state-prompt-text-color: #495057;
+    /* Borders & Separators */
+    --border-color-strong: var(--primary-color); /* Page container border */
+    --border-color-medium: #e0e0e0; /* Sidebar, mermaid diagram */
+    --border-color-light: #d1d5db; /* Input fields */
+    --border-color-subtle: #e5e7eb; /* Chat title, history, table */
+    --border-color-default: #dddddd; /* Export PDF button border */
+    --control-button-border: #cccccc;
+    --active-control-button-border: var(--primary-color);
+    --modal-border-color: #888888;
+    --modal-separator-color: #dddddd;
+    --toast-shadow-color: rgba(0, 0, 0, 0.15);
+    --empty-state-prompt-border: #dee2e6;
+    --empty-state-prompt-hover-border: #ced4da;
+    /* Icons */
+    --icon-color-default: var(--text-color-medium);
+    --icon-color-muted: #aeaeae;
+    --icon-color-on-primary: var(--primary-text-color);
+    --chat-title-icon-color: var(--primary-color);
+    --empty-state-icon-color: var(--primary-color);
+    --bot-action-icon-color: var(--text-color-muted);
+    --bot-action-icon-hover-color: #343a40;
+    --bot-action-icon-liked-color: var(--link-color);
+    --bot-action-icon-disliked-color: var(--danger-color);
+    /* Shadows */
+    --shadow-light-rgba: rgba(0, 0, 0, 0.1);
+    --shadow-medium-rgba: rgba(0, 0, 0, 0.2);
+    --shadow-strong-rgba: rgba(0,0,0,0.19);
+    /* CodeMirror Theme (Light Brown/Paper for SQL Edit Modal) */
+    --cm-bg: #F8F5F2;
+    --cm-text: #3E2723;
+    --cm-gutter-bg: #EDEAE6;
+    --cm-gutter-border: #D7CCC8;
+    --cm-linenumber: #795548;
+    --cm-cursor: #795548;
+    --cm-selected-bg: #D7CCC8;
+    --cm-matchingbracket-bg: #BCAAA4;
+    --cm-matchingbracket-text: var(--cm-text);
+    --cm-activeline-bg: #E7E2DD;
+    --cm-activeline-gutter-bg: #D7CCC8;
+    --cm-activeline-gutter-text: var(--cm-text);
+    --cm-keyword: #007ACC;
+    --cm-atom: #8B4513;
+    --cm-number: #4a90e2;
+    --cm-string: #D65D0E;
+    --cm-comment: #A1887F;
+    --cm-variable: var(--cm-text);
+    --cm-variable-2: #4a5568; /* Different shade for other variables if needed */
+    --cm-operator: #5D4037;
+    --cm-builtin: #8B4513;
+    --cm-meta: #c8762d;
+    /*Conversation*/
+    --list-item-hover-bg: #9cc765;
+    --pin-conversation-btn-color-pin: #3c8eb3;
+}
+
+/* ==========================================================================
+   General Layout & Page Structure
+   ========================================================================== */
+
+.page-container {
+    margin-top: 25px; /* From .cshtml */
+    display: flex !important; /* From .cshtml - review if !important is essential */
+    flex-direction: row; /* From .cshtml */
+    height: calc(89vh - 65px); /* From .cshtml */
+    border: 1px solid var(--border-color-strong); /* From .cshtml */
+    border-radius: 20px; /* Consistent */
+    overflow: hidden; /* From .cshtml */
+    background-color: var(--page-container-bg); /* From .cshtml */
+    box-shadow: 0 4px 8px var(--shadow-light-rgba); /* From .cshtml */
+    width: 100%; /* From original chat.css */
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+}
+
+/* ==========================================================================
+   AI Insights Toggle Switch Styles
+   ========================================================================== */
+
+.ai-insights-toggle-container {
+    /* Positioning styles are kept from inline for now, adjust as needed */
+    /* gap: 8px;  is also from inline */
+    left: 10px;
+}
+
+#aiInsightsToggleTextLabel {
+    /* font-size, color, etc., are from inline for now */
+    line-height: 20px; /* Vertically align with the switch */
+}
+
+.switch-style-label {
+    position: relative;
+    display: inline-block;
+    width: 40px; /* Width of the switch track */
+    height: 20px; /* Height of the switch track */
+    vertical-align: middle;
+}
+
+    /* Hide default HTML checkbox */
+    .switch-style-label input#aiInsightsToggle {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* The slider (the track of the switch) */
+.slider-style-span {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc; /* Background of the track when OFF */
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    /* The knob of the switch */
+    .slider-style-span:before {
+        position: absolute;
+        content: "";
+        height: 16px; /* Height of the knob */
+        width: 16px; /* Width of the knob */
+        left: 2px; /* Indent from left */
+        bottom: 2px; /* Indent from bottom */
+        background-color: white; /* Color of the knob */
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input#aiInsightsToggle:checked + .slider-style-span {
+    background-color: var(--primary-color); /* Track color when ON */
+}
+
+input#aiInsightsToggle:focus + .slider-style-span {
+    box-shadow: 0 0 1px var(--primary-color); /* Optional focus style */
+}
+
+input#aiInsightsToggle:checked + .slider-style-span:before {
+    -webkit-transform: translateX(20px); /* Moves knob to the right: track width (40) - knob width (16) - left_offset (2*2=4) is not exactly this, it's simpler: TrackWidth - KnobWidth - (2*offset) if offset is from edge to knob edge. Here, 40 - 16 = 24. Slider width = 40, knob = 16. Knob starts at 2px. Needs to move 40 - 16 - 2 = 22px. Let's use 20px for a 40px wide track and 16px knob means 40 - 16 - 2(padding) = 22. The total travel is 20px if the knob starts at 2px and ends at 22px (40-16-2). (40-16-2-2 = 20px of travel distance). */
+    -ms-transform: translateX(20px);
+    transform: translateX(20px); /* (Switch Track Width - Knob Width - (2 * Knob's Left/Right Margin within Track)) = 40px - 16px - (2 * 2px) = 20px */
+}
+
+/* Rounded sliders */
+.slider-style-span.round-style-span {
+    border-radius: 20px; /* Makes the track rounded */
+}
+
+    .slider-style-span.round-style-span:before {
+        border-radius: 50%; /* Makes the knob circular */
+    }
+
+
+/* ==========================================================================
+   Conversation Sidebar
+   ========================================================================== */
+
+#conversation-sidebar {
+    width: 360px;
+    flex-shrink: 0;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color-medium);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-header {
+    padding: 15px;
+    margin-top: 3px;
+    border-bottom: 1px solid var(--border-color-medium);
+}
+
+#newChatButton {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+    #newChatButton:hover {
+        background-color: var(--primary-color-hover);
+    }
+
+    #newChatButton svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--icon-color-on-primary); /* Ensure SVG fill is set */
+    }
+
+.sidebar-search-container {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color-medium);
+}
+
+#conversationSearchInput {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 15px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+    #conversationSearchInput:focus {
+        border-color: var(--primary-color);
+    }
+
+/* ==========================================================================
+   Conversation List (in Sidebar)
+   ========================================================================== */
+
+#conversation-list { /* Selector from original chat.css */
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Combined from .cshtml inline and original chat.css */
+#conversation-sidebar #conversation-list { /* More specific selector from .cshtml */
+    display: block !important; /* From .cshtml - review if !important is needed */
+    /* flex-grow, overflow-y, padding, margin, list-style are covered by the less specific selector above */
+}
+
+
+#conversation-list li {
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    transition: background-color 0.2s, color 0.2s; /* Added color transition */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    #conversation-list li:hover {
+        background-color: var(--list-item-hover-bg) !important; /* Original had !important */
+        color: var(--primary-text-color) !important; /* Original had !important */
+    }
+
+    #conversation-list li.active {
+        background-color: var(--primary-color);
+        color: var(--primary-text-color) !important; /* Original had !important */
+    }
+
+.conversation-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* From .cshtml: For editable title when it's being edited */
+#conversation-sidebar #conversation-list li .conversation-title[contenteditable="true"] {
+    background-color: var(--body-bg); /* Or --color-white if that's the specific intent */
+    color: var(--text-color-black);
+    border: 1px solid var(--link-color);
+    padding: 2px 5px;
+    border-radius: 3px;
+    outline: none;
+    cursor: text;
+    /* flex-grow: 1; already on .conversation-title */
+}
+
+/* From .cshtml: For title allowing wrap when editing */
+.conversation-title.editing-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* Conversation List Item Actions (Pin, Edit, Delete) */
+.conversation-actions { /* From .cshtml */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pin-conversation-btn,
+.edit-conversation-btn,
+.delete-conversation-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: none; /* Hidden by default, shown on hover/active */
+    transition: color 0.2s;
+}
+
+.pin-conversation-btn {
+    color: var(--icon-color-muted);
+}
+
+    .pin-conversation-btn svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+    }
+
+.edit-conversation-btn {
+    color: var(--icon-color-on-primary); /* Default white for active, overridden on hover */
+}
+
+.delete-conversation-btn {
+    color: var(--icon-color-on-primary); /* Default white for active, overridden on hover */
+}
+
+#conversation-list li:hover .pin-conversation-btn,
+#conversation-list li:hover .edit-conversation-btn,
+#conversation-list li:hover .delete-conversation-btn {
+    display: inline-block;
+}
+
+#conversation-list li:hover .pin-conversation-btn {
+    margin-top: 5px; /* Specific margin for pin button on hover */
+    color: var(--accent-bg-light); /* #eef7ff - Assuming this should be icon color on hover */
+}
+
+#conversation-list li:hover .edit-conversation-btn,
+#conversation-list li:hover .delete-conversation-btn {
+    color: var(--accent-bg-light); /* To make icons visible on dark hover bg */
+}
+
+
+#conversation-list li .pin-conversation-btn.pinned {
+    margin-top: 5px;
+    display: inline-block;
+    color: var(--pin-conversation-btn-color-pin);
+}
+
+.pin-conversation-btn:hover {
+    color: var(--accent-bg-light);
+}
+
+#conversation-list li.active .pin-conversation-btn,
+.edit-conversation-btn:hover { /* This hover might need context if not active */
+    color: var(--primary-text-color);
+}
+
+#conversation-list li.active .edit-conversation-btn,
+.edit-conversation-btn:hover { /* This hover might need context if not active */
+    color: var(--primary-text-color);
+}
+
+#conversation-list li.active .delete-conversation-btn,
+.delete-conversation-btn:hover { /* This hover might need context if not active */
+    color: var(--primary-text-color);
+}
+
+/* ==========================================================================
+   Chat Title Area (Above Chat History - From .cshtml)
+   ========================================================================== */
+.chat-title-container {
+    text-align: center;
+    padding: 1px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-color-dark);
+    position: relative;
+    border-bottom: 1px solid var(--border-color-subtle);
+    background-color: var(--chat-title-bg);
+}
+
+.chat-title-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    color: var(--chat-title-icon-color);
+    margin-right: 10px;
+}
+
+.chat-title-container h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.chat-title-container p {
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+
+#exportChatPdfButton {
+    position: absolute;
+    top: 50%;
+    right: 55px;
+    transform: translateY(-50%);
+    background: var(--control-button-bg); /* #f1f1f1 */
+    border: 1px solid var(--border-color-default);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+    #exportChatPdfButton:hover {
+        background-color: var(--control-button-bg-hover); /* #e2e2e2 */
+    }
+
+    #exportChatPdfButton svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--icon-color-default); /* #555 */
+    }
+
+.guidelines-dropdown {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: var(--control-button-bg); /* #f1f1f1 */
+    border: 1px solid var(--border-color-default);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.guidelines-dropdown-content {
+    display: none;
+    position: absolute; /* Positions relative to the .guidelines-dropdown parent */
+    top: 100%; /* Places the dropdown directly below the parent */
+    right: 0; /* Aligns the right edge of the dropdown with the right edge of the button */
+    margin-top: 8px; /* Adds a small gap between the button and the dropdown */
+    background-color: #ffffff;
+    min-width: 1000px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 100;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #ddd;
+}
+
+/* Show dropdown on hover */
+.guidelines-dropdown:hover .guidelines-dropdown-content {
+    display: block;
+}
+/* --- End of Correction --- */
+
+
+.guidelines-dropdown-content h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.guidelines-dropdown-content p, .guidelines-dropdown-content ul {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.guidelines-dropdown-content ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+#guidelinesButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    #guidelinesButton:hover {
+        background-color: #f0f0f0;
+    }
+
+
+
+/* ==========================================================================
+   Chat Area
+   ========================================================================== */
+
+.chat-container {
+    width: 100%;
+    margin: 0;
+    background-color: var(--chat-area-bg);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+/* Chat History & Scrollbar */
+.chat-history {
+    flex-grow: 1;
+    padding: 20px 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: var(--chat-area-bg); /* Assuming same as chat-container */
+    border-bottom: 1px solid var(--border-color-subtle);
+}
+
+    .chat-history::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-history::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .chat-history::-webkit-scrollbar-thumb {
+        background: var(--border-color-light); /* #ced4da */
+        border-radius: 4px;
+    }
+
+        .chat-history::-webkit-scrollbar-thumb:hover {
+            background: var(--text-color-muted); /* #adb5bd */
+        }
+
+/* Single Chat Search (within Chat Title Area, but affects Chat History view) */
+#singleChatSearchInput {
+    position: absolute;
+    top: 50%;
+    right: 100px; /* Adjusted to make space for PDF export button */
+    transform: translateY(-50%);
+    padding: 6px 12px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 15px;
+    font-size: 0.9rem;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    #singleChatSearchInput:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color-alpha-low);
+    }
+
+/* ==========================================================================
+   Chat Messages (General)
+   ========================================================================== */
+
+.chat-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+    .chat-message.dimmed {
+        opacity: 0.35;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .chat-message:not(.dimmed) {
+        opacity: 1;
+    }
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--border-color-medium); /* Default */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .message-avatar svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--icon-color-default); /* Default */
+    }
+
+.message-bubble {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    border-radius: 18px;
+    padding: 0; /* Padding will be in content/actions */
+    min-width: 300px !important; /* Use with caution, from original CSS */
+}
+
+    .message-bubble .collapsible-content {
+        /* width: 80%; This might be too restrictive if bubble itself is 80% */
+        width: 100%; /* content should fill the bubble it's in */
+        box-sizing: border-box;
+    }
+
+.message-content {
+    padding-bottom: 5px; /* If no actions/footer, gives some space */
+}
+
+    .message-content p {
+        margin: 0;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+.message-sender-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px 3px 15px;
+    font-size: 0.8rem;
+}
+
+.message-sender-name {
+    font-weight: bold;
+}
+
+.message-timestamp {
+    font-size: 0.75rem;
+    color: var(--text-color-black); /* From .cshtml, might need adjustment based on bubble bg */
+    align-self: flex-end;
+}
+
+/* Text Highlight within Messages */
+mark.search-highlight {
+    background-color: var(--warning-color); /* Or a dedicated highlight color */
+    color: var(--text-color-black);
+    padding: 1px 0;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   User Messages
+   ========================================================================== */
+
+.user-message {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+    .user-message .message-avatar svg {
+        fill: var(--icon-color-on-primary);
+    }
+
+    .user-message .message-avatar { /* Avatar itself */
+        background-color: var(--primary-color); /* Match bubble or distinct */
+    }
+
+
+    .user-message .message-bubble {
+        background-color: var(--user-bubble-bg);
+        color: var(--text-color-on-user-bubble);
+        border-bottom-right-radius: 4px;
+        margin-left: auto;
+    }
+
+    .user-message .message-content p { /* Actual text padding */
+        padding: 10px 15px;
+    }
+
+    .user-message .message-sender-info {
+        color: var(--user-message-sender-info-color);
+    }
+
+    .user-message .message-timestamp {
+        color: var(--user-message-sender-info-color); /* Make timestamp consistent */
+    }
+
+
+/* User Message Actions */
+.user-message-actions {
+    display: flex;
+    gap: 5px;
+    padding: 8px 15px 5px;
+    margin-top: 5px; /* If there's content above */
+}
+
+.message-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+    .message-action-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+
+.user-message .message-action-btn {
+    color: var(--user-message-sender-info-color); /* Light color for dark bubble */
+}
+
+    .user-message .message-action-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Subtle hover on dark bubble */
+        color: var(--primary-text-color); /* Ensure full white on hover */
+    }
+
+/* ==========================================================================
+   Bot Messages
+   ========================================================================== */
+
+.bot-message {
+    align-self: flex-start;
+}
+
+    .bot-message .message-avatar {
+        background-color: var(--primary-color); /* Or a distinct bot color */
+    }
+
+        .bot-message .message-avatar svg {
+            fill: var(--icon-color-on-primary);
+        }
+
+    .bot-message .message-bubble {
+        background-color: var(--bot-bubble-bg);
+        color: var(--text-color-on-bot-bubble);
+        border-bottom-left-radius: 4px;
+    }
+
+    .bot-message .bot-reply-text { /* Actual text padding */
+        padding: 10px 15px;
+        margin: 0;
+    }
+
+    .bot-message .message-sender-info {
+        color: var(--bot-message-sender-info-color);
+    }
+
+    .bot-message .message-timestamp {
+        color: var(--bot-message-sender-info-color); /* Make timestamp consistent */
+    }
+
+    /* Table specific styling within a bot message from .cshtml */
+    .bot-message table td.numeric-cell {
+        text-align: right;
+    }
+
+
+/* Bot Message Actions (Like, Dislike, etc.) */
+.bot-message-actions {
+    display: flex;
+    gap: 8px;
+    padding: 5px 10px 10px; /* Adjusted padding */
+    border-top: 1px solid var(--border-color-subtle); /* #e9ecef */
+}
+
+.bot-message-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bot-action-icon-color);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+    .bot-message-action-btn:hover {
+        background-color: var(--control-button-bg); /* #f0f0f0 */
+        color: var(--bot-action-icon-hover-color);
+    }
+
+    .bot-message-action-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+
+    .bot-message-action-btn.liked {
+        color: var(--bot-action-icon-liked-color);
+    }
+
+        .bot-message-action-btn.liked:hover {
+            background-color: rgba(0, 123, 255, 0.1); /* link-color with alpha */
+        }
+
+    .bot-message-action-btn.disliked {
+        color: var(--bot-action-icon-disliked-color);
+    }
+
+        .bot-message-action-btn.disliked:hover {
+            background-color: rgba(220, 53, 69, 0.1); /* danger-color with alpha */
+        }
+
+.bot-message-actions .delete-msg-btn { /* Specific delete button in bot actions */
+    color: var(--bot-action-icon-color);
+}
+
+    .bot-message-actions .delete-msg-btn:hover {
+        background-color: var(--control-button-bg); /* #f0f0f0 */
+        color: var(--bot-action-icon-hover-color);
+    }
+
+/* ==========================================================================
+   Message Controls & Sections (within message bubbles)
+   ========================================================================== */
+
+.message-section {
+    margin-top: 0px;
+}
+
+.message-controls { /* Container for toggle buttons like "View SQL" */
+    padding: 0 15px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid var(--border-color-subtle); /* #e5e7eb */
+    margin-top: 5px;
+}
+
+.message-control-button { /* Individual buttons like "View SQL" */
+    padding: 4px 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    border: 1px solid var(--control-button-border);
+    background-color: var(--control-button-bg);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--text-color-dark); /* Ensure text color is set */
+}
+
+    .message-control-button:hover {
+        background-color: var(--control-button-bg-hover);
+    }
+
+/* Collapsible Content & Toggles */
+.collapsible-content { /* The content that gets shown/hidden */
+    padding: 10px; /* Default padding, can be overridden */
+    /* background-color: var(--body-bg); Add if distinct background needed */
+}
+
+.toggle-visibility-btn { /* Button that triggers collapse/expand */
+    width: 100%;
+    text-align: left;
+    background: var(--message-control-bg);
+    border: none;
+    border-top: 1px solid var(--border-color-subtle); /* #e9ecef */
+    border-bottom: 1px solid var(--border-color-subtle); /* #e9ecef */
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--link-color);
+    font-weight: 500;
+    transition: background-color 0.2s; /* Added transition */
+}
+
+    .toggle-visibility-btn.small {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .toggle-visibility-btn:hover {
+        background: var(--message-control-hover-bg);
+    }
+
+    .toggle-visibility-btn svg.toggle-icon {
+        width: 18px;
+        height: 18px;
+        vertical-align: middle;
+        margin-left: 5px;
+        fill: currentColor;
+    }
+
+/* ==========================================================================
+   Chat Input Area
+   ========================================================================== */
+
+.chat-input-container {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    gap: 10px;
+    padding: 20px 30px;
+    background-color: var(--chat-area-bg); /* Match chat area bg */
+    border-top: 1px solid var(--border-color-subtle);
+}
+
+.input-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end; /* Align textarea and button along their bottom */
+    padding: 0 5px 0 18px; /* Padding for inner elements */
+    background-color: var(--input-wrapper-bg);
+    border: 1px solid var(--border-color-light);
+    border-radius: 22px; /* Rounded ends for the wrapper */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    .input-wrapper:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-color-alpha-low);
+    }
+
+textarea.chat-input {
+    flex-grow: 1;
+    padding: 12px 0; /* Vertical padding for text */
+    border: none !important;
+    background: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    font-size: 1rem;
+    resize: none;
+    overflow-y: hidden; /* For auto-height behavior */
+    height: 48px; /* Initial height for one line + padding */
+    min-height: 48px; /* Minimum height */
+    max-height: 250px; /* Limit expansion */
+    color: var(--text-color-dark); /* Ensure input text color */
+}
+
+    textarea.chat-input::placeholder {
+        color: var(--text-color-muted);
+    }
+
+
+.send-button {
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: var(--primary-color); /* Icon color */
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.2s, transform 0.2s; /* Changed from background-color */
+}
+
+.input-wrapper .send-button { /* Specific alignment if needed */
+    margin-bottom: 2px; /* Small adjustment to align with textarea baseline */
+}
+
+.send-button:hover {
+    color: var(--primary-color-hover); /* Darken icon color on hover */
+    transform: scale(1.05);
+}
+
+.send-button svg {
+    /* background: transparent; Already on button */
+    /* color: var(--primary-color); Already on button, inherited by fill: currentColor */
+    fill: currentColor; /* Make SVG inherit color from button */
+    width: 24px;
+    height: 24px;
+}
+
+/* ==========================================================================
+   Special Content Blocks (Insights, SQL, Charts, Tables, Maps)
+   ========================================================================== */
+
+/* Insights Section */
+.insights-container {
+    padding: 10px 10px;
+    background-color: var(--accent-bg-light); /* #eef7ff */
+    border-bottom: 1px solid var(--border-color-light); /* #d1e7ff - or similar */
+}
+
+    .insights-container h4 {
+        margin-top: 0;
+        color: var(--link-color); /* #004085 - Or primary color */
+    }
+
+        .insights-container h4 svg.section-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+            fill: currentColor; /* #004085 */
+        }
+
+/* Suggested Questions / Clarifications (From .cshtml & existing) */
+.suggested-questions-container { /* From .cshtml */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 10px 10px; /* Original: padding: 10px 10px 10px; */
+    border-top: 1px solid var(--border-color-subtle);
+}
+
+.suggestion-button { /* From .cshtml */
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color-alpha-low);
+    color: var(--primary-color);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+    .suggestion-button:hover {
+        background-color: var(--primary-color);
+        color: var(--primary-text-color);
+    }
+
+
+.suggested-visualizations { /* For "View as Bar Chart" type suggestions */
+    padding: 10px 16px;
+    border-top: 1px solid var(--border-color-subtle); /* #e9ecef */
+}
+
+.clarification-container { /* For "Did you mean..." type prompts */
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: row !important;
+    gap: 8px;
+    border-top: 1px solid var(--border-color-subtle); /* #e9ecef */
+}
+
+/* SQL Code Container (Prism.js) */
+.sql-container { /* For displayed SQL in chat */
+    background-color: var(--sql-container-bg) !important; /* Often themed by Prism, override if needed */
+    color: var(--text-color-dark); /* Base text color, Prism tokens will override */
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 15px 0; /* Margin within message bubble */
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border-color-light); /* Added border for definition */
+}
+    /* Basic Prism token styling (can be expanded or rely on Prism theme) */
+    .sql-container .token.keyword {
+        color: var(--cm-keyword) !important; /* Use CodeMirror var or define new ones */
+        font-weight: bold;
+    }
+
+    .sql-container .token.string {
+        color: var(--cm-string) !important;
+    }
+
+    .sql-container .token.comment {
+        color: var(--cm-comment) !important;
+        font-style: italic;
+    }
+
+    .sql-container .token.number {
+        color: var(--cm-number) !important;
+    }
+
+    .sql-container .token.operator {
+        color: var(--cm-operator) !important;
+    }
+
+    .sql-container .token.punctuation {
+        color: var(--text-color-medium);
+    }
+
+
+/* Chart & Map Containers */
+.chart-container-render { /* For D3 charts typically */
+    padding: 10px;
+    background-color: var(--body-bg); /* Or a specific chart bg */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--shadow-light-rgba);
+    /* width: 80%; Consider 100% of bubble or responsive design */
+    width: 100%;
+    min-width: 300px; /* Adjusted from 600px for better fit in bubble */
+    box-sizing: border-box;
+    overflow-x: auto; /* If chart is wider than container */
+}
+/* Styles for D3 chart elements from .cshtml */
+.tick text {
+    fill: var(--tick-text-color);
+}
+
+.axis-label {
+    font-size: 14px;
+    fill: var(--axis-label-color);
+}
+
+
+iframe { /* For embedded content like maps from external source */
+    border: none;
+}
+
+.leaflet-map-container { /* From .cshtml */
+    height: 300px;
+    width: 100%; /* Takes width of its parent in the message bubble */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-light-rgba);
+    border: 1px solid var(--border-color-light); /* Added border */
+}
+
+/* Tooltip for D3 charts (from .cshtml) */
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 12px sans-serif;
+    background: var(--tooltip-bg);
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0; /* Controlled by JS */
+    z-index: 1000; /* Above chart elements */
+    color: var(--text-color-dark); /* Ensure text is visible */
+}
+
+
+/* ==========================================================================
+   Tables (Results, Pivot) & Table Controls
+   ========================================================================== */
+
+.table-container-render,
+.pivot-table-container-render {
+    padding: 0; /* Table itself will have padding/margins */
+    background-color: var(--body-bg); /* Container bg if needed, usually transparent */
+    border-radius: 8px; /* If container has border */
+    /* box-shadow: 0 1px 3px var(--shadow-light-rgba); Not on container, on table */
+    width: 100%; /* Fill available width in message bubble */
+    box-sizing: border-box;
+    overflow-x: auto; /* Crucial for wide tables */
+    margin-top: 10px;
+}
+
+.results-table { /* Applies to both standard and pivot tables */
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0; /* Margin around the table itself */
+    font-size: 0.9em;
+    color: var(--table-text-color);
+    background-color: var(--body-bg);
+    border-radius: 8px;
+    overflow: hidden; /* For border-radius to clip th/td */
+    box-shadow: 0 1px 3px var(--shadow-light-rgba);
+    border: 1px solid var(--border-color-subtle);
+}
+
+    .results-table th,
+    .results-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color-subtle);
+    }
+
+    .results-table th {
+        background-color: var(--table-header-bg);
+        font-weight: 600;
+        color: var(--table-header-text-color);
+        text-transform: uppercase;
+        font-size: 0.75em;
+        letter-spacing: 0.05em;
+    }
+
+        .results-table th.sortable {
+            cursor: pointer;
+        }
+
+            .results-table th.sortable:hover {
+                background-color: var(--control-button-bg); /* #f0f0f0 */
+            }
+
+        .results-table th .sort-arrow {
+            display: inline-block;
+            margin-left: 5px;
+            opacity: 0.5;
+        }
+
+    .results-table tr:last-of-type td {
+        border-bottom: none;
+    }
+
+    .results-table tr:hover {
+        background-color: var(--table-row-hover-bg);
+    }
+
+/* Table Controls (Search, Pagination, Export - from .cshtml and existing) */
+/* Generic container for controls above/below table/chart from .cshtml */
+.chart-controls,
+.table-controls { /* This is a container for buttons */
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+/* More specific table control wrappers from existing chat.css */
+.table-controls-wrapper {
+    /* For future use if more structure is needed around table controls */
+}
+
+.table-top-controls { /* Container for search and action buttons above table */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px; /* Reduced padding as inner elements have margins/padding */
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.table-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.table-search-input {
+    padding: 8px 12px 8px 35px; /* Space for icon */
+    border: 1px solid var(--border-color-light);
+    border-radius: 15px;
+    font-size: 0.9rem;
+    color: var(--text-color-dark);
+    background-color: var(--input-wrapper-bg); /* #f9fafb */
+    min-width: 250px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    .table-search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color-alpha-low);
+    }
+
+    .table-search-input::placeholder {
+        color: var(--text-color-muted); /* #999 */
+    }
+
+.table-search-container::before { /* Search Icon */
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: var(--text-color-muted);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000000'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat center;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000000'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat center;
+}
+
+.table-right-controls { /* Container for pagination, export buttons */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-nav-container { /* For prev/next buttons */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-pagination-info { /* "Showing 1-10 of 50" text - From .cshtml */
+    align-self: center;
+    font-size: 0.9em; /* From .cshtml */
+    color: var(--text-color-medium); /* #555 from .cshtml */
+    margin-left: 10px; /* From .cshtml */
+    /* font-size: 0.85rem; from original chat.css, .cshtml is 0.9em */
+    /* color: var(--text-color-muted); from original chat.css */
+}
+
+/* Control Buttons (General, used in .chart-controls, .table-controls, modals) */
+.control-button {
+    padding: 5px; /* From .cshtml (more generic one) */
+    font-size: 0.8rem; /* Consistent */
+    border: 1px solid var(--control-button-border);
+    background-color: var(--control-button-bg);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* Added color */
+    color: var(--text-color-dark); /* Base text color for control buttons */
+    font-weight: 500; /* From original */
+    margin-right: 5px;
+}
+    /* Hover/Active states from .cshtml */
+    .control-button.active,
+    .control-button:not(:disabled):hover {
+        background-color: var(--active-control-button-bg);
+        color: var(--active-control-button-text);
+        border-color: var(--active-control-button-border);
+    }
+    /* Disabled state from .cshtml */
+    .control-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6; /* From .cshtml (original was 0.5) */
+    }
+
+.suggestion-chip {
+    margin-right: 10px;
+}
+
+/* Specific Export Buttons from .cshtml */
+.export-button { /* Excel like export */
+    background-color: var(--success-color);
+    border-color: var(--success-color); /* Match background */
+    color: var(--primary-text-color);
+    margin-left: auto; /* Pushes to the right if in a flex container */
+}
+
+    .export-button:hover {
+        background-color: var(--success-color-hover) !important; /* Original had !important */
+        border-color: var(--success-color-hover) !important; /* Match background */
+    }
+
+.pdf-export-button { /* PDF specific export */
+    background-color: var(--danger-color);
+    border-color: var(--danger-color); /* Match background */
+    color: var(--primary-text-color);
+}
+
+    .pdf-export-button:hover {
+        background-color: var(--danger-color-hover) !important; /* Original had !important */
+        border-color: var(--danger-color-hover) !important; /* Match background */
+    }
+
+
+/* Pivot Table Specific Styles */
+.results-table.crosstab-table {
+    white-space: nowrap;
+}
+
+    .results-table.crosstab-table th.crosstab-row-header,
+    .results-table.crosstab-table td:first-child {
+        font-weight: bold;
+    }
+
+.results-table.expandable-pivot th.sortable {
+    cursor: pointer;
+}
+
+.results-table.expandable-pivot th .sort-arrow {
+    display: inline-block;
+    margin-left: 5px;
+    opacity: 0.5;
+}
+
+.pivot-group-header { /* Row for a group */
+    background-color: var(--message-control-hover-bg); /* #e9ecef */
+    font-weight: bold;
+}
+
+.pivot-toggle-cell { /* Cell containing the toggle button */
+    white-space: nowrap;
+}
+
+.pivot-toggle-btn { /* The +/- button */
+    background: none;
+    border: 1px solid var(--control-button-border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 0.9em;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    text-align: center;
+    padding: 0;
+    margin-right: 8px;
+    color: var(--text-color-dark);
+    transition: background-color 0.2s;
+}
+
+    .pivot-toggle-btn:hover {
+        background-color: var(--control-button-bg-hover); /* #d0d0d0 */
+    }
+
+.pivot-detail-row td { /* Data rows under an expanded group */
+    background-color: var(--input-wrapper-bg); /* #fdfdfd - slightly different */
+}
+
+.pivot-detail-row .pivot-detail-key-cell {
+    padding-left: 30px !important; /* Indent detail key */
+}
+
+.pivot-detail-row td:first-child { /* Ensure first cell of detail row also has some padding if not key cell */
+    padding-left: 15px !important;
+}
+
+.group-total-cell { /* Cell for group totals */
+    font-weight: bold;
+}
+
+.results-table.expandable-pivot td.numeric-cell { /* Numeric cells in pivot */
+    text-align: right;
+}
+
+/* ==========================================================================
+   SQL Log
+   ========================================================================== */
+
+.table-view-toggle-controls { /* For toggling views if SQL log has multiple */
+    gap: 5px;
+}
+
+.sql-log-record {
+    border: 1px solid var(--border-color-default); /* #dee2e6 */
+    border-radius: 6px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--body-bg); /* Added for contrast if needed */
+}
+
+    .sql-log-record.success {
+        border-left: 4px solid var(--success-color); /* #28a745 */
+    }
+
+    .sql-log-record.error {
+        border-left: 4px solid var(--danger-color); /* #dc3545 */
+    }
+
+.sql-log-details { /* Timestamp, duration etc. */
+    font-size: 0.8rem;
+    color: var(--text-color-muted);
+    margin-bottom: 5px;
+}
+
+.sql-log-record pre { /* SQL query text */
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--sql-log-record-bg);
+    padding: 8px;
+    border-radius: 4px;
+    overflow-x: auto;
+    color: var(--text-color-dark); /* Ensure text color */
+}
+
+.sql-log-actions { /* Buttons like "Copy SQL", "Edit SQL" */
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+    .sql-log-actions button { /* Using .control-button might be better for consistency */
+        background-color: var(--control-button-bg);
+        border: 1px solid var(--control-button-border);
+        font-size: 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 4px 8px;
+        color: var(--text-color-dark);
+    }
+
+        .sql-log-actions button:hover {
+            background-color: var(--control-button-bg-hover);
+        }
+
+/* ==========================================================================
+   Modal Dialogs
+   ========================================================================== */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: var(--modal-bg);
+}
+
+.modal-content {
+    background-color: var(--modal-content-bg);
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid var(--modal-border-color);
+    width: 60%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-medium-rgba), 0 6px 20px var(--shadow-strong-rgba);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    position: relative;
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--modal-separator-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.5em;
+        color: var(--text-color-dark);
+    }
+
+.modal-close-btn {
+    color: var(--text-color-muted); /* #aaa */
+    font-size: 28px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+    .modal-close-btn:hover,
+    .modal-close-btn:focus {
+        color: var(--text-color-black);
+        text-decoration: none;
+    }
+
+.modal-body {
+    padding: 15px 0;
+}
+
+#sqlQueryEditTextArea { /* Textarea for SQL in Edit Modal (OLD - if not using CodeMirror) */
+    width: 100%;
+    min-height: 250px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    resize: vertical;
+    border: 1px solid var(--control-button-border);
+    padding: 10px;
+    box-sizing: border-box;
+    color: var(--text-color-dark);
+    background-color: var(--body-bg);
+}
+
+.modal-footer {
+    padding-top: 15px;
+    border-top: 1px solid var(--modal-separator-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+    /* Using .control-button for modal footer buttons */
+    .modal-footer .control-button {
+        padding: 10px 20px; /* Larger padding for modal actions */
+        font-size: 1em;
+        /* color: var(--primary-text-color); Will be set by specific button styles */
+        /* margin-left: 0; gap handles spacing */
+    }
+
+    .modal-footer .run-sql-btn { /* Specific type of control-button */
+        background-color: var(--primary-color-hover); /* #317694 */
+        border-color: var(--primary-color-hover);
+        color: var(--primary-text-color);
+    }
+
+        .modal-footer .run-sql-btn:hover {
+            background-color: var(--primary-color); /* #2a6580 - lighten or use base primary */
+            border-color: var(--primary-color);
+        }
+
+    .modal-footer .cancel-sql-btn { /* Specific type of control-button */
+        background-color: var(--text-color-muted);
+        border-color: var(--text-color-muted);
+        color: var(--primary-text-color);
+    }
+
+        .modal-footer .cancel-sql-btn:hover {
+            background-color: var(--text-color-medium); /* #5a6268 */
+            border-color: var(--text-color-medium);
+        }
+
+/* SQL Edit Modal - CodeMirror Theme Overrides */
+#sqlEditModal .cm-s-material-darker.CodeMirror { /* This targets a specific theme if used */
+    /* General theme overrides with CSS variables */
+    background-color: var(--cm-bg) !important;
+    color: var(--cm-text) !important;
+    border: 1px solid var(--cm-gutter-border) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-gutters {
+    background-color: var(--cm-gutter-bg) !important;
+    border-right: 1px solid var(--cm-gutter-border) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-linenumber {
+    color: var(--cm-linenumber) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-cursor {
+    border-left: 2px solid var(--cm-cursor) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-selected {
+    background-color: var(--cm-selected-bg) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-matchingbracket {
+    background-color: var(--cm-matchingbracket-bg) !important;
+    color: var(--cm-matchingbracket-text) !important;
+    font-weight: bold;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-activeline-background {
+    background-color: var(--cm-activeline-bg) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .CodeMirror-activeline .CodeMirror-gutter-elt {
+    background-color: var(--cm-activeline-gutter-bg) !important;
+    color: var(--cm-activeline-gutter-text) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-keyword {
+    color: var(--cm-keyword) !important;
+    font-weight: bold;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-atom {
+    color: var(--cm-atom) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-number {
+    color: var(--cm-number) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-string,
+#sqlEditModal .cm-s-material-darker .cm-string-2 {
+    color: var(--cm-string) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-comment {
+    color: var(--cm-comment) !important;
+    font-style: italic !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-variable,
+#sqlEditModal .cm-s-material-darker .cm-property {
+    color: var(--cm-variable) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-variable-2 {
+    color: var(--cm-variable-2) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-operator {
+    color: var(--cm-operator) !important;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-builtin {
+    color: var(--cm-builtin) !important;
+    font-weight: bold;
+}
+
+#sqlEditModal .cm-s-material-darker .cm-meta {
+    color: var(--cm-meta) !important;
+}
+
+
+/* ==========================================================================
+   Mermaid Diagrams
+   ========================================================================== */
+
+.mermaid-diagram-container { /* Older generic container for mermaid */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--mermaid-diagram-bg);
+    border-radius: 8px;
+    overflow: auto; /* For wide diagrams */
+    border: 1px solid var(--border-color-medium);
+}
+
+    .mermaid-diagram-container .mermaid { /* The direct child that Mermaid.js targets */
+        text-align: center;
+    }
+
+        .mermaid-diagram-container .mermaid svg {
+            display: block; /* Or inline-block for centering with text-align */
+            margin: auto; /* If display: block */
+            max-width: 100%;
+        }
+
+    .mermaid-diagram-container pre.mermaid { /* For displaying raw mermaid code block */
+        background-color: var(--control-button-bg-hover); /* #eee */
+        padding: 10px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        text-align: left;
+        color: var(--text-color-dark);
+    }
+
+/* Optional: Ensure the container that holds .mermaid-diagram-output allows it to behave */
+.mermaid-exportable-container { /* This is the parent of .mermaid-diagram-output */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center .mermaid-diagram-output if it's narrower than this container */
+    width: 100%; /* Make sure this container also tries to use available width */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+/* Styles for the container of the Mermaid diagram (e.g., within a chat bubble) */
+.mermaid-diagram-output {
+    background-color: var(--mermaid-diagram-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color-medium);
+    box-sizing: border-box;
+    /* --- Key styles for sizing and overflow --- */
+    /* It can't be wider than its parent (e.g., the chat bubble's content area)
+       but we want it to try and use the width given to it. */
+    width: 100%;
+    max-width: 100%; /* Ensures it respects parent's width constraints */
+    /* CRITICAL: Allow scrolling if the SVG inside is too big */
+    overflow: auto;
+}
+
+    /* Styles for the SVG element rendered by Mermaid */
+    .mermaid-diagram-output svg {
+        display: block; /* Or 'inline-block' if layout requires, but block is often simpler for this */
+        /* --- Sizing Strategy Change --- */
+        /* We are no longer forcing it to be 100% of a potentially tiny container.
+       Instead, we give it a minimum width for legibility.
+       Adjust '600px' as needed based on your typical diagrams.
+       This means the SVG will try to be AT LEAST this wide.
+       If its natural content is wider, it will be wider.
+    */
+        min-width: 600px; /* <<<<<< CHANGE THIS VALUE AS NEEDED */
+        /* Let height adjust automatically based on its (potentially new) width */
+        height: auto;
+        /* Centering the SVG if its min-width is less than the .mermaid-diagram-output actual width
+       (though with overflow:auto, .mermaid-diagram-output will effectively be the SVG's scrollport) */
+        margin: 0 auto;
+    }
+
+.export-diagram-btn { /* Using .control-button as base, specialized */
+    /* Example:
+    background-color: var(--primary-color) !important;
+    color: var(--primary-text-color);
+    border-color: var(--primary-color);
+    margin-top: 0; Add to .mermaid-exportable-container gap instead */
+}
+
+    .export-diagram-btn:hover {
+        /* Example:
+       background-color: var(--primary-color-hover) !important;
+       border-color: var(--primary-color-hover); */
+    }
+
+
+/* ==========================================================================
+   Indicators & Notifications
+   ========================================================================== */
+
+/* Thinking Indicator (Dots) */
+.thinking-indicator-content { /* Container for "Thinking..." text and dots */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color-muted); /* Color for "Thinking..." text */
+}
+
+.dot-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-color-muted); /* #868e96 */
+    animation: dotPulse 1.4s infinite ease-in-out;
+    animation-fill-mode: both;
+}
+
+    .dot-pulse:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .dot-pulse:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+@keyframes dotPulse {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Toast Notifications */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast-message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: var(--primary-text-color); /* Default text color for toasts */
+    font-size: 1rem;
+    box-shadow: 0 4px 12px var(--toast-shadow-color);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+    .toast-message.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .toast-message.success {
+        background-color: var(--toast-success-bg);
+    }
+
+    .toast-message.warning {
+        background-color: var(--toast-warning-bg);
+        color: var(--text-color-dark);
+    }
+    /* Warning often needs dark text */
+    .toast-message.error {
+        background-color: var(--toast-error-bg);
+    }
+
+    .toast-message.info {
+        background-color: var(--toast-info-bg);
+    }
+
+/* ==========================================================================
+   Empty State / Placeholder (For Chat History)
+   ========================================================================== */
+
+.empty-state { /* General empty state from .cshtml - can be used as a simpler version */
+    /* Styles from .cshtml if needed for a different context */
+    /* text-align: center; */
+    /* padding: 40px 20px; */
+    /* color: var(--text-color-muted); */
+    /* font-style: italic; */
+    /* Styles from original chat.css for the main chat empty state */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 95%; /* Fill most of chat history */
+    padding: 20px;
+    text-align: center;
+    color: var(--empty-state-text-color);
+}
+
+.empty-state-icon {
+    width: 60px;
+    height: 60px;
+    color: var(--empty-state-icon-color);
+    margin-bottom: 20px;
+}
+
+.empty-state h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--empty-state-header-color);
+    margin: 0 0 10px 0;
+}
+
+.empty-state p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    max-width: 400px;
+}
+
+/* Example Prompts in Empty State */
+.example-prompts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.example-prompt {
+    background-color: var(--empty-state-prompt-bg);
+    border: 1px solid var(--empty-state-prompt-border);
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    color: var(--empty-state-prompt-text-color);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+    .example-prompt:hover {
+        background-color: var(--empty-state-prompt-hover-bg);
+        border-color: var(--empty-state-prompt-hover-border);
+    }
+
+/* ==========================================================================
+   Helper/Hidden elements
+   ========================================================================== */
+/* For PDF rendering of charts/mermaid that need to be in DOM but not visible */
+#pdf-chart-render-container,
+#pdf-mermaid-render-container {
+    display: none; /* Not strictly needed with position absolute & left -9999px */
+    position: absolute;
+    left: -9999px;
+    /* top: -9999px; if needed */
+    /* No visual styles needed as they are off-screen */
+}
+
+/* ==========================================================================
+   Treview elements
+   ========================================================================== */
+/* In chat.css */
+.tree-view-table {
+    border-collapse: collapse; /* Ensure borders don't double up */
+}
+
+    .tree-view-table th {
+        text-align: left;
+        /* background-color: var(--table-header-bg); Consistent with other tables */
+    }
+
+    .tree-view-table td, .tree-view-table th {
+        /* border-bottom: 1px solid var(--border-color-subtle); Consistent */
+        padding: 6px 8px; /* Slightly less padding for denser tree */
+        vertical-align: top;
+    }
+
+.tree-toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1em; /* Or use an SVG icon */
+    margin-right: 5px;
+    padding: 0 3px;
+    width: 20px; /* Ensure consistent width */
+    text-align: center;
+    color: var(--primary-color);
+}
+
+    .tree-toggle-btn:hover {
+        color: var(--primary-color-hover);
+    }
+
+.tree-node-level-0 > td:first-child {
+    font-weight: bold;
+}
+
+.tree-node-level-1 > td:first-child {
+    font-weight: normal;
+}
+/* Adjust as needed */
+
+.leaf-node > td:first-child {
+    /* Optional: style leaf node names differently, e.g., italic */
+    /* font-style: italic; */
+}
+
+.tree-view-render-container .numeric-cell { /* Ensure numeric cells are right-aligned */
+    text-align: right;
+}
+
+.tree-view-table td.tree-name-cell {
+    white-space: nowrap;
+}
+
+.tree-prefix-lines {
+    display: inline-flex;
+    align-items: stretch;
+    height: 22px; /* Should match SVG height and button height */
+    vertical-align: middle;
+    position: relative;
+}
+
+/* Spans that will contain the SVGs for lines */
+.tree-line-guide,
+.tree-line-connector {
+    display: inline-block; /* Changed from inline-flex if SVG is direct child */
+    width: 18px; /* Should match SVG width */
+    height: 100%; /* Takes height from .tree-prefix-lines */
+    flex-shrink: 0;
+    /* No borders or pseudo-elements needed here for line drawing */
+    line-height: 0; /* Important for inline-block elements containing only an SVG */
+}
+
+    .tree-line-guide > svg.tree-line-svg,
+    .tree-line-connector > svg.tree-line-svg {
+        display: block; /* Or vertical-align: top; to remove any extra space below SVG */
+    }
+
+
+/* --- Remove old CSS line drawing pseudo-elements --- */
+/* .tree-line-guide.has-vertical-line::before { ... REMOVE ... } */
+/* .tree-line-connector.l-connector::before { ... REMOVE ... } */
+/* .tree-line-connector.l-connector::after { ... REMOVE ... } */
+/* .tree-line-connector.t-connector::before { ... REMOVE ... } */
+/* .tree-line-connector.t-connector::after { ... REMOVE ... } */
+
+
+/* Toggle button and spacer styles (can remain largely the same or adjusted for alignment) */
+.tree-toggle-btn,
+.tree-node-button-spacer {
+    margin-left: 0;
+    vertical-align: middle;
+    height: 22px;
+    width: 22px;
+    line-height: 22px;
+    /* Optional: visual styling for button */
+    /* background-color: #f0f0f0; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 3px; */
+    /* margin-right: 4px; */ /* Space before node name */
+}
+
+.tree-node-button-spacer {
+    /* background: transparent; */
+    /* border: none; */
+}
+
+/* Styles for the Tree View Search Input */
+#treeViewSearchInput {
+    display: block; /* Ensures it takes up its own line */
+    width: 100%; /* Takes the full width of its parent container */
+    padding: 10px 12px; /* Comfortable padding inside the input */
+    margin-bottom: 15px; /* Space below the search bar */
+
+    font-size: 1rem; /* Standard, readable font size */
+    line-height: 1.5; /* Standard line height for text within */
+    color: #333; /* Dark grey color for text */
+    background-color: #fff; /* White background */
+
+    border: 1px solid #ccc; /* Standard subtle border */
+    border-radius: 5px; /* Slightly rounded corners for a modern look */
+
+    box-sizing: border-box; /* Critical: padding and border don't add to the width/height */
+    /* Smooth transition for focus effects */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    /* Styles when the search input is focused (clicked into) */
+    #treeViewSearchInput:focus {
+        border-color: #007bff; /* A highlight color for the border (e.g., a primary blue) */
+        outline: 0; /* Removes the default browser outline which can be inconsistent */
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* A glowing effect matching the border color */
+    }
+
+    /* Style for the placeholder text */
+    #treeViewSearchInput::placeholder {
+        color: #aaa; /* Lighter color for placeholder text */
+        opacity: 1; /* Ensures placeholder is fully visible (Firefox fix) */
+    }

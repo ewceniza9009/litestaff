@@ -1,0 +1,24 @@
+﻿@page
+@model NoRights
+
+@(Html.Kendo().Dialog()
+        .Name("confirmNoRightsDialog")
+        .Title("WHRIS")
+        .Content("<p>The current user logged-in has no rights to view the function. Please contact your administrator.<p>")
+        .Width(400)
+        .Modal(true)
+        .Actions(actions =>
+        {
+            actions.Add().Text("Ok").Action("onConfirmOk").Primary(true);
+        })
+        .Events(ev => ev.Close("onClose"))
+    )
+<script>
+    function onConfirmOk() {
+        window.history.go(-1);
+    }
+
+    function onClose() {
+        window.history.go(-1);
+    }
+</script>

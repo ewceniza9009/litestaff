@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="customSqlQuery1.Sql" xml:space="preserve">
+    <value>--SELECT TrnDTRLine.EmployeeId, 
+--	MstEmployee.FullName, 
+--	SUM(TrnDTRLine.GrossTotalHours) AS GrossTotalHours, 
+--	SUM(TrnDTRLine.OvertimeHours) AS OvertimeHours, 
+--	SUM(TrnDTRLine.TardyLateHours) AS TardyLateHours, 
+--	SUM(TrnDTRLine.TardyUndertimeHours) AS TardyUndertimeHours, 
+--	SUM(TrnDTRLine.NetTotalHours) AS NetTotalHours, 
+--	ISNULL([Allowance],0) AS AllowanceRate, 
+--	SUM(TrnDTRLine.NetTotalHours)*ISNULL([Allowance],0) AS AllowanceAmount,
+--	IIf(@ParamBranchId = 0,'All', MstBranch.Branch) as Branch
+--FROM TrnDTRLine LEFT JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id 
+--	LEFT JOIN MstEmployee ON TrnDTRLine.EmployeeId = MstEmployee.Id
+--	LEFT JOIN MstBranch ON MstEmployee.BranchId = MstBranch.Id
+--WHERE TrnDTRLine.Date 
+--	Between @ParamDateStart 
+--	AND @ParamDateEnd 
+--	AND (@ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
+--GROUP BY TrnDTRLine.EmployeeId, 
+--	MstEmployee.FullName, 
+--	ISNULL([Allowance],0),
+--	IIF(@ParamBranchId = 0,'All', MstBranch.Branch)
+--ORDER BY MstEmployee.FullName;
+
+--DECLARE @ParamDateStart DATE = '2024-02-11';
+--DECLARE @ParamDateEnd DATE = '2024-02-25';
+--DECLARE @ParamBranchId INT = 42
+
+SELECT 
+    EmployeeDtr.EmployeeId, 
+    EmployeeDtr.BranchId,
+    EmployeeDtr.CompanyId,
+    EmployeeDtr.FullName, 
+    EmployeeDtr.BiometricIdNumber,	 
+    IIF(@ParamBranchId = 0, 'All', MstBranch.Branch) as Branch,
+    IIF(@ParamCompanyId = 0, 'All', MstCompany.Company) as Company,
+    ISNULL(EmployeePresentCount.NoOfDaysPresent, 0) AS NoOfDaysPresent1, 
+    ISNULL(EmployeeTardyCount.NoOfDaysTardy, 0) AS NoOfDaysTardy1, 
+    ISNULL(EmployeePresentCount.NoOfDaysPresent, 0) - ISNULL(EmployeeTardyCount.NoOfDaysTardy, 0) AS DaysWithAllowance, 
+    ISNULL(EmployeeDtr.AllowanceRate, 0) AS AllowanceRate1, 
+    (ISNULL(EmployeePresentCount.NoOfDaysPresent, 0) - ISNULL(EmployeeTardyCount.NoOfDaysTardy, 0)) * ISNULL(EmployeeDtr.AllowanceRate, 0) AS AllowanceAmount
+FROM (
+    SELECT 
+        TrnDTRLine.EmployeeId, 
+        MstEmployee.FullName, 
+        MstEmployee.BranchId,
+	  MstEmployee.CompanyId, 
+        ISNULL(MstEmployee.Allowance, 0) AS AllowanceRate, 
+        MstEmployee.BiometricIdNumber
+    FROM TrnDTRLine 
+    LEFT JOIN MstEmployee ON TrnDTRLine.EmployeeId = MstEmployee.Id
+    WHERE TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+    GROUP BY 
+        TrnDTRLine.EmployeeId, 
+        MstEmployee.FullName, 
+        MstEmployee.BranchId,
+	  MstEmployee.CompanyId, 
+        ISNULL(MstEmployee.Allowance, 0), 
+        MstEmployee.BiometricIdNumber
+) EmployeeDtr 
+LEFT JOIN 
+(
+    SELECT 
+        TrnDTRLine.EmployeeId, 
+        COUNT(DISTINCT TrnDTRLine.Date) AS NoOfDaysTardy
+    FROM TrnDTRLine
+    WHERE 
+        TrnDTRLine.TardyAmount &gt; 0 AND 
+        TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+    GROUP BY TrnDTRLine.EmployeeId
+) EmployeeTardyCount ON EmployeeDtr.EmployeeId = EmployeeTardyCount.EmployeeId
+LEFT JOIN 
+(
+    SELECT 
+        TrnDTRLine.EmployeeId, 
+        COUNT(DISTINCT TrnDTRLine.Date) AS NoOfDaysPresent
+    FROM TrnDTRLine
+    WHERE 
+        (TrnDTRLine.Absent = 0 AND TrnDTRLine.HalfdayAbsent = 0) AND
+        (ISNULL(TrnDTRLine.TimeIn1, 0) &lt;&gt; 0 OR 
+         ISNULL(TrnDTRLine.TimeOut1, 0) &lt;&gt; 0 OR 
+         ISNULL(TrnDTRLine.TimeIn2, 0) &lt;&gt; 0 OR 
+         ISNULL(TrnDTRLine.TimeOut2, 0) &lt;&gt; 0) AND
+        TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+    GROUP BY TrnDTRLine.EmployeeId
+) EmployeePresentCount ON EmployeeDtr.EmployeeId = EmployeePresentCount.EmployeeId
+LEFT JOIN dbo.MstBranch ON EmployeeDtr.BranchId = dbo.MstBranch.Id
+LEFT JOIN dbo.MstCompany ON EmployeeDtr.CompanyId = dbo.MstCompany.Id
+WHERE 
+    (@ParamBranchId = 0 OR EmployeeDtr.BranchId = @ParamBranchId) AND
+    (@ParamCompanyId = 0 OR EmployeeDtr.CompanyId = @ParamCompanyId) AND 
+    (ISNULL(EmployeePresentCount.NoOfDaysPresent, 0) - ISNULL(EmployeeTardyCount.NoOfDaysTardy, 0)) * ISNULL(EmployeeDtr.AllowanceRate, 0) &gt; 0
+ORDER BY EmployeeDtr.FullName;</value>
+  </data>
+  <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iRW1wbG95ZWVJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IkJyYW5jaElkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iQ29tcGFueUlkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQmlvbWV0cmljSWROdW1iZXIiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQnJhbmNoIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvbXBhbnkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTm9PZkRheXNQcmVzZW50MSIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9Ik5vT2ZEYXlzVGFyZHkxIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iRGF5c1dpdGhBbGxvd2FuY2UiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJBbGxvd2FuY2VSYXRlMSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQWxsb3dhbmNlQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+  </data>
+</root>

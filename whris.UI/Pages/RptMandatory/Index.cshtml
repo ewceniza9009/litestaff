@@ -1,0 +1,132 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Mandatory Deduction Reports";
+}
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fas fa-print"></i> Mandatory Deduction Reports</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            @(Html.Kendo().ListBox()
+                .Name("RptMandatorysReportList")
+                .DataValueField("Value")
+                .DataTextField("Text")
+                .HtmlAttributes(new { @style = "width: 100%; height: 80vh" })
+                .Selectable(ListBoxSelectable.Single)
+                .Events(ev => ev.Change("ListBoxChange"))
+                .BindTo(Model.Reports))
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Period: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PeriodId" style="width: 20%"
+                                    placeholder="Period"
+                                    datatextfield="Period"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.Periods">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Quarter: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="QuarterId" style="width: 20%"
+                                    placeholder="Quarter"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.Quarters">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Month: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="MonthId" style="width: 20%"
+                                    placeholder="Month"
+                                    datatextfield="Month"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.Months">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Company: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="CompanyId" style="width: 50%"
+                                    placeholder="Company"
+                                    datatextfield="Company"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.Companies">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Date Start</label>
+                <div class="col-sm-10">
+                    <kendo-datepicker name="DateStart" placeholder="Date start" style="width: 200px; text-align:end;" on-change="DateChange" />
+                </div>
+
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Date End</label>
+                <div class="col-sm-10">
+                    <kendo-datepicker name="DateEnd" placeholder="Date end" style="width: 200px; text-align:end;" on-change="DateChange" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Pages/RptMandatory/Index.cshtml.js"></script>
+}
+

@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Full name")
+    .DataTextField("FullName")
+    .DataValueField("Id")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.FullName#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/TrnDtr/Detail?handler=Employees").Data("EmployeeIdRouteValues");
+        })
+        .ServerFiltering(false);
+    })
+)

@@ -1,0 +1,278 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions
+{
+
+}
+
+<style>
+    #TrnChangeShiftLines {
+        height: 60vh;
+        width: 96vw;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-code"></i> Change Shift Code Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdQuickEncode()">
+                        Quick Encode
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary  cmd-buttons"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row" hidden>
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.ChangeShiftCodeDetail.Id" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Period: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PeriodId" style="width: 20%"
+                                    placeholder="Period"
+                                    datatextfield="Period"
+                                    datavaluefield="Id"
+                                    value="@Model.ChangeShiftCodeDetail.PeriodId"
+                                    min-length="3"
+                                    height="520"
+                                    enable="false"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.PeriodCmbDs">
+                    </kendo-combobox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">CS Number: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Csnumber" placeholder="Leave Number" enable="false" value="@Model.ChangeShiftCodeDetail.Csnumber" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">CS Date: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="Csdate" placeholder="Leave Date" value="@Model.ChangeShiftCodeDetail.Csdate" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Group: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PayrollGroupId" style="width: 40%"
+                                    placeholder="Payroll Group"
+                                    datatextfield="PayrollGroup"
+                                    datavaluefield="Id"
+                                    value="@Model.ChangeShiftCodeDetail.PayrollGroupId"
+                                    min-length="3"
+                                    height="520"
+                                    enable="false"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.PayrollGroupCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="RemarksHeader" placeholder="Remarks" value="@Model.ChangeShiftCodeDetail.Remarks" style="width: 100%">
+                    </kendo-textbox>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Prepared By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PreparedBy" style="width: 35%"
+                                    placeholder="Prepared By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.ChangeShiftCodeDetail.PreparedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Checked By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="CheckedBy" style="width: 35%"
+                                    placeholder="Checked By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.ChangeShiftCodeDetail.CheckedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Approved By: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="ApprovedBy" style="width: 35%"
+                                    placeholder="Approved By"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.ChangeShiftCodeDetail.ApprovedBy"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.UserCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.ChangeShiftCodeDetail.IsLocked" on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @(
+        Html.Kendo().Grid(Model.ChangeShiftCodeDetail.TrnChangeShiftLines)
+        .Name("TrnChangeShiftLines")
+        .Scrollable()
+        .ToolBar(x =>
+        {
+            x.Custom().Text("Add Shift Code Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddChangeShiftCodeLine(); return false;" });
+            x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
+        })
+        .Columns(columns =>
+        {
+            columns.Command(command => command.Custom("Delete").IconClass("k-icon k-i-x").Click("CmdDeleteChangeShiftCodeLine")).Width(110);
+            columns.Bound(x => x.EmployeeId).Title("Employee").Filterable(false).EditorTemplateName("FKForCSEmployee").ClientTemplate("#= GetEmployeeText(data) #").Width(300);
+            columns.ForeignKey(column => column.ShiftCodeId, x => x.Read(b => b.Url("/TrnChangeShiftCode/Detail?handler=ShiftCodes")), "Id", "ShiftCode")
+                .Title("Shift Code")
+                .HtmlAttributes(new { onchange = "onFKShiftCodeChange()" });
+            columns.Bound(x => x.Date).Width(200);
+            columns.Bound(x => x.Remarks).Title("Remarks").Width(500);
+            columns.Template("").Title("");
+            columns.Bound(x => x.Id).Filterable(false).Hidden();
+            columns.Bound(x => x.IsDeleted).Hidden();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Navigatable()
+        .Selectable(x => x.Mode(GridSelectionMode.Single))
+        .Pageable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model =>
+        {
+            model.Id(p => p.Id);
+            model.Field(x => x.EmployeeId);
+            model.Field(x => x.ShiftCodeId);
+            model.Field(x => x.Date);
+            model.Field(x => x.Remarks);
+            model.Field(x => x.IsDeleted);
+        })
+        .Sort(x => x.Add("EmployeeName").Ascending())
+        .ServerOperation(false)
+        .PageSize(100))
+        )
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>

@@ -1,0 +1,1049 @@
+﻿@page
+@using whris.Application.Library;
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Home";
+}
+
+@*<div class="text-center">
+    <a class="nav-link text-dark" asp-area="" asp-page="/MstEmployee/Index">Click to proceed for employees</a>
+    <a class="nav-link text-dark" asp-area="" asp-page="/MstEmployee/MstEmployee" asp-route-paramId="8230" target="_blank">Click to proceed for employee report</a>
+</div>*@
+
+<style>
+    .jumbotron {
+        background-image: url('images\\homeimages\\payrollcover.jpg');
+        background-size: cover;
+        margin: 7px;
+        margin-left: 0px;
+        border: none;
+        height: 500px;
+        width: 100%;
+        border-radius: 10px;
+        text-align: center; /* align the inline(-block) elements horizontally */
+    }
+
+    .image-margin {
+        margin-top: 40px;
+        margin-left: 220px;
+    }
+
+    .h1-margin {
+        margin-top: 120px;
+    }
+
+    /* Glyph, by Harry Roberts */
+    hr.style-eight {
+        overflow: visible;
+        padding: 0;
+        border: none;
+        border-top: medium #258ad3;
+        color: #adb5bd;
+        text-align: center;
+    }
+
+    hr.style-eight:after {
+        content: "§";
+        display: inline-block;
+        position: relative;
+        top: -0.7em;
+        font-size: 1.5em;
+        padding: 0 0.25em;
+        background: white;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        padding: 1rem 1rem;
+        height: 120px;
+        /* border-bottom-left-radius: 20%; */
+        box-shadow: 3px 3px 8px hsl(0, 0%, 70%);
+    }
+
+    ul.checkStyle {
+        list-style: none;
+    }
+
+        ul.checkStyle li:before {
+            content: '✓';
+        }
+</style>
+
+<style>
+    #example {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        overflow: hidden;
+    }
+
+    .dash-head {
+        max-width: 970px;
+        height: 80px;
+        background-color: #222;
+        position: relative;
+    }
+
+        .dash-head .k-rpanel-toggle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 20px;
+            left: 20px;
+        }
+
+    .panel-wrap {
+        max-width: 100%;
+        background-color: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        position: relative;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+
+    #sidebar {
+        margin: 0;
+        padding: 20px 0 20px 20px;
+        vertical-align: top;
+    }
+
+    @@media (max-width: 1000px) {
+        #sidebar {
+            background: #fff;
+            padding: 20px;
+            border-left: 1px solid #e5e5e5;
+            /* show sidebar in container, demo only*/
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+
+            #sidebar.k-rpanel-expanded {
+                box-shadow: 0 0 10px rgba(0,0,0,.3);
+            }
+    }
+
+    #main-content {
+        overflow: hidden;
+        margin: 0;
+        padding: 20px;
+        min-height: 580px;
+        vertical-align: top;
+    }
+
+    /* WIDGETS */
+    .widget {
+        margin: 0 0 20px;
+        padding: 0;
+        background-color: #ffffff;
+        border: 1px solid #e7e7e7;
+        border-radius: 3px;
+    }
+
+        .widget div {
+            padding: 10px;
+            min-height: 50px;
+        }
+
+        .widget h3 {
+            font-size: 12px;
+            padding: 8px 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+            .widget h3 span {
+                float: right;
+            }
+
+                .widget h3 span:hover {
+                    cursor: pointer;
+                    background-color: #e7e7e7;
+                    border-radius: 20px;
+                }
+
+    /* PROFILE */
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        margin: 10px auto;
+        border-radius: 100px;
+        border: 1px solid #e7e7e7;
+        background: url(@Url.Content("~/images/" + whris.Application.Library.Security.GetCurrentCompany().ImageLogo));
+        background-repeat: no-repeat;
+        background-size: cover;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+
+    #profile div {
+        text-align: center;
+    }
+
+    #profile h4 {
+        width: auto;
+        margin: 0 0 5px;
+        font-size: 1.4em;
+        color: #16b978;
+    }
+
+    #profile p {
+        margin: 0 0 10px;
+    }
+
+    /* BLOGS & NEWS */
+    #blogs div,
+    #news div {
+        padding: 0 20px 20px;
+    }
+
+    #teammates h4,
+    #blogs h4,
+    #news h4 {
+        width: auto;
+        margin: 20px 0 2px;
+        font-size: 1.4em;
+        color: #016637;
+        font-weight: normal;
+    }
+
+    .blog-info {
+        margin: 0 0 10px;
+        font-size: .9em;
+        color: #787878;
+    }
+
+    #sidebar #blogs h4 {
+        font-size: 1em;
+    }
+
+    #sidebar #blogs p {
+        display: none;
+    }
+
+    #sidebar #blogs .blog-info {
+        display: block;
+    }
+
+    #main-content #news h4 {
+        font-size: 1.1em; /*1.2em;*/
+        line-height: 1.4em;
+        min-height: 40px;
+    }
+
+        #main-content #news h4 span {
+            display: block;
+            float: left;
+            width: 120px;
+            color: #000;
+            padding-right: 10px;
+        }
+
+    #sidebar #news h4 {
+        font-size: 1em;
+    }
+
+        #sidebar #news h4 span {
+            display: block;
+            margin-bottom: 3px;
+            color: #000;
+        }
+
+    /* TEAMMATES */
+    .team-mate:after {
+        content: ".";
+        display: block;
+        height: 0;
+        line-height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    #teammates .team-mate h4 {
+        font-size: 1.2em;
+        font-weight: normal;
+        margin-top: 12px;
+    }
+
+    .team-mate p {
+        margin: 0;
+    }
+
+    .team-mate img {
+        float: left;
+        margin: 0 15px 0 0;
+        border: 1px solid #e7e7e7;
+        border-radius: 60px;
+    }
+</style>
+
+<style>
+    #tilelayout
+    {
+        border: solid;
+        border-width: thin;
+        border-color: #e7e7e7;
+    }
+</style>
+
+@{
+    var claimsCount = HttpContext.User.Claims.ToList().Count();
+
+    if (claimsCount > 0)
+    {
+        var aspUserId = HttpContext.User.Claims.ToList()[0].Value;
+        if (!Security.IsAspUserIdLinked(aspUserId))
+        {
+            <script>
+                location.href = "/Identity/Account/Login?param=ua";
+            </script>
+        }
+    }
+}
+
+@if (!(User.Identity?.IsAuthenticated ?? false))
+{
+    <div class="container" style="font-family: Arial, serif;">
+        <div class="row">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="h1-margin"><b style="color: #3C8FB1">LITE</b>STAFF</h1>
+                    <br />
+                    <h4>
+                        Empower your business with a payroll system as light as a breeze yet as powerful as a storm—effortless, efficient, and built for growth. 
+                        Let simplicity meet precision, so you can focus on what truly matters.
+                    </h4>
+                    <br />
+                    <a class="btn btn-primary btn-lg" style="font-family:'Segoe UI'" asp-area="Identity" asp-page="/Account/Login">GET STARTED NOW!</a>
+                    <a class="btn btn-primary btn-lg" href="/LogToPrintSlip">PRINT PAYSLIP</a>
+                    <a class="btn btn-primary btn-lg" style="font-family:'Segoe UI'" asp-page-handler="DownLoadZip">DOWNLOAD MOBILE APK</a>
+                </div>
+
+                @*<p><a href="@Url.Action("Login", "Account", routeValues: null)" class="btn btn-primary btn-lg">Get started</a></p>*@
+            </div>
+
+            <div class="row" style="margin-top: 120px">
+                <div class="col-md-4 text-center">
+                    <br>
+                    <i class="fas fa-money-bill-wave fa-3x" style="color: #3C8FB1"></i>
+                    <br>
+                    <br>
+                    <h2 class="text-center">
+                        <b style="font-weight:600; color: #3C8FB1;">
+                            Automated Payroll Processing
+                        </b>
+                    </h2>
+                    <br>
+                    <p class="text-center" style="font-size: 21px; color: #3C8FB1; font-weight:400 !important;">
+                        Streamline your dtr and payroll processing with automatic calculations, mandatory deductions, and pay slip generation.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <br>
+                    <i class="fas fa-users-cog fa-3x" style="color: #3C8FB1"></i>
+                    <br>
+                    <br>
+                    <h2 class="text-center">
+                        <b style="font-weight:600; color: #3C8FB1">
+                            Employee Management
+                        </b>
+                    </h2>
+                    <br>
+                    <p class="text-center" style="font-size: 21px; color: #3C8FB1; font-weight:400 !important;">
+                        Efficiently manage employee data, salary history, memo's, leave credits, other income, other deduction, loans, tardiness and absences reports.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <br>
+                    <i class="fas fa-file-contract fa-3x" style="color: #3C8FB1"></i>
+                    <br>
+                    <br>
+                    <h2 class="text-center">
+                        <b style="font-weight:600; color: #3C8FB1">
+                            Compliance Management
+                        </b>
+                    </h2>
+                    <br>
+                    <p class="text-center" style="font-size: 21px; color: #3C8FB1; font-weight:400 !important;">
+                        Stay compliant with ever-changing tax laws and labor regulations effortlessly.
+                    </p>
+                </div>
+            </div>
+        </div>       
+    </div>
+}
+else
+{
+    <div class="container" style="font-family: Arial, serif;">
+        <div id="menu">
+            <div class="row" style="margin-top: 30px">
+                <h5 style="font-weight: 600; color: #8e8e8e;">
+                    <img src="@Url.Content("~/images/toolbaricons/setup.png")" style="height: 20px; width: 20px; margin-left: -7px; margin-right: 7px" /> Setup
+                </h5>
+            </div>
+
+            <div class="code" style="margin-top: -20px; margin-bottom: 20px"></div>
+            <hr class="style-eight">
+
+            <div class="row">
+                <a href="@Url.Action("Index", "MstUser")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-user" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">User</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstEmployee")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-people-line" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Employee</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstCompany")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-building" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Company</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstMandatoryDeductionTable")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-landmark" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Mandatory</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstShiftCode")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-calendar" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Shift Codes</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstDayType")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-sun" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Day Type</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstOtherIncome")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-user-plus" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Other Income</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "MstOtherDeduction")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-user-minus" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">Other Deductions</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "SysTables")" style="width: 180px; margin-top:10px; color: #92C153; text-decoration:none">
+                    <div class="card text-center" style="background-color: #92C153; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-table-cells" style="color: whitesmoke"></i></h2>
+                            <div style="color: whitesmoke">System Tables</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row" style="margin-top: 30px">
+                <h5 style="font-weight: 600; color: #8e8e8e;">
+                    <img src="@Url.Content("~/images/toolbaricons/transactions.png")" style="height: 20px; width: 20px; margin-left: -7px; margin-right: 7px" />Activities
+                </h5>
+            </div>
+
+            <div class="code" style="margin-top: -20px; margin-bottom: 20px"></div>
+            <hr class="style-eight">
+
+            <div class="row">
+                <a href="@Url.Action("Index", "TrnDtr")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-fingerprint" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">DTR</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnLeaveApplication")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-calendar-xmark" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Leave Application</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnOTApplication")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-clock" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Overtime Application</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnLoans")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-hand-holding" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Loans</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnPayrollOtherIncome")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-circle-plus" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Payroll Other Income</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnPayrollOtherDeduction")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-circle-minus" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Payroll Other Deduction</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnLastWithholdingTax")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-book" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Last Withholding</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnPayroll")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-peso-sign" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Payroll</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "TrnChangeShiftCode")" style="width: 180px; margin-top:10px; color: #3C8FB1; text-decoration:none">
+                    <div class="card text-center" style="background-color: #3C8FB1; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-code" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Change Shift</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row" style="margin-top: 30px">
+                <h5 style="font-weight: 600; color: #8e8e8e;">
+                    <img src="@Url.Content("~/images/toolbaricons/reports.png")" style="height: 20px; width: 20px; margin-left: -7px; margin-right: 7px" />Reports
+                </h5>
+            </div>
+
+            <div class="code" style="margin-top: -20px; margin-bottom: 20px"></div>
+            <hr class="style-eight">
+
+            <div class="row">
+                <a href="@Url.Action("Index", "RptDtr")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">DTR Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptPayroll")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Payroll Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptMandatory")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Mandatory Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptWithTax")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Withholding Tax Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptLeave")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Leave Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptLoans")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Loan Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptAccounting")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-print" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Accounting Reports</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptATMBank")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-credit-card" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">ATM/Bank</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Index", "RptDemographics")" style="width: 180px; margin-top: 10px; color: #6A6666; text-decoration:none">
+                    <div class="card text-center" style="background-color: #6A6666; border-radius: 0px;">
+                        <div class="card-body">
+                            <h2 class="card-title"><i class="fas fa-chart-simple" style="color: whitesmoke;"></i></h2>
+                            <div style="color: whitesmoke">Demographics</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container-fluid" style="font-family: Arial, serif;">
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <div id="dashboard" style="background: white">
+            <h3 class="text-center" style="color: #8e8e9d; font-family: 'Roboto Slab', serif;">DASHBOARD</h3>
+            @*<h5 class="text-center">DASHBOARD</h5>*@
+            <div class="panel-wrap" style="min-height: 680px; background:white">
+                @(Html.Kendo().ResponsivePanel()
+                    .Name("sidebar")
+                    .Breakpoint(1000)
+                    .Orientation(ResponsivePanelOrientation.Left)
+                    .Content("<div> <div id='profile' class='widget'> <h3>Profile</h3> <div> <div class='profile-photo'>" +
+                    " </div> <h4>" + whris.Application.Library.Security.GetCurrentCompany().Company + "</h4> <p>" + whris.Application.Library.Security.GetCurrentCompany().Address + " <br />" + whris.Application.Library.Security.GetCurrentCompany().ContactNumber + "</p> </div> </div> <div id='teammates' class='widget'> <h3>Executives</h3>" +
+                    " <div> <div class='team-mate'> <img src='images/ceo.png' alt='" + whris.Application.Library.Security.GetCurrentCompany().CEO + "' style='border - radius: 50 %; width: 75px; height: 75px; margin - top: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;'> <h4>" + whris.Application.Library.Security.GetCurrentCompany().CEO + "</h4> <p>Chief Executive Officer</p> </div> " +
+                    " <div class='team-mate'> <img src='images/hrmgr.png' alt='" + whris.Application.Library.Security.GetCurrentCompany().HRManager + "' style='border - radius: 50 %; width: 75px; height: 75px; margin - top: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;'> <h4>" + whris.Application.Library.Security.GetCurrentCompany().HRManager + "</h4> <p>HR Manager</p></div>" +
+                    " <div class='team-mate'> <img src='images/staff.png' alt='" + whris.Application.Library.Security.GetCurrentCompany().Staff + "' style='border - radius: 50 %; width: 75px; height: 75px; margin - top: 4px; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;'> <h4>" + whris.Application.Library.Security.GetCurrentCompany().Staff + "</h4> <p>Payroll</p> </div> </div> </div>")
+                    )
+
+                <div id="main-content">
+                    <div class="row" style="height: 275px;">
+                        <div class="col-md-8">
+                            @(Html.Kendo().TileLayout()
+                                .Name("tilelayout")
+                                .Columns(5)
+                                .RowsHeight("225px")
+                                .ColumnsWidth("300px")
+                                .Containers(c =>
+                                {
+                                    c.Add().Header(h => h.Text("New Leave(s)")).BodyTemplateId("leaveCard").ColSpan(1).RowSpan(1);
+                                    c.Add().Header(h => h.Text("New Overtime(s)")).BodyTemplateId("overtimeCard").ColSpan(1).RowSpan(1);
+                                    c.Add().Header(h => h.Text("New Loan(s)")).BodyTemplateId("loansCard").ColSpan(1).RowSpan(1);
+                                    c.Add().Header(h => h.Text("New Income(s)")).BodyTemplateId("otherIncomeCard").ColSpan(1).RowSpan(1);
+                                    c.Add().Header(h => h.Text("New Deduction(s)")).BodyTemplateId("otherDeductionCard").ColSpan(1).RowSpan(1);
+                                })
+                                .Reorderable()
+                                .Resizable()
+                                .Events(e => e.Resize("onTileResize"))
+                                )
+                        </div>
+                        <div class="col-md-4">
+                            <div id="blogs" class="widget"style="height: 260px">
+                                <h3>Important links</h3>
+                                <div>
+                                    <ul class="checkStyle">
+                                        <li>&nbsp;<a href="https://www.dole.gov.ph/news/" target="_blank" style="color: #16b978">DOLE NEWS</a></li>
+                                        <li>&nbsp;<a href="https://www.sss.gov.ph//" target="_blank" style="color: #16b978">SOCIAL SECURITY SYSTEM</a></li>
+                                        <li>&nbsp;<a href="https://www.bir.gov.ph/index.php/tax-information/withholding-tax.html#wt08" target="_blank" style="color: #16b978">BIR WITHHOLDING TAX</a></li>
+                                        <li>&nbsp;<a href="https://www.jobstreet.com.ph/" target="_blank" style="color: #16b978">JOBS</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="news" class="widget" style="min-height: 345px;">
+                        <h3>Calendar, Upcoming Events</h3>
+                        <div>
+                            @if (Model.CalendarEvents.Count > 0)
+                            {
+                                foreach (var calendarEvent in Model.CalendarEvents)
+                                {
+                                    <h4 style="color: #8e8e8e">
+                                        <span><b>@calendarEvent.Start.ToString("MMM dd, yyyy")</b></span> <b>@calendarEvent.Title: </b>@calendarEvent.Description
+                                    </h4>
+                                }
+                            }
+                            else
+                            {
+                                <h4 class="text-center" style="margin-top: 140px; color: #8e8e8e">
+                                    No events posted yet in the calendar click <a href="/Calendar">here</a> to add.
+                                </h4>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*&nbsp*@
+
+            <div id="newsMobile" class="widget" style="min-height: 345px;">
+                <h3>Calendar, Upcoming Events</h3>
+                <div>
+                    @if (Model.CalendarEvents.Count > 0)
+                    {
+                        foreach (var calendarEvent in Model.CalendarEvents)
+                        {
+                            <h4 style="color: #8e8e8e">
+                                <span><b>@calendarEvent.Start.ToString("MMM dd, yyyy")</b></span> <b>@calendarEvent.Title: </b>@calendarEvent.Description
+                            </h4>
+                        }
+                    }
+                    else
+                    {
+                        <h4 class="text-center" style="margin-top: 140px; color: #8e8e8e">
+                            No events posted yet in the calendar click <a href="/Calendar">here</a> to add.
+                        </h4>
+                    }
+
+                </div>
+            </div>
+
+            <div id="dashChart" class="container-fluid" style="border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; margin-top: 20px; padding: 10px">
+               <div class="row">
+                    <div class="col-md-6">
+                        <div style="margin-left: 20px">
+                            @(Html.Kendo().Chart<whris.Application.Dtos.TopEarlyBird>()
+                                .Name("bar-chart")
+                                .Title("Top 5 Early Birds")
+                                .Legend(legend => legend
+                                .Visible(false)
+                                )
+                                .DataSource(ds => ds.Read(read => read.Action("EarlyBirds", "Home"))
+                                .Sort(sort => sort.Add(model => model.EarlyWorkCount).Descending()))
+                                .Series(series =>
+                                {
+                                    series.Bar(model => model.EarlyWorkCount).Name("Early work days ct").CategoryField("EmployeeName").ColorHandler("setPerformersBarsColor").Gap(1);
+                                })
+                                .CategoryAxis(axis => axis
+                                .MajorGridLines(lines => lines.Visible(false))
+                                .Labels(labels => labels.Template("#= categoryAxisLabelTemplate(data.value) #"))
+                                )
+                                .ValueAxis(axis => axis.Numeric()
+                                .Line(line => line.Visible(false))
+                                .MajorGridLines(lines => lines.Visible(false))
+                                .Labels(x => x.Template("#= formatPerformers(value) #"))
+                                .MajorUnit(10)
+                                )
+                                .Tooltip(tooltip => tooltip
+                                .Visible(true)
+                                .Template("#= formatTooltip(value) #")
+                                ))
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <kendo-tabstrip name="itemTabs" style="margin-top: 5px; margin-right: 20px;">
+                            <popup-animation>
+                                <open effects="fade:in" />
+                            </popup-animation>
+                            <items>
+                                <tabstrip-item text="Income/Deduction Pie Chart" selected="true">
+                                    <content>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                @(Html.Kendo().Chart<whris.Application.Dtos.PieChartDto>()
+                                                    .Name("otherIncomeChart")
+                                                    .Title("Other Income Breakdown")
+                                                    .Legend(legend => legend.Position(ChartLegendPosition.Bottom))
+                                                    .DataSource(ds =>
+                                                    {
+                                                        ds.Read(read => read.Action("OtherIncomeChart", "Home"));
+                                                    })
+                                                    .Series(series =>
+                                                    {
+                                                        series.Pie(model => model.Percentage, model => model.Source)
+                                                        .ColorField("Color")
+                                                        .ExplodeField("Explode");
+                                                    })
+                                                    .Tooltip(tooltip => tooltip.Template("${ category } - ${ value }%").Visible(true))
+                                                    )
+                                            </div>
+                                            <div class="col-md-6">
+                                                @(Html.Kendo().Chart<whris.Application.Dtos.PieChartDto>()
+                                                    .Name("otherDeductionChart")
+                                                    .Title("Other Deduction Breakdown")
+                                                    .Legend(legend => legend.Position(ChartLegendPosition.Bottom))
+                                                    .DataSource(ds =>
+                                                    {
+                                                        ds.Read(read => read.Action("OtherDeductionChart", "Home"));
+                                                    })
+                                                    .Series(series =>
+                                                    {
+                                                        series.Pie(model => model.Percentage, model => model.Source)
+                                                        .ColorField("Color")
+                                                        .ExplodeField("Explode");
+                                                    })
+                                                    .Tooltip(tooltip => tooltip.Template("${ category } - ${ value }%").Visible(true))
+                                                    )
+                                            </div>
+                                        </div>
+                                    </content>
+                                </tabstrip-item>
+                                <tabstrip-item text="Loans Chart">
+                                    <content>
+                                        @(Html.Kendo().Chart<whris.Application.Dtos.LoanChartDto>()
+                                            .Name("loanCharts")
+                                            .Title("Loans Chart")
+                                            .Legend(legend => legend
+                                            .Position(ChartLegendPosition.Top)
+                                            )
+                                            .DataSource(ds => ds.Read(read => read.Action("LoanChart", "Home")))
+                                            .Series(series =>
+                                            {
+                                                series.Line(model => model.CashAdvances).Name("Cash Advances").CategoryField("Month");
+                                                series.Line(model => model.SSSLoans).Name("SSS Loans").CategoryField("Month");
+                                            })
+                                            .CategoryAxis(axis => axis
+                                            .Labels(labels => labels.Rotation(-90))
+                                            .Crosshair(c => c.Visible(true))
+                                            )
+                                            .ValueAxis(axis => axis.Numeric()
+                                            .Labels(labels => labels.Format("{0:N2}"))
+                                            .MajorUnit(1000)
+                                            )
+                                            .Tooltip(tooltip => tooltip
+                                            .Visible(true)
+                                            .Shared(true)
+                                            .Format("{0:N2}")
+                                            ))
+                                    </content>
+                                </tabstrip-item>
+                                <tabstrip-item text="Leaves">
+                                    <content>
+                                        @(Html.Kendo().Chart<whris.Application.Dtos.LeaveChartDto>()
+                                            .Name("leaveCharts")
+                                            .Title("Leaves Chart")
+                                            .Legend(legend => legend
+                                            .Position(ChartLegendPosition.Top)
+                                            )
+                                            .DataSource(ds => ds.Read(read => read.Action("LeaveChart", "Home")))
+                                            .Series(series =>
+                                            {
+                                                series.Line(model => model.WithPay).Name("With Pay").CategoryField("Month");
+                                                series.Line(model => model.NoPay).Name("No Pay").CategoryField("Month");
+                                            })
+                                            .CategoryAxis(axis => axis
+                                            .Labels(labels => labels.Rotation(-90))
+                                            .Crosshair(c => c.Visible(true))
+                                            )
+                                            .ValueAxis(axis => axis.Numeric()
+                                            .Labels(labels => labels.Format("{0:N2}"))
+                                            .MajorUnit(100)
+                                            )
+                                            .Tooltip(tooltip => tooltip
+                                            .Visible(true)
+                                            .Shared(true)
+                                            .Format("{0:N2}")
+                                            ))
+                                    </content>
+                                </tabstrip-item>
+                                <tabstrip-item text="Overtime">
+                                    <content>
+                                        @(Html.Kendo().Chart<whris.Application.Dtos.OvertimeChartDto>()
+                                            .Name("overtimeCharts")
+                                            .Title("Overtime Chart")
+                                            .Legend(legend => legend
+                                            .Position(ChartLegendPosition.Top)
+                                            )
+                                            .DataSource(ds => ds.Read(read => read.Action("overtimeChart", "Home")))
+                                            .Series(series =>
+                                            {
+                                                series.Line(model => model.NoOfHours).Name("Overtime").CategoryField("Month");
+                                            })
+                                            .CategoryAxis(axis => axis
+                                            .Labels(labels => labels.Rotation(-90))
+                                            .Crosshair(c => c.Visible(true))
+                                            )
+                                            .ValueAxis(axis => axis.Numeric()
+                                            .Labels(labels => labels.Format("{0:N2}"))
+                                            .MajorUnit(100)
+                                            )
+                                            .Tooltip(tooltip => tooltip
+                                            .Visible(true)
+                                            .Shared(true)
+                                            .Format("{0:N2}")
+                                            ))
+                                    </content>
+                                </tabstrip-item>
+                            </items>
+                        </kendo-tabstrip>
+                    </div>
+               </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    var isSwitchedOn = localStorage.getItem("adminSwitch");
+
+    if(isSwitchedOn == "true")
+    {
+        $("#menu").hide();
+        $("#dashboard").show();
+    }
+    else
+    {
+        $("#menu").show();
+        $("#dashboard").hide();
+    }
+
+    function setPerformersBarsColor(point) {
+        switch (point.index) {
+            case 0: {
+                return "#2185b4";
+            };
+            case 1: {
+                return "#319fd2";
+            };
+            case 2: {
+                return "#3eaee2";
+            };
+            case 3: {
+                return "#89CFF0";
+            };
+            case 4: {
+                return "#B0DFE5";
+            };
+        };
+    }
+
+    function categoryAxisLabelTemplate(value) {
+        return value.split(" ").join("\n");
+    };
+
+    function formatPerformers(value) {
+        if (value == 0) {
+            return 0;
+        }
+        else {
+            // hundreds
+            if (value <= 999) {
+                return value;
+            }
+            // thousands
+            else if (value >= 1000 && value <= 999999) {
+                return (value / 1000) + "K";
+            }
+            // millions
+            else if (value >= 1000000 && value <= 999999999) {
+                return (value / 1000000) + "M";
+            }
+        }
+    };
+
+    function formatTooltip(value) {
+        return kendo.toString(value, "#,##");
+    };
+
+    function onTileResize(e) {
+        if (e.container) {
+            // for widgets that do not auto resize
+            // https://docs.telerik.com/kendo-ui/styles-and-layout/using-kendo-in-responsive-web-pages
+            kendo.resize(e.container, true);
+        }
+    }
+</script>
+
+<script id="leaveCard" type="text/x-kendo-template">
+    <h2>@Model.FloatingRecord.Leave</h2>
+    <a href="/TrnLeaveApplication">Go to page</a>
+</script>
+
+<script id="overtimeCard" type="text/x-kendo-template">
+    <h2>@Model.FloatingRecord.Overtime</h2>
+    <a href="/TrnOTApplication">Go to page</a>
+</script>
+
+<script id="loansCard" type="text/x-kendo-template">
+    <h2>@Model.FloatingRecord.Loans</h2>
+    <a href="/TrnLoans">Go to page</a>
+</script>
+
+<script id="otherIncomeCard" type="text/x-kendo-template">
+    <h2>@Model.FloatingRecord.OtherIncome</h2>
+    <a href="/TrnPayrollOtherIncome">Go to page</a>
+</script>
+
+<script id="otherDeductionCard" type="text/x-kendo-template">
+    <h2>@Model.FloatingRecord.OtherDeduction</h2>
+    <a href="TrnPayrollOtherDeduction">Go to page</a>
+</script>
+
+<script>
+    if(detectMob())
+    {
+        $(".panel-wrap").hide();
+
+        $("#newsMobile").show();
+
+        document.getElementById("dashChart").style.width = "80vw";
+        document.getElementById("bar-chart").style.width = "100%";
+        document.getElementById("itemTabs").style.width = "100%";
+    }
+    else
+    {
+        $("#newsMobile").hide();
+    }
+</script>

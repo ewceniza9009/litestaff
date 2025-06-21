@@ -1,0 +1,155 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Other Deduction";
+}
+
+<style>
+    #MstOtherDeductions {
+        height: 70vh;
+    }
+</style>
+
+@*<div class="row" style="width: 181vh">*@
+<div class="row">
+    <form id="frmDetail" method="post" style="margin-top: 10px">
+        <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+            <div class="col-md-6">
+                <h5 class="title-color"><i class="fa fa-user-plus"></i> Other Deductions (Editable)</h5>
+            </div>
+
+            <div class="col-md-6" style="padding: 0px">
+                <div class="float-end">
+                    <div class="hstack gap-3 float end">
+                        <button id="btnSave"
+                                class="btn btn-primary"
+                                type="button"
+                                onclick="CmdSave()">
+                            <span class="btn-label">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            Save
+                        </button>
+
+                       <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <kendo-tabstrip name="itemTabs" style="margin-top: 5px; width: 100%">
+                <popup-animation>
+                    <open effects="fade:in" />
+                </popup-animation>
+                <items>
+                    <tabstrip-item text="Other Deduction" selected="true">
+                        <content>
+                            @(
+                                Html.Kendo().Grid(Model.OtherDeductions)
+                                .Name("MstOtherDeductions")
+                                .ToolBar(toolbar =>
+                                {
+                                    toolbar.Custom()
+                                        .Text("Add Payroll Group")
+                                        .IconClass("k-icon k-i-plus")
+                                        .HtmlAttributes(new { onclick = "CmdAddOtherDeduction(); return false;" });
+                                    toolbar.Excel();
+                                    toolbar.Pdf();
+    
+                                })
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteOtherDeduction").IconClass("k-icon k-i-x"))
+                                        .Width(110);
+                                    columns.Bound(column => column.Id).Hidden();
+                                    columns.Bound(x => x.OtherDeduction)
+                                        .Title("Other Deduction")
+                                        .Filterable(false)
+                                        .Width(500);
+                                    columns.Bound(x => x.LoanType)
+                                        .Title("Loan Type")
+                                        .ClientTemplate("<input type='checkbox' #= LoanType ? checked='checked' : '' # />")
+                                        .HtmlAttributes(new { onchange = "onCheckBoxChange()" })
+                                        .Filterable(false)
+                                        .Width(100);
+                                    columns.Bound(x => x.AccountId)
+                                        .Title("GL Account")
+                                        .Filterable(false)
+                                        .Width(300)
+                                        .EditorTemplateName("FKForOtherIncomeAccount")
+                                        .ClientTemplate("#= GetAccountText(data) #");
+                                    columns.Bound(x => x.Amount)
+                                        .Title("Amount")
+                                        .Filterable(false)
+                                        .Width(150)
+                                        .HtmlAttributes(new { @style = "text-align: end;" });
+                                    columns.Template("").Title("");
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(100)
+                                .ServerOperation(false))
+                                )
+                        </content>
+                    </tabstrip-item>
+                </items>
+            </kendo-tabstrip>
+        </div>
+    </form>
+</div>
+
+<script>
+    $accounts = null;
+
+    function GetAccountText(data) {
+        var result = "";
+
+        if ($accounts == null) {
+            $.ajax({
+                url: "/MstOtherDeduction/Index?handler=Accounts",
+                type: "GET",
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                async: false,
+                success: function (data) {
+                    $accounts = data;
+                }
+            });
+        }
+
+        for (let ctr = 0; ctr < $accounts.length; ctr++) {
+            if ($accounts[ctr].Id == data.AccountId) {
+                result = $accounts[ctr].Account;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+</script>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>
+
+@section Scripts {
+    <script src="~/Pages/MstOtherDeduction/Index.cshtml.js"></script>
+}

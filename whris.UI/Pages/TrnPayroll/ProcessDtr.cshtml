@@ -1,0 +1,42 @@
+﻿@page
+@model ProcessDtrModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-9">
+                <kendo-combobox name="ProcessDtrEmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnSave"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdProcessDtr()">
+                    <span class="btn-label">
+                        @*<i class="fa fa-gear"></i>*@
+                        <i id="btnPayrollProcessLock" class="fa fa-lock"></i>
+                        <i id="btnPayrollProcessSpin" class="fa fa-spinner fa-spin" hidden></i>
+                    </span>
+                    Process
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

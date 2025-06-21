@@ -1,0 +1,166 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Last Withholding Tax";
+
+    var token = Xsrf.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    #grid {
+        height: 73.8vh;
+    }
+
+    #modal-dialog-processDetail {
+        max-width: 800px;
+    }
+
+</style>
+
+<div class="lookUpPanel">
+    <div class="row">
+        @(Html.Kendo().ComboBox()
+            .Name("payrollGroupCmb")
+            .Placeholder("Search payroll group...")
+            .DataValueField("Id")
+            .DataTextField("PayrollGroup")
+            .Suggest(true)
+            .SelectedIndex(0)
+            .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
+            .BindTo(Model.allPayrollGroups)
+            .Events(e => { e.Change("onPayrollGroupChange"); })
+            .Value("51"))
+        @(Html.Kendo().Button()
+            .Name("clearPayrollGroup")
+            .ThemeColor(ThemeColor.Light)
+            .Content("<i class='fa fa-xmark'></i>")
+            .HtmlAttributes(new { style = "width: 2.5%" })
+            .Events(e => e.Click("onClearPayrollGroupClick")))
+    </div>
+</div>
+
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fa fa-book"></i> Last Withholding Tax</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdAdd()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @(Html.Kendo().Grid<TrnLastWithholdingTaxDto>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                columns.Command(command => command.Custom("Detail")
+                .Click("CmdDetail")
+                .IconClass("k-icon k-i-track-changes-enable"))
+                .Width(120);
+                columns.Bound(column => column.Lwtdate).Title("Date").Width(150);
+                columns.Bound(column => column.Lwtnumber).Title("LWT Number").Width(170);
+                columns.Bound(column => column.Remarks).Title("Remarks");
+                columns.Bound(x => x.IsLocked)
+                .Title("L")
+                .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
+                .Filterable(false)
+                .Width(50);
+            })
+            .Filterable()
+            .Selectable(x => x.Mode(GridSelectionMode.Single))
+            .Pageable()
+            .Sortable()
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .Scrollable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model =>
+            {
+                model.Id(p => p.Id);
+                model.Field(p => p.Lwtdate).Editable(false);
+                model.Field(p => p.Lwtnumber).Editable(false);
+                model.Field(p => p.Remarks).Editable(false);
+                model.Field(p => p.IsLocked).Editable(false);
+            })
+            .ServerOperation(true)
+            .PageSize(20)
+            .Read(read => read.Url("/TrnLastWithholdingTax/Index?handler=ReadLWTList")
+            .Data("forgeryToken")))
+            .Events(events => events.DataBound("onGridDatabound"))
+            )
+    </div>
+</div>
+
+<div style="position: absolute;
+    width: 100px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -25px;">
+    <div id="loading" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<section id="processDetailSection">
+    <div class="modal fade" id="processDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processModalLabel"><i class="fa fa-book"></i> Last Withholding Tax</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Process last withholding tax lines.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="detailView" hidden="hidden">
+    <div id="detailFormView" />
+</div>
+
+@(Html.Kendo().Dialog()
+    .Name("confirmSaveDialog")
+    .Title("WHRIS")
+    .Content("<p>Record has been change, Do you want to save and continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelSave");
+        actions.Add().Text("Yes").Action("onConfirmSave").Primary(true);
+    }))
+
+@section Scripts {
+    <script src="~/Pages/TrnLastWithholdingTax/Index.cshtml.js"></script>
+}
+

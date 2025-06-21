@@ -1,0 +1,28 @@
+﻿@page
+@model RepSlipContinuesModel
+@using whris.UI.Reports
+@{
+    ViewData["Title"] = "Payslip (Continues)";
+    Layout = null;
+}
+<style>
+    #DocumentViewer {
+        height: 100vh;
+    }
+</style>
+
+<html>
+<head>
+    <title>Payslip (Continues)</title>
+    <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+    <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+    <script src="~/js/thirdparty.bundle.js"></script>
+    <script src="~/js/viewer.part.bundle.js"></script>
+</head>
+<body>
+    @Html.DevExpress().WebDocumentViewer("DocumentViewer").Bind(Model.PayslipContinues)
+</body>
+</html>
+
+

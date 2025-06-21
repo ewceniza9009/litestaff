@@ -1,0 +1,32 @@
+﻿@page
+@model RepSSSMonthlyModel
+@using whris.UI.Reports
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "SSS Monthly Report";
+    Layout = null;
+}
+<style>
+    #DocumentViewer
+    {
+        height: 100vh;
+    }
+</style>
+
+<html>
+    <head>
+        <title>SSS Monthly Report</title>
+        <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+        <script src="~/js/thirdparty.bundle.js"></script>
+        <script src="~/js/viewer.part.bundle.js"></script>
+    </head>
+    <body>
+        @Html.DevExpress().WebDocumentViewer("DocumentViewer").Bind(Model.SSSMonthly)
+    </body>
+</html>
+
+

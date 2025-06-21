@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Other Income")
+    .DataTextField("OtherIncome")
+    .DataValueField("Id")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.OtherIncome#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/TrnPayrollOtherIncome/Detail?handler=Incomes");
+        })
+        .ServerFiltering(false);
+    })
+)

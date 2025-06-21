@@ -1,0 +1,224 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions
+{
+
+}
+
+<style>
+    #MstShiftCodeDays {
+        height: 60vh;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-calendar"></i> Shift Code Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()"
+                            disabled>
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.ShiftCodeDetail.Id" readonly="true" style="width: 100px; background-color: lightgray;">
+                    </kendo-textbox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Day Type: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="ShiftCode" placeholder="Day Type" value="@Model.ShiftCodeDetail.ShiftCode" style="width: 50%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Remarks" placeholder="Remarks" value="@Model.ShiftCodeDetail.Remarks" style="width: 50%">
+                    </kendo-textbox>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.ShiftCodeDetail.IsLocked" on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @(Html.Kendo().Grid(Model.ShiftCodeDetail.MstShiftCodeDays)
+        .Name("MstShiftCodeDays")
+        .Scrollable()
+        .ToolBar(x =>
+        {
+            x.Custom().Text("Add Day").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddShiftCodeDay(); return false;" });
+        })
+        .Columns(columns =>
+        {
+            columns.Command(command => command.Custom("Delete").IconClass("k-icon k-i-x").Click("CmdDeleteShiftCodeDay"))
+                .Width(110);
+            columns.Bound(x => x.Id)
+                .Filterable(false)
+                .Hidden();
+           @* columns.ForeignKey(column => column.Day, x => x.Read(b => b.Url("/MstEmployee/Detail?handler=Days")), "Day", "Day")
+                .Title("Day")
+                .Filterable(false)
+                .HtmlAttributes(new { onchange = "onDayChange()" });*@
+            columns.Bound(x => x.Day)
+                .Title("Day")
+                .Filterable(false)
+                .Width(200)
+                .EditorTemplateName("DropDownForShiftCodeDays");
+            columns.Bound(x => x.RestDay)
+                .Title("Rest")
+                .ClientTemplate("<input type='checkbox' #= RestDay ? checked='checked' : '' # />")
+                .HtmlAttributes(new { onchange = "onRestDayChange()" })
+                .Filterable(false)
+                .Width(50);
+            columns.Bound(column => column.TimeIn1).Width(140).Title("Time In 1").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeIn1CellChanged(this)" });
+            columns.Bound(column => column.TimeOut1).Width(140).Title("Time Out 1").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeOut1CellChanged(this)" });
+            columns.Bound(column => column.TimeIn2).Width(140).Title("Time In 2").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeIn2CellChanged(this)" });
+            columns.Bound(column => column.TimeOut2).Width(140).Title("Time Out 2").HtmlAttributes(new { @class = "cell-input", onchange = "gridTimeOut2CellChanged(this)" });
+
+            columns.Bound(x => x.NumberOfHours)
+                .Title("No. of Hrs.")
+                .Filterable(false)
+                .Width(100)
+                .HtmlAttributes(new { @style = "text-align: end;" });
+            columns.Bound(x => x.LateFlexibility)
+                .Title("Flex Hrs.")
+                .Filterable(false)
+                .Width(100)
+                .HtmlAttributes(new { @style = "text-align: end;" });
+            columns.Bound(x => x.LateGraceMinute)
+                .Title("Grace Min.")
+                .Filterable(false)
+                .Width(100)
+                .HtmlAttributes(new { @style = "text-align: end;" });
+            columns.Bound(x => x.NightHours)
+                .Title("Night Hrs.")
+                .Filterable(false)
+                .Width(100)
+                .HtmlAttributes(new { @style = "text-align: end;" });
+            columns.Bound(x => x.IsTommorow)
+                .Title("T")
+                .ClientTemplate("<input type='checkbox' #= IsTommorow ? checked='checked' : '' # />")
+                .HtmlAttributes(new { onchange = "onCheckboxChange()" }).Filterable(false).Width(50);
+            columns.Template("").Title("");
+            columns.Bound(x => x.IsDeleted).Hidden();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Navigatable()
+        .Selectable(x => x.Mode(GridSelectionMode.Single))
+        .Pageable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model =>
+        {
+            model.Id(p => p.Id);
+            model.Field(p => p.Day);
+            model.Field(p => p.RestDay);
+            model.Field(p => p.TimeIn1);
+            model.Field(p => p.TimeOut1);
+            model.Field(p => p.TimeIn2);
+            model.Field(p => p.TimeOut2);
+            model.Field(p => p.NumberOfHours);
+            model.Field(p => p.LateFlexibility);
+            model.Field(p => p.LateGraceMinute);
+            model.Field(p => p.NightHours);
+            model.Field(p => p.IsDeleted);
+        })
+        //.Events(events => events.Change("onGridChange"))
+        .ServerOperation(false)
+        .PageSize(20)
+        ))
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>
+

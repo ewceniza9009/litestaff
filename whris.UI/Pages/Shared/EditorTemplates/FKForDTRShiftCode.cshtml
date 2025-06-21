@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Shift Code")
+    .DataTextField("ShiftCode")
+    .DataValueField("Id")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.ShiftCode#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/TrnDtr/Detail?handler=ShiftCodes");
+        })
+        .ServerFiltering(false);
+    })
+)

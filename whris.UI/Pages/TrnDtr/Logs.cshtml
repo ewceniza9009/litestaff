@@ -1,0 +1,101 @@
+﻿@page
+@using whris.Application.Queries.TrnDtr;
+@model LogsModel
+@{
+    Layout = null;
+}
+
+<form id="frmLogs" method="post" style="margin-top: 10px">
+    <div class="row" style="margin: 5px">
+        <div class="col-md-12">
+            <div class="form-group row" style="margin-top: 5px;">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Start Date: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="LogDateStart" placeholder="Log Date" value="@DateTime.Now.Date" style="width: 20%; text-align:end;"/>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 5px;">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">End Date: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="LogDateEnd" placeholder="Log Date" value="@DateTime.Now.Date" style="width: 20%; text-align:end;"/>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 5px;">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+                <div class="col-md-8">
+                    <kendo-combobox name="LogEmployeeId" style="width: 100%"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                    </kendo-combobox>                
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group row">
+                        <div class="text-start">
+                            <button id="btnSearchLog"
+                                    class="btn btn-info cmd-buttons"
+                                    type="button"
+                                    style="padding-top: -5px;"
+                                    onclick="CmdSearchLogs()">
+                                <span class="btn-label">
+                                    <i id="icoSearchLog" class="fa fa-magnifying-glass"></i>
+                                </span>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 5px">
+                @(Html.Kendo().Grid<Logs.Record>()
+                    .Name("gridLogs")
+                    .ToolBar(x =>
+                    {
+                        x.Custom().Text("Export to Excel(Full)").HtmlAttributes(new { id = "exportToExcelFull", onclick = "CmdExportLogsToExcellFull()" });
+                        x.Excel();
+                        x.Pdf();
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Command(command => command.Custom("Delete")
+                            .IconClass("k-icon k-i-x")
+                            .Click("CmdDeleteLogById"))
+                            .Width(110);
+                        columns.Bound(x => x.Id).Width(120).Title("Id").Visible(false);
+                        columns.Bound(x => x.BiometricIdNumber).Width(120).Title("Biometric Id");
+                        columns.Bound(x => x.EmployeeName).Width(500).Title("Employee");
+                        columns.Bound(x => x.LogDateTime).Format("{0:MM/dd/yyyy hh:mm tt}").Width(300).Title("Log");
+                        columns.Bound(x => x.LogTypeString).Width(120).Title("Log Type");
+
+                    })
+                    .Selectable(x => x.Mode(GridSelectionMode.Single))
+                    .Editable(editable => editable.Mode(GridEditMode.InCell))
+                    .Scrollable()
+                    .Pageable()
+                    .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model =>
+                    {
+                        model.Field(p => p.Id).Editable(false);
+                        model.Field(p => p.BiometricIdNumber).Editable(false);
+                        model.Field(p => p.EmployeeName).Editable(false);
+                        model.Field(p => p.LogDateTime).Editable(false);
+                        model.Field(p => p.LogType).Editable(false);
+                    })
+                    .ServerOperation(true)
+                    .PageSize(100)
+                    .Read(read => read.Url("/TrnDtr/Logs?handler=ReadLogs")
+                        .Data("forgeryToken2")))
+                    )
+            </div>
+        </div>
+    </div>
+</form>

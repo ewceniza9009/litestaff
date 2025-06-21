@@ -1,0 +1,20 @@
+﻿@model object
+@(
+Html.Kendo().ComboBoxFor(m => m)
+    .Placeholder("Leave")
+    .DataTextField("Leave")
+    .DataValueField("Id")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Template("<span>#: data.Leave#</span>")
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/TrnLeaveApplication/Detail?handler=Leaves");
+        })
+        .ServerFiltering(false);
+    })
+)

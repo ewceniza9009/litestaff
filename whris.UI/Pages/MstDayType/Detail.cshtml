@@ -1,0 +1,202 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions
+{
+
+}
+
+<style>
+    #MstDayTypeDays {
+        height: 60vh;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-sun"></i> Day Type Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()"
+                            disabled>
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.DayTypeDetail.Id" readonly="true" style="width: 100px; background-color: lightgray;">
+                    </kendo-textbox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Day Type: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="DayType" placeholder="Day Type" value="@Model.DayTypeDetail.DayType" style="width: 50%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+             <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Multiplier on Workday: </label>
+                <div class="col-md-10">
+                    <input class="form-control" name="WorkingDays" data-inputmask="'alias': 'currency'" value="@Model.DayTypeDetail.WorkingDays" style="width: 20%; text-align: end" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Multiplier on Restday: </label>
+                <div class="col-md-10">
+                    <input class="form-control" name="RestdayDays" data-inputmask="'alias': 'currency'" value="@Model.DayTypeDetail.RestdayDays" style="width: 20%; text-align: end" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DayTypeDetail.IsLocked" on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @(Html.Kendo().Grid(Model.DayTypeDetail.MstDayTypeDays)
+        .Name("MstDayTypeDays")
+        .Scrollable()
+        .ToolBar(x =>
+        {
+            x.Custom().Text("Add Day").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddDayTypeDay(); return false;" });
+        })
+        .Columns(columns =>
+        {
+            columns.Command(command => command.Custom("Delete").IconClass("k-icon k-i-x").Click("CmdDeleteDayTypeDay"))
+                .Width(110);
+            columns.Bound(x => x.Id)
+                .Filterable(false)
+                .Hidden();
+            columns.ForeignKey(column => column.BranchId, x => x.Read(b => b.Url("/MstDayType/Detail?handler=Branches")), "Id", "Branch")
+                .Width(150)
+                .Title("Branches")
+                .Filterable(false)
+                .HtmlAttributes(new { onchange = "onBranchChange()" });
+            columns.Bound(column => column.Date).Width(150);
+            columns.Bound(column => column.DateBefore).Width(175).Title("Working Date Before");
+            columns.Bound(column => column.DateAfter).Width(175).Title("Working Date After");
+            columns.Bound(x => x.ExcludedInFixed)
+                .Title("Excluded in Fixed")
+                .ClientTemplate("<input type='checkbox' #= ExcludedInFixed ? checked='checked' : '' # />")
+                .HtmlAttributes(new { onchange = "onExcludedInFixedChange()" })
+                .Filterable(false)
+                .Width(150);
+            columns.Bound(x => x.WithAbsentInFixed)
+                .Title("With Absent")
+                .ClientTemplate("<input type='checkbox' #= WithAbsentInFixed ? checked='checked' : '' # />")
+                .HtmlAttributes(new { onchange = "onWithAbsentInFixedChange()" })
+                .Filterable(false)
+                .Width(150);
+            columns.Bound(column => column.Remarks);
+
+            columns.Bound(x => x.IsDeleted).Hidden();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Navigatable()
+        .Selectable(x => x.Mode(GridSelectionMode.Single))
+        .Pageable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model =>
+        {
+            model.Id(p => p.Id);
+            model.Field(p => p.BranchId);
+            model.Field(p => p.Date);
+            model.Field(p => p.DateBefore);
+            model.Field(p => p.DateAfter);
+            model.Field(p => p.ExcludedInFixed);
+            model.Field(p => p.WithAbsentInFixed);
+            model.Field(p => p.Remarks);
+            model.Field(p => p.IsDeleted);
+        })
+        .ServerOperation(false)
+        .PageSize(20)
+        ))
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>

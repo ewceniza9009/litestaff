@@ -1,0 +1,401 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Payroll";
+
+    var token = Xsrf.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    #grid {
+        height: 73.8vh;
+    }
+
+    #modal-dialog-editDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-computeDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processMandatoryDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processWithholdingDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processTotalsDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processDtrDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processOtherIncomeDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processOtherDeductionDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-expandSalaryDetail {
+        max-width: 1000px;
+    }
+
+    #modal-dialog-expandPOIDetail {
+        max-width: 1000px;
+    }
+
+    #modal-dialog-expandPOINDetail {
+        max-width: 1000px;
+    }
+
+    #modal-dialog-expandPODDetail {
+        max-width: 1000px;
+    }
+</style>
+
+<div class="lookUpPanel">
+    <div class="row">
+     @(Html.Kendo().ComboBox()
+        .Name("payrollGroupCmb")
+        .Placeholder("Search payroll group...")
+        .DataValueField("Id")
+        .DataTextField("PayrollGroup")
+        .Suggest(true)
+        .SelectedIndex(0)
+        .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
+        .BindTo(Model.allPayrollGroups)
+        .Events(e => { e.Change("onPayrollGroupChange"); })
+        .Value("51"))
+    @(Html.Kendo().Button()
+        .Name("clearPayrollGroup")
+        .ThemeColor(ThemeColor.Light)
+        .Content("<i class='fa fa-xmark'></i>")
+        .HtmlAttributes(new { style = "width: 2.5%" })
+        .Events(e => e.Click("onClearPayrollGroupClick")))
+    </div>
+</div>
+
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fa fa-peso-sign"></i> Payroll</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdAdd()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @(Html.Kendo().Grid<TrnPayrollDto>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                columns.Command(command => command.Custom("Detail")
+                .Click("CmdDetail")
+                .IconClass("k-icon k-i-track-changes-enable"))
+                .Width(120);
+                columns.Bound(column => column.PayrollDate).Title("Date").Width(150);
+                columns.Bound(column => column.PayrollNumber).Title("Payroll Number").Width(170);
+                columns.Bound(column => column.Remarks).Title("Remarks");
+                columns.Bound(x => x.IsLocked)
+                .Title("L")
+                .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
+                .Filterable(false)
+                .Width(50);
+            })
+            .Filterable()
+            .Selectable(x => x.Mode(GridSelectionMode.Single))
+            .Pageable()
+            .Sortable()
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .Scrollable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model =>
+            {
+                model.Id(p => p.Id);
+                model.Field(p => p.PayrollDate).Editable(false);
+                model.Field(p => p.PayrollNumber).Editable(false);
+                model.Field(p => p.Remarks).Editable(false);
+                model.Field(p => p.IsLocked).Editable(false);
+            })
+            .ServerOperation(true)
+            .PageSize(20)
+            .Read(read => read.Url("/TrnPayroll/Index?handler=ReadPayrollList")
+            .Data("forgeryToken")))
+            .Events(events => events.DataBound("onGridDatabound"))
+            )
+    </div>
+</div>
+
+<div style="position: absolute;
+    width: 100px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -25px;">
+    <div id="loading" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<section id="processMandatoryDetailSection">
+    <div class="modal fade" id="processMandatoryDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processMandatoryModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processMandatoryDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processMandatoryModalLabel"><i class="fa fa-fingerprint"></i> Process Mandatory Deductions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processMandatoryView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all payroll mandatory tax deductions.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processWithholdingDetailSection">
+    <div class="modal fade" id="processWithholdingDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processWithholdingModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processWithholdingDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processWithholdingModalLabel"><i class="fa fa-fingerprint"></i> Process Withholding</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processWithholdingView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all payroll withholding tax.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processTotalsDetailSection">
+    <div class="modal fade" id="processTotalsDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processTotalsModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processTotalsDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processTotalsModalLabel"><i class="fa fa-fingerprint"></i> Process Totals</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processTotalsView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all payroll totals.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processDtrDetailSection">
+    <div class="modal fade" id="processDtrDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processDtrModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processDtrDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processDtrModalLabel"><i class="fa fa-fingerprint"></i> Process DTR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processDtrView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all dtr lines and move it to payroll with initial computation.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processOtherIncomeDetailSection">
+    <div class="modal fade" id="processOtherIncomeDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processOtherIncomeModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processOtherIncomeDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processOtherIncomeModalLabel"><i class="fa fa-fingerprint"></i> Process Other Income</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processOtherIncomeView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all payroll other income.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processOtherDeductionDetailSection">
+    <div class="modal fade" id="processOtherDeductionDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processOtherDeductionModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processOtherDeductionDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processOtherDeductionModalLabel"><i class="fa fa-fingerprint"></i> Process Other Deduction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processOtherDeductionView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function process all payroll other deduction.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="expandSalaryDetailSection">
+    <div class="modal fade" id="expandSalaryDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="expandSalaryModalLabel" aria-hidden="true">
+        <div id="modal-dialog-expandSalaryDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="expandSalaryModalLabel"><i class="fa fa-peso-sign"></i> Payroll Salary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="expandSalaryView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Shows the detailed salary figures.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="expandPOIDetailSection">
+    <div class="modal fade" id="expandPOIDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="expandPOIModalLabel" aria-hidden="true">
+        <div id="modal-dialog-expandPOIDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="expandPOIModalLabel"><i class="fa fa-peso-sign"></i> Payroll Other Income</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="expandPOIView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Shows the detailed other income figures.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="expandPOINDetailSection">
+    <div class="modal fade" id="expandPOINDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="expandPOINModalLabel" aria-hidden="true">
+        <div id="modal-dialog-expandPOINDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="expandPOINModalLabel"><i class="fa fa-peso-sign"></i> Payroll Other Income (Non - Taxable)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="expandPOINView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Shows the detailed other income (non-tax) figures.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="expandPODDetailSection">
+    <div class="modal fade" id="expandPODDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="expandPODModalLabel" aria-hidden="true">
+        <div id="modal-dialog-expandPODDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="expandPODModalLabel"><i class="fa fa-peso-sign"></i> Payroll Other Deduction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="expandPODView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Shows the detailed other deduction figures.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="detailView" hidden="hidden">
+    <div id="detailFormView" />
+</div>
+
+@(Html.Kendo().Dialog()
+    .Name("confirmSaveDialog")
+    .Title("WHRIS")
+    .Content("<p>Record has been change, Do you want to save and continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelSave");
+        actions.Add().Text("Yes").Action("onConfirmSave").Primary(true);
+    }))
+
+@(Html.Kendo().Dialog()
+    .Name("confirmQuickChangeDialog")
+    .Title("WHRIS")
+    .Content("<p>Quickly change the shift code based on logs on lines, Do you want to continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelQuickChange");
+        actions.Add().Text("Yes").Action("onConfirmQuickChange").Primary(true);
+    }))
+
+@section Scripts {
+    <script src="~/Pages/TrnPayroll/Index.cshtml.js"></script>
+}
+

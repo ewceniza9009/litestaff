@@ -1,0 +1,31 @@
+﻿@model object
+@(
+Html.Kendo().MultiColumnComboBoxFor(m => m)
+    .Placeholder("Loan Date")
+    .DataTextField("LoanDate2")
+    .DataValueField("LoanId")
+    .Filter(FilterType.Contains)
+    .AutoBind(true)
+    .MinLength(3)
+    .Columns(columns =>
+        {
+            columns.Add().Field("LoanDate").Template("#:  kendo.toString(kendo.parseDate(data.LoanDate), 'MM/dd/yyyy')#").Title("Loan Date").Width("150px");
+            columns.Add().Field("MonthlyAmortization").Template("#: kendo.format('{0:N2}', kendo.parseFloat(data.MonthlyAmortization))#").Title("Monthly Amortization").Width("100px");
+        })
+    .ValuePrimitive(true)
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Url("/TrnPayrollOtherDeduction/Detail?handler=Loans").Data("LoanIdRouteValues");
+        })
+        .ServerFiltering(false);
+    })
+)
+
+<script>
+    var widthVal = "460";
+
+    $("#EmployeeLoanId_listbox").css("width", widthVal);
+    $("#EmployeeLoanId_listbox").parents("div").css("width", widthVal);
+</script>

@@ -1,0 +1,72 @@
+﻿@page
+@model ProcessModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Department: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="ProcessDepartmentId" style="width: 100%"
+                                datatextfield="Department"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.DepartmentCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="ProcessEmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.AllEmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="ProcessDateStart" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="ProcessDateEnd" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="col-md-8"> <input type="file" accept=".xlsx, .xls, .txt, .csv" class="form-control" id="file" name="file"></div>
+            <div class="col-md-4">
+                <div class="text-end">
+                    <button id="btnSave"
+                            class="btn btn-primary  cmd-buttons"
+                            type="button"
+                            onclick="CmdDtrProcess()">
+                        <span class="btn-label">
+                            <i id="btnProcessGear" class="fa fa-gear"></i>
+                            <i id="btnProcessSpin" class="fa fa-spinner fa-spin" hidden></i>
+                        </span>
+                        Process
+                    </button>
+                </div>
+            </div>                     
+        </div>
+    </div>
+</div>

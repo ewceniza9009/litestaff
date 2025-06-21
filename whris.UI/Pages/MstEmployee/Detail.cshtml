@@ -1,0 +1,1183 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions 
+{
+   
+}
+
+<style>
+    .form-group
+    {
+        margin-top: 5px;
+    }
+
+    .browse-input {
+        width: 365px;
+    }
+</style>
+
+@*<form id="frmDetail" asp-antiforgery="false" method="post">*@
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fas fa-people-line"></i> Employee Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+         <div class="col-md-6">
+             <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-sm-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.EmployeeDetail.Id" readonly="true" style="width: 100px; background-color: lightgray;">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id/Bio No.: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="IdNumber" placeholder="Id Number" value="@Model.EmployeeDetail.IdNumber" style="width: 145px;">
+                    </kendo-textbox>
+                    <kendo-textbox name="BiometricIdNumber" placeholder="Biometric" value="@Model.EmployeeDetail.BiometricIdNumber" style="width: 150px;">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            @*<div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Biometric: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="BiometricIdNumber" placeholder="Biometric" value="@Model.EmployeeDetail.BiometricIdNumber" style="width: 200px;">
+                    </kendo-textbox>
+                </div>
+            </div>*@
+
+            <div class="form-group row">
+               <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Last name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="LastName" placeholder="Last name" value="@Model.EmployeeDetail.LastName" style="width: 300px;" on-change="onUpdateFullName">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">First name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="FirstName" placeholder="First name" value="@Model.EmployeeDetail.FirstName" style="width: 300px;" on-change="onUpdateFullName">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+               <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Middle name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="MiddleName" placeholder="Middle name" value="@Model.EmployeeDetail.MiddleName" style="width: 300px;" on-change="onUpdateFullName">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Extension name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="ExtensionName" placeholder="Extension name" value="@Model.EmployeeDetail.ExtensionName" style="width: 300px;" on-change="onUpdateFullName">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+               <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Full name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="FullName" placeholder="Full name" value="@Model.EmployeeDetail.FullName" style="width: 500px; background-color: lightgray;" readonly="true">
+                    </kendo-textbox>
+                </div>
+            </div>
+         </div>
+         <div class="col-md-6">
+             <div class="form-group row">
+                 <fieldset>
+                     @*<legend>Employee Photo: </legend>*@
+                    <div class="form-group row"  style="width: 500px">
+                        <div style="width: 200px"></div>
+                        <img id="ImagePath" src="@Url.Content("~/photos/" + @Model.EmployeeDetail.PictureFilePath)" style="width: 200px; height: 180px; border-radius: 50%;" class="img-fluid" />
+                    </div>
+                 </fieldset>
+            </div>
+            <div class="form-group row" style="margin-top: 20px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Photo: </label>
+                <div class="col-md-10">
+                    <div class="input-group browse-input" style="padding-left: 2px">
+                        <input type="file" id="ImageFile" accept="image/x-png,image/gif,image/jpeg" onchange="ImageFileChange(); return false;" style="display: none" />
+                        <input type="text" id="OldImage" name="OldImage" class="form-control" value="@Model.EmployeeDetail.OldPictureFilePath" placeholder="Choose file..." style="width: 100px; background-color: lightgray;" hidden>
+                        <input type="text" name="Image" class="form-control" value="@Model.EmployeeDetail.PictureFilePath" placeholder="Choose file..." style="width: 100px; background-color: lightgray; pointer-events:none;" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" onclick="document.querySelector('#ImageFile').click(); return false;">Browse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Hired/Rsgd: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateHired" placeholder="Date Hired" value="@Model.EmployeeDetail.DateHired" style="width: 180px; text-align:end;" on-change="onDateChange"/>
+                    <kendo-datepicker name="DateResigned" placeholder="Date Resigned" value="@Model.EmployeeDetail.DateResigned" style="width: 180px; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+           @* <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date Resigned: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateResigned" placeholder="Date Resigned" value="@Model.EmployeeDetail.DateResigned" style="width: 200px; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>*@
+
+            @if (whris.Application.Library.Security.IsUserAdmin())
+            {
+                <div class="form-group row">
+                    <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                    <div class="col-md-10">
+                        <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsLocked" on-change="onCheckboxChange" />
+                    </div>
+                </div>
+            }
+            else 
+            {
+                <div class="form-group row">
+                    <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                    <div class="col-md-10">
+                        <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsLocked" on-change="onCheckboxChange" enabled="false"/>
+                    </div>
+                </div>
+            }
+
+         </div>
+    </div>
+
+    <kendo-tabstrip name="itemTabs" style="margin-top: 5px" on-select="tabStripOnSelect">
+        <popup-animation>
+            <open effects="fade:in" />
+        </popup-animation>
+        <items>
+            <tabstrip-item text="General Information" selected="true">
+                <content>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Address: </label>
+                                <div class="col-md-10">
+                                    <kendo-textbox name="Address" placeholder="Address" value="@Model.EmployeeDetail.Address" style="width: 80%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Zip Code: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="ZipCodeId" style="width: 20%"
+                                                    datatextfield="ZipCode"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.ZipCodeId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    placeholder="Zip code"
+                                                    on-change="onEntityComboboxChange"
+                                                    bind-to="@Model.ComboboxDatasources.ZipCodeCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Phone Number: </label>
+                                <div class="col-md-10">
+                                    <kendo-textbox name="PhoneNumber" placeholder="Phone number" value="@Model.EmployeeDetail.PhoneNumber" style="width: 20%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Cellphone Number: </label>
+                                <div class="col-md-10">
+                                    <kendo-textbox name="CellphoneNumber" placeholder="Cellphone number" value="@Model.EmployeeDetail.CellphoneNumber" style="width: 20%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Email Address: </label>
+                                <div class="col-md-10">
+                                    <kendo-textbox name="EmailAddress" placeholder="Email address" value="@Model.EmployeeDetail.EmailAddress" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date of Birth: </label>
+                                <div class="col-md-10">
+                                    <kendo-datepicker name="DateOfBirth" placeholder="Date of birth" value="@Model.EmployeeDetail.DateOfBirth" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Place of Birth: </label>
+                                <div class="col-md-10">
+                                    <kendo-textbox name="PlaceOfBirth" placeholder="Place of Birth" value="@Model.EmployeeDetail.PlaceOfBirth" style="width: 50%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Birth Zip Code: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="PlaceOfBirthZipCodeId" style="width: 20%"
+                                                    datatextfield="ZipCode"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.PlaceOfBirthZipCodeId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Place of birth zip code"
+                                                    bind-to="@Model.ComboboxDatasources.ZipCodeCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Sex: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="Sex" style="width: 20%"
+                                                    value="@Model.EmployeeDetail.Sex"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Sex"
+                                                    bind-to="@Model.ComboboxDatasources.GenderCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Civil Status: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="CivilStatus" style="width: 20%"
+                                                    value="@Model.EmployeeDetail.CivilStatus"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Civil status"
+                                                    bind-to="@Model.ComboboxDatasources.CivilStatusCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Citizenship: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="CitizenshipId" style="width: 30%"
+                                                    datatextfield="Citizenship"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.CitizenshipId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Citizenship"
+                                                    bind-to="@Model.ComboboxDatasources.CitizenShipCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Religion: </label>
+                                <div class="col-md-10">
+                                    <kendo-combobox name="ReligionId" style="width: 50%"
+                                                    datatextfield="Religion"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.ReligionId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Religion"
+                                                    bind-to="@Model.ComboboxDatasources.ReligionCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Height: </label>
+                                <div class="col-md-10">
+                                    <input class="form-control" name="Height" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.Height" style="width: 20%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Weight: </label>
+                                <div class="col-md-10">
+                                    <input class="form-control" name="Weight" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.Weight" style="width: 20%; text-align: end" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold; color: coral">Leave Balance: </label>
+                                <div class="col-md-10">
+                                    <input class="form-control" placeholder="Leave Balance" name="LeaveBalance" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.LeaveBalance" style="width: 30%; text-align: end" disabled/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="padding-top: 5px; font-weight: bold; color: coral">Loan Balance: </label>
+                                <div class="col-md-10">
+                                    <input class="form-control" placeholder="Loan Balance" name="LoanBalance" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.LoanBalance" style="width: 30%; text-align: end" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="Payroll Information">
+                <content>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">GSIS Number: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="Gsisnumber" placeholder="GSIS number" value="@Model.EmployeeDetail.Gsisnumber" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">SSS Number: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="Sssnumber" placeholder="SSS number" value="@Model.EmployeeDetail.Sssnumber" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">SSS Add-on: </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" placeholder="SSS Add-on" name="SssaddOn" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.SssaddOn" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">SSS Gross Salary: </label>
+                                <div class="col-md-9">
+                                    <div class="col-md-10">
+                                        <kendo-checkbox name="SssisGrossAmount" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.SssisGrossAmount" on-change="onCheckboxChange" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">HDMF Number: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="Hdmfnumber" placeholder="HDMF number" value="@Model.EmployeeDetail.Hdmfnumber" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">HDMF Type: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="Hdmftype" style="width: 30%"
+                                                    value="@Model.EmployeeDetail.Hdmftype"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Hdmf Type"
+                                                    bind-to="@Model.ComboboxDatasources.HDMFTypeCmbDs">
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">HDMF Add-on: </label>
+                                <div class="col-md-9">
+                                    <input class="form-control" placeholder="HDMF Add-on" name="HdmfaddOn" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.HdmfaddOn" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">PHIC Number: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="Phicnumber" placeholder="PHIC number" value="@Model.EmployeeDetail.Phicnumber" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">TIN: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="Tin" placeholder="TIN" value="@Model.EmployeeDetail.Tin" style="width: 30%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Tax Code: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="TaxCodeId" style="width: 30%"
+                                                    datatextfield="TaxCode"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.TaxCodeId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Tax code"
+                                                    bind-to="@Model.ComboboxDatasources.TaxCodeCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Tax Table: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="TaxTable" style="width: 30%"
+                                                    value="@Model.EmployeeDetail.TaxTable"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Tax table"
+                                                    bind-to="@Model.ComboboxDatasources.TaxTableCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">ATM Acct No.: </label>
+                                <div class="col-md-9">
+                                    <kendo-textbox name="ATMAccountNumber" placeholder="ATM Acct no." value="@Model.EmployeeDetail.AtmaccountNumber" style="width: 40%;">
+                                    </kendo-textbox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Company: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="CompanyId" style="width: 60%"
+                                                    datatextfield="Company"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.CompanyId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Company"
+                                                    bind-to="@Model.ComboboxDatasources.CompanyCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Branch: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="BranchId" style="width: 40%"
+                                                    datatextfield="Branch"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.BranchId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Branch"
+                                                    bind-to="@Model.ComboboxDatasources.BranchCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Department: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="DepartmentId" style="width: 40%"
+                                                    datatextfield="Department"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.DepartmentId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Department"
+                                                    bind-to="@Model.ComboboxDatasources.DepartmentCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Position: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="PositionId" style="width: 40%"
+                                                    datatextfield="Position"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.PositionId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Position"
+                                                    bind-to="@Model.ComboboxDatasources.PostionCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Division: </label>
+                                <div class="col-md-9">
+                                    <kendo-combobox name="DivisionId" style="width: 60%"
+                                                    datatextfield="Division"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.DivisionId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Division"
+                                                    bind-to="@Model.ComboboxDatasources.DivisionCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Emplymnt Tp | Flex | Exmptd in Ddctns | Long Shift | Flex Break: </label>
+                                <div class="col-md-8">
+                                    <kendo-combobox name="EmploymentType" style="width: 40%"
+                                                    datatextfield="EmploymentType"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.EmploymentType"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Employment Type"
+                                                    bind-to="@Model.ComboboxDatasources.EmploymentTypeCmbDs">
+
+                                    </kendo-combobox>
+                                    <kendo-checkbox name="IsFlex" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsFlex" on-change="onCheckboxChange" />
+                                    <kendo-checkbox name="IsExemptedInMandatoryDeductions" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsExemptedInMandatoryDeductions" on-change="onCheckboxChange" />
+                                    <kendo-checkbox name="IsLongShift" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsLongShift" on-change="onCheckboxChange" />
+                                    <kendo-checkbox name="IsFlexBreak" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsFlexBreak" on-change="onCheckboxChange" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll Group: </label>
+                                <div class="col-md-8">
+                                    <kendo-combobox name="PayrollGroupId" style="width: 40%"
+                                                    datatextfield="PayrollGroup"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.PayrollGroupId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Payroll group"
+                                                    bind-to="@Model.ComboboxDatasources.PayrollGroupCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll Type: </label>
+                                <div class="col-md-8">
+                                    <kendo-combobox name="PayrollTypeId" style="width: 40%"
+                                                    datatextfield="PayrollType"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.PayrollTypeId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Payroll type"
+                                                    bind-to="@Model.ComboboxDatasources.PayrollTypeCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">GL Account: </label>
+                                <div class="col-md-8">
+                                    <kendo-combobox name="AccountId" style="width: 60%"
+                                                    datatextfield="Account"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.AccountId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="GL account"
+                                                    bind-to="@Model.ComboboxDatasources.GlAccountCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+
+                           
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Fix No Of Days: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Fix No Of Days" name="FixNoOfDays" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.FixNumberOfDays" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Fix No Of Hrs: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Fix No Of Hours" name="FixNoOfHours" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.FixNumberOfHours" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                             @if (whris.Application.Library.Security.IsUserAdmin()) 
+                             {
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Is Salary Confidential: </label>
+                                    <div class="col-md-8">
+                                        <kendo-checkbox name="IsSalaryConfidential" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.EmployeeDetail.IsSalaryConfidential" on-change="onCheckboxChange" />
+                                    </div>
+                                </div>
+                             }
+
+                            @if (!(Model.EmployeeDetail.IsSalaryConfidential ?? false) || whris.Application.Library.Security.IsUserAdmin())
+                            {
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Monthly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Monthly Rate" name="MonthlyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.MonthlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Payroll Rate" name="PayrollRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.PayrollRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Daily Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Daily Rate" name="DailyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.DailyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Absent Daily Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Absent Daily Rate" name="AbsentDailyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.AbsentDailyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Hourly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Hourly Rate" name="HourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.HourlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Night Hourly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Night Hourly Rate" name="NightHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NightHourlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Overtime Hourly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Overtime Hourly Rate" name="OvertimeHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.OvertimeHourlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Overtime Night Hourly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Overtime Night Hourly Rate" name="OvertimeNightHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.OvertimeNightHourlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Tardy Hourly Rate: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Tardy Hourly Rate" name="TardyHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.TardyHourlyRate" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Allowance: </label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" disabled placeholder="Allowance" name="Allowance" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.Allowance" style="width: 30%; text-align: end" />
+                                    </div>
+                                </div>
+                            }
+                            
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Shift Code: </label>
+                                <div class="col-md-8">
+                                    <kendo-combobox name="ShiftCodeId" style="width: 60%"
+                                                    datatextfield="ShiftCode"
+                                                    datavaluefield="Id"
+                                                    value="@Model.EmployeeDetail.ShiftCodeId"
+                                                    min-length="3"
+                                                    height="520"
+                                                    filter="FilterType.Contains"
+                                                    on-change="onEntityComboboxChange"
+                                                    placeholder="Shift code"
+                                                    bind-to="@Model.ComboboxDatasources.ShiftCodeCmbDs">
+
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </content>
+            </tabstrip-item>
+            <tabstrip-item text="Memo">
+                <content>
+                    @(
+                        Html.Kendo().Grid(Model.EmployeeDetail.MstEmployeeMemos)
+                        .Name("MstEmployeeMemos")
+                        .ToolBar(toolbar => toolbar.Custom()
+                            .Text("Add Memo")
+                            .IconClass("k-icon k-i-plus")
+                            .HtmlAttributes(new { onclick = "CmdAddMemo(); return false;" }))
+                        .Columns(columns =>
+                        {
+                            columns.Command(command => command.Custom("Content").Click("CmdDetailMemo").IconClass("k-icon k-i-track-changes-enable"))
+                                .Width(122);
+                            columns.Command(command => command.Custom("Print").Click("CmdPrintMemo").IconClass("k-icon k-i-print"))
+                                .Width(100);
+                            columns.Command(command => command.Custom("Delete").Click("CmdDeleteMemo").IconClass("k-icon k-i-x"))
+                                .Width(110);
+                            columns.Bound(column => column.Id).Hidden();
+                            columns.Bound(column => column.MemoDate).Width(150);
+                            columns.Bound(column => column.MemoSubject);
+                            columns.Bound(column => column.MemoContent).Hidden(true);
+                            columns.Bound(column => column.PreparedBy).Hidden(true);
+                            columns.Bound(column => column.ApprovedBy).Hidden(true);
+                            columns.Bound(column => column.IsDeleted).Hidden(true);
+                            })
+                        .Filterable()
+                        .Selectable(x => x.Mode(GridSelectionMode.Single))
+                        .Pageable()
+                        .Sortable()
+                        .Editable(editable => 
+                            editable.Mode(GridEditMode.InCell))
+                        .Scrollable()
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(5)
+                        .ServerOperation(false))
+                    )
+                </content>
+            </tabstrip-item>
+            
+           @*  @if (!whris.Application.Library.Security.IsUserAdmin() && Model.EmployeeDetail.IsLocked)
+            {
+                <tabstrip-item text="Shift Codes" >
+                    <content>
+                        <div style="pointer-events:none">
+                            @(
+                                Html.Kendo().Grid(Model.EmployeeDetail.MstEmployeeShiftCodes)
+                                .Name("MstEmployeeShiftCodes")
+                                .ToolBar(toolbar => toolbar.Custom()
+                                .Text("Add Shift Code")
+                                .IconClass("k-icon k-i-plus")
+                                .HtmlAttributes(new { onclick = "CmdAddShiftCode(); return false;" }))
+                                .Columns(columns =>
+                                {
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeleteShiftCode").IconClass("k-icon k-i-x"))
+                                    .Width(110);
+                                    columns.ForeignKey(column => column.ShiftCodeId, x => x.Read(b => b.Url("/MstEmployee/Detail?handler=ShiftCodes")), "Id", "ShiftCode")
+                                    .Title("Shift Code")
+                                    .HtmlAttributes(new { onchange = "onFKShiftCodeChange()" });
+                                    columns.Bound(column => column.EmployeeId).Hidden(true);
+                                    columns.Bound(column => column.IsDeleted).Hidden(true);
+                                })
+                                .Filterable()
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(5)
+                                .ServerOperation(false))
+                                )
+                        </div>                       
+                    </content>
+                </tabstrip-item>
+            }
+            else
+            {
+                <tabstrip-item text="Shift Codes">
+                    <content>
+                        @(
+                            Html.Kendo().Grid(Model.EmployeeDetail.MstEmployeeShiftCodes)
+                            .Name("MstEmployeeShiftCodes")
+                            .ToolBar(toolbar => toolbar.Custom()
+                            .Text("Add Shift Code")
+                            .IconClass("k-icon k-i-plus")
+                            .HtmlAttributes(new { onclick = "CmdAddShiftCode(); return false;" }))
+                            .Columns(columns =>
+                            {
+                                columns.Command(command => command.Custom("Delete").Click("CmdDeleteShiftCode").IconClass("k-icon k-i-x"))
+                                .Width(110);
+                                columns.ForeignKey(column => column.ShiftCodeId, x => x.Read(b => b.Url("/MstEmployee/Detail?handler=ShiftCodes")), "Id", "ShiftCode")
+                                .Title("Shift Code")
+                                .HtmlAttributes(new { onchange = "onFKShiftCodeChange()" });
+                                columns.Bound(column => column.EmployeeId).Hidden(true);
+                                columns.Bound(column => column.IsDeleted).Hidden(true);
+                            })
+                            .Filterable()
+                            .Pageable()
+                            .Sortable()
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                            .Scrollable()
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(5)
+                            .ServerOperation(false))
+                            )
+                    </content>
+                </tabstrip-item>            
+            } *@
+
+            <tabstrip-item text="Shift Codes">
+                <content>
+                    @(
+                        Html.Kendo().Grid(Model.EmployeeDetail.MstEmployeeShiftCodes)
+                            .Name("MstEmployeeShiftCodes")
+                            .ToolBar(toolbar =>
+                            {
+                                toolbar.Custom()
+                                    .Text("Add Shift Code")
+                                    .IconClass("k-icon k-i-plus")
+                                    .HtmlAttributes(new { onclick = "CmdAddShiftCode(); return false;" });                                
+
+                                if (whris.Application.Library.Security.IsUserAdmin())
+                                {
+                                    toolbar.Custom().Text("|").HtmlAttributes(new { style="background-color: transparent;border: none;cursor: default;padding-right: 5px;padding-left: 5px;"});
+
+                                    toolbar.Custom()
+                                        .Text("Approve Shift Codes")
+                                        .IconClass("k-icon k-i-check")
+                                        .HtmlAttributes(new
+                                        {
+                                            onclick = "CmdApproveShiftCodes(); return false;",
+                                            style = "color: #fff; background-color: #16b978 !important; border-color: #16b978ab;" 
+                                        });
+                                }
+
+                                toolbar.Custom()
+                                    .Text("Note: When adding a new employee please save the record first before adding shift codes.")
+                                    .HtmlAttributes(new { style = "color: coral;font-weight: bold;background-color: transparent;border: none;cursor: default;padding-right: 5px;padding-left: 5px;" });
+                            })
+                            .Columns(columns =>
+                            {
+                                columns.Command(command => command.Custom("Delete").Click("CmdDeleteShiftCode").IconClass("k-icon k-i-x"))
+                                .Width(110);
+                                columns.ForeignKey(column => column.ShiftCodeId, x => x.Read(b => b.Url("/MstEmployee/Detail?handler=ShiftCodes")), "Id", "ShiftCode")
+                                    .Title("Shift Code")
+                                    .HtmlAttributes(new { onchange = "onFKShiftCodeChange(event)" })
+                                    .Width(500);
+                                columns.Bound(column => column.Status).Width(120).HtmlAttributes(new { style = "pointer-events: none;" });
+                                columns.Bound(column => column.Remarks).Width(300);
+                                columns.Bound(column => column.RowVersion).Visible(false);
+                                columns.Template("").Title("");
+                                columns.Bound(column => column.EmployeeId).Hidden(true);
+                                columns.Bound(column => column.IsDeleted).Hidden(true);
+                            })
+                            .Filterable()
+                            .Pageable()
+                            .Sortable()
+                            .Editable(editable => editable.Mode(GridEditMode.InCell).CreateAt(GridInsertRowPosition.Bottom))
+                            .Events(events => events.Page("onShiftCodesPage"))
+                            .Scrollable()
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(10)
+                                .ServerOperation(false)
+                            )
+                    )
+                </content>
+            </tabstrip-item>
+
+            @if (whris.Application.Library.Security.IsUserAdmin())
+            {
+                <tabstrip-item text="Salary History">
+                    <content>
+                        @(
+                            Html.Kendo().Grid(Model.EmployeeDetail.MstEmployeeSalaryHistories)
+                                .Name("MstEmployeeSalaryHistory")
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(column => column.ChangeDate)
+                                    .Title("Change Date")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.MonthlyRate)
+                                    .Title("Monthly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.PayrollRate)
+                                    .Title("Payroll Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.DailyRate)
+                                    .Title("Daily Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.AbsentDailyRate)
+                                    .Title("Absent Daily Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.HourlyRate)
+                                    .Title("Hourly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.NightHourlyRate)
+                                    .Title("Night Hourly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.OvertimeHourlyRate)
+                                    .Title("Overtime Hourly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.OvertimeNightHourlyRate)
+                                    .Title("Overtime Night Hourly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.TardyHourlyRate)
+                                    .Title("Tardy Hourly Rate")
+                                    .Filterable(false)
+                                    .Width(100);
+                                    columns.Bound(column => column.Allowance)
+                                    .Title("Allowance")
+                                    .Filterable(false)
+                                    .Width(100);
+                                })
+                                .Filterable()
+                                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                                .Pageable()
+                                .Sortable()
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Scrollable()
+                                .DataSource(dataSource => dataSource
+                                    .Ajax()
+                                    .PageSize(5)
+                                    .ServerOperation(false)
+                                    .Model(model =>
+                                    {
+                                        model.Field(x => x.ChangeDate).Editable(false);
+                                        model.Field(x => x.MonthlyRate).Editable(false);
+                                        model.Field(x => x.PayrollRate).Editable(false);
+                                        model.Field(x => x.DailyRate).Editable(false);
+                                        model.Field(x => x.AbsentDailyRate).Editable(false);
+                                        model.Field(x => x.HourlyRate).Editable(false);
+                                        model.Field(x => x.NightHourlyRate).Editable(false);
+                                        model.Field(x => x.OvertimeHourlyRate).Editable(false);
+                                        model.Field(x => x.OvertimeNightHourlyRate).Editable(false);
+                                        model.Field(x => x.TardyHourlyRate).Editable(false);
+                                        model.Field(x => x.Allowance).Editable(false);
+
+                                    })
+                                )
+                        )                        
+                    </content>
+                </tabstrip-item>
+            }
+            
+            <tabstrip-item text="New Salary">
+                <content>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                    <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Monthly Rate: </label>
+                                    <div class="col-md-8">
+                                    <input class="form-control" placeholder="Monthly Rate" name="NewMonthlyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.NewMonthlyRate" style="width: 30%; text-align: end" onblur="calculateSalary()"/>
+                                    </div>
+                                </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Payroll Rate" id="NewPayrollRate" name="NewPayrollRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.NewPayrollRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Daily Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Daily Rate" id="NewDailyRate" name="NewDailyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.NewDailyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Absent Daily Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Absent Daily Rate" id="NewAbsentDailyRate" name="NewAbsentDailyRate" data-inputmask="'alias': 'currency'" value="@Model.EmployeeDetail.NewAbsentDailyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Hourly Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Hourly Rate" id="NewHourlyRate" name="NewHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewHourlyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Night Hourly Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Night Hourly Rate" id="NewNightHourlyRate" name="NewNightHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewNightHourlyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Overtime Hourly Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Overtime Hourly Rate" id="NewOvertimeHourlyRate" name="NewOvertimeHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewOvertimeHourlyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Overtime Night Hourly Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Overtime Night Hourly Rate" id="NewOvertimeNightHourlyRate" name="NewOvertimeNightHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewOvertimeNightHourlyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Tardy Hourly Rate: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Tardy Hourly Rate" id="NewTardyHourlyRate" name="NewTardyHourlyRate" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewTardyHourlyRate" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Allowance: </label>
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="Allowance" name="NewAllowance" data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': '5', 'digitsOptional': 'false'" value="@Model.EmployeeDetail.NewAllowance" style="width: 30%; text-align: end" />
+                                </div>
+                            </div>
+
+                            @if (whris.Application.Library.Security.IsUserAdmin())
+                            {
+                                <div class="form-group row">
+                                    <button id="btnApproveSalary"
+                                            class="btn btn-primary"
+                                            type="button"
+                                            onclick="CmdApproveSalary()"
+                                            style="margin-left:5px; width:53%">
+                                        <span class="btn-label">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                        Approve Salary
+                                    </button>
+                                </div>
+                            }                                                    
+                        </div>
+                    </div>
+                </content>
+            </tabstrip-item>
+        </items>
+    </kendo-tabstrip>
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>

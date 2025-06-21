@@ -1,0 +1,633 @@
+﻿@using whris.Application.Library;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WHRS</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/whris.UI.styles.css" asp-append-version="true" />
+    <link href="~/lib/font-awesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="~/lib/jbox/jbox.all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap" rel="stylesheet">
+
+    <link href="~/lib/kendo-ui/styles/kendo.bootstrap-main.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/lib/kendo-ui/js/jquery.min.js"></script>
+    <script src="~/lib/kendo-ui/js/jszip.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.all.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.aspnetmvc.min.js"></script>
+    <script src="~/lib/kendo-ui/js/cultures/kendo.culture.en-PH.min.js"></script>
+    <script src="~/lib/kendo-ui/js/kendo.timezones.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/font-awesome/js/all.js"></script>
+    <script src="~/lib/inputmask-5x/dist/jquery.inputmask.js"></script>
+    <script src="~/lib/inputmask-5x/dist/bindings/inputmask.binding.js"></script>
+    <script src="~/lib/jbox/jbox.all.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/util.js"></script>
+
+    <style>
+        #drawer {
+            height: 85vh;
+            background-color: rgb(250 250 250 / 0%)
+        }
+
+        #drawer-content li {
+            font-size: 1.2em;
+            padding-left: .89em;
+            background: 0 0;
+            border-radius: 0;
+            border-width: 0 0 1px;
+            border-color: rgba(33, 37, 41, 0.125);
+            line-height: 1.5em;
+            padding: 0em 0.4em 0.7em .84em
+        }
+
+            #drawer-content li:last-child {
+                border: 0;
+            }
+
+        .hidden {
+            display: none;
+        }
+
+        #demo-runner #mainContent div.demo-section {
+            max-width: 800px;
+        }
+
+        .k-toolbar .k-icon {
+            font-size: 18px;
+        }
+
+        #drawer-content ul {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+            margin-bottom: .5rem;
+            font-family: inherit;
+            font-weight: 500;
+            line-height: 1.2;
+            color: inherit;
+        }
+
+        .k-drawer-content {
+            padding-top: 0px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-bottom: 15px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-left: 8px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body style="background-image: url(@Url.Content("~/images/hive.jpg"))">
+    <header>
+        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="background-color: #0077cc1c !important;">*@
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="@Url.Content("~/images/icon.jpg")" style="width: 30px; height: auto; margin-top: -10px; margin-left: 7px; margin-right: -10px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li><a class="btn btn-light" onclick="showMenu()"><i class="fa-solid fa-bars"></i></a></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">
+                                    <div>MENU/DASHBOARD</div>
+                                </a>
+                            </li>
+                        }
+                        @*else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">
+                                    <div>Home</div>
+                                </a>
+                            </li>
+                        }*@
+                        
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark position-relative pe-3" asp-area="" asp-page="/ChatToDB">
+                                    AI CHAT
+                                    <span class="position-absolute start-90 translate-middle badge rounded-pill bg-danger" style="margin-left: -7px;">
+                                        NEW
+                                        <span class="visually-hidden">New feature</span>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Calendar">CALENDAR</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">ABOUT</a>
+                        </li>
+                    </ul>
+
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <div class="navbar-nav flex-grow-1" style="margin-left: -180px">
+                            <img id="logoImageInLayout" src="@Security.GetImageLogoPath()" style="border-radius: 50%; width: 30px; height: 30px; margin-top: 1px;" />&nbsp;&nbsp;
+                            <h3 id="logoImageTextInLayout" style="color: #8e8e9d; font-family: Arial, serif; margin-top: 2px;">@Security.GetCompanyName()</h3>
+                        </div>
+                    }
+
+                    <partial name="_LoginPartial" />
+                </div>
+                
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            <div id="mainContent">
+                <div class="demo-section">
+
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <kendo-drawer name="drawer"
+                                  template-id="drawer-template"
+                                  mode="push"
+                                  position="left"
+                                  auto-collapse="false"
+                                  min-height="330"
+                                  on-item-click="onItemClick"
+                                  swipe-to-open="false">
+                            <mini enabled="true" />
+                            <content>
+                                @RenderBody()
+                            </content>
+                        </kendo-drawer>
+
+                        <script id="drawer-template" type="text/x-kendo-template">
+                            <ul>
+                              <li data-role='drawer-item' id="Setup">
+                                  <img src="@Url.Content("~/images/toolbaricons/setup.png")" style="height: 28px; width: 28px; margin-left: -7px; margin-right: 7px"/>
+                                  <span class='k-item-text' data-id='Setup'>&nbsp; Setup</span>
+                                  <span class='k-spacer'></span>
+                                  <span class='k-icon k-i-arrow-chevron-right'></span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' class='hidden' id="MstUser">
+                                  <span class='k-icon k-i-none' id='none'></span>
+                                  <span class='fas fa-user' style='margin-top: 7px; margin-right: 18px'></span>
+                                  <span class='k-item-text' data-id='User'>Users</span>
+                               </li>
+                               <li data-role='drawer-item' class='hidden' id="MstEmployee">
+                                  <span class='k-icon k-i-none' id='none'></span>
+                                  <span class='fas fa-people-line' style='margin-top: 7px; margin-left: -3px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='Employees'>Employees</span>
+                               </li>
+                              <li data-role='drawer-item' class='hidden' id="MstCompany">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-building' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>
+                                  <span class='k-item-text' data-id='Company'>Company</span>
+                              </li>
+                               <li data-role='drawer-item' class='hidden' id="MstMandatoryDeductionTable">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-landmark' style='margin-top: 7px; margin-left: -2px; margin-right: 16px'></span>
+                                  <span class='k-item-text' data-id='TaxTables'>Mandatory Tax Tables</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="MstShiftCode">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-calendar' style='margin-top: 7px; margin-left: -1px; margin-right: 16px'></span>
+                                  <span class='k-item-text' data-id='ShiftCode'>Shift Code</span>
+                              </li>
+                               <li data-role='drawer-item' class='hidden' id="MstDayType">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-sun' style='margin-top: 7px; margin-left: 0px; margin-right: 13px'></span>
+                                  <span class='k-item-text' data-id='DayType'>Day Type</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="MstOtherIncome">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-user-plus' style='margin-top: 7px; margin-left: 0px; margin-right: 10px'></span>
+                                  <span class='k-item-text' data-id='OtherIncome'>Other Income</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="MstOtherDeduction">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-user-minus' style='margin-top: 7px; margin-left: 0px; margin-right: 10px'></span>
+                                  <span class='k-item-text' data-id='OtherDeduction'>Other Deduction</span>
+                              </li>
+                               <li data-role='drawer-item' class='hidden' id="SysTables">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-table-cells' style='margin-top: 7px; margin-left: 0px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='SystemTable'>System Tables</span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' id="Transactions">
+                                  <img src="@Url.Content("~/images/toolbaricons/transactions.png")" style="height: 28px; width: 28px; margin-left: -7px; margin-right: 7px"/>
+                                  <span class='k-item-text' data-id='Transactions'>&nbsp; Transactions</span>
+                                  <span class='k-spacer'></span>
+                                  <span class='k-icon k-i-arrow-chevron-right'></span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' class='hidden' id="TrnDtr">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-fingerprint' style='margin-top: 7px; margin-right: 14px'></span>
+                                  <span class='k-item-text' data-id='DTR'>DTR</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnLeaveApplication">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-calendar-xmark' style='margin-top: 7px; margin-left: 0px; margin-right: 16px'></span>
+                                  <span class='k-item-text' data-id='Leave'>Leave Application</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnOTApplication">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-clock' style='margin-top: 7px; margin-left: -2px; margin-right: 16px'></span>
+                                  <span class='k-item-text' data-id='OTApp'>Overtime Application</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnLoans">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-hand-holding' style='margin-top: 7px; margin-left: -2px; margin-right: 14px'></span>
+                                  <span class='k-item-text' data-id='Loans'>Loans</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnPayrollOtherIncome">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-circle-plus' style='margin-top: 7px; margin-left: -3px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='OtherInc'>Payroll Other Income</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnPayrollOtherDeduction">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-circle-minus' style='margin-top: 7px; margin-left: -3px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='OtherDeduc'>Payroll Other Deduction</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnLastWithholdingTax">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-book' style='margin-top: 7px; margin-left: -1px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='LastWith'>Last Withholding Task</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnPayroll">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-peso-sign' style='margin-top: 7px; margin-left: -1px; margin-right: 17px'></span>
+                                  <span class='k-item-text' data-id='Payroll'>Payroll</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="TrnChangeShiftCode">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-code' style='margin-top: 7px; margin-left: -6px; margin-right: 13px'></span>
+                                  <span class='k-item-text' data-id='ChangeShift'>Change Shift Code</span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' id="Reports">
+                                  <img src="@Url.Content("~/images/toolbaricons/reports.png")" style="height: 28px; width: 28px; margin-left: -7px; margin-right: 7px"/>
+                                  <span class='k-item-text' data-id='Reports'>&nbsp; Reports</span>
+                                  <span class='k-spacer'></span>
+                                  <span class='k-icon k-i-arrow-chevron-right'></span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' class='hidden' id="RptDtr">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-timeline' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='DTRReps'>DTR Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptPayroll">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-money-bill' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='PayrollReps'>Payroll Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptMandatory">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-hands-holding-circle' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='MandatoryReps'>Mandatory Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptWithTax">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-hands' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='WithTaxReps'>Withholding Tax Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptLeave">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-leaf' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='LeaveReps'>Leave Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptLoans">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-share' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='LoansReps'>Loan Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptAccounting">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-book-open' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='AcctReps'>Accounting Reports</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptATMBank">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-credit-card' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='ATMBank'>ATM/Bank</span>
+                              </li>
+                              <li data-role='drawer-item' class='hidden' id="RptDemographics">
+                                  <span class='k-icon k-i-none'></span>
+                                  <span class='fas fa-chart-simple' style='margin-top: 7px; margin-left: -2px; margin-right: 15px'></span>
+                                  <span class='k-item-text' data-id='Demographic'>Demographics</span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' id="SysUtilities">
+                                  <img src="@Url.Content("~/images/toolbaricons/utilities.png")" style="height: 30px; width: 30px; margin-left: -9px; margin-right: 5px"/>
+                                  <span class='k-item-text' data-id='Utilities'>&nbsp; Utilities</span>
+                              </li>
+                              <li data-role='drawer-separator'></li>
+                              <li data-role='drawer-item' id="SysSettings">
+                                  <img src="@Url.Content("~/images/toolbaricons/setting.png")" style="height: 30px; width: 30px; margin-left: -9px; margin-right: 5px"/>
+                                  <span class='k-item-text' data-id='Settings'>&nbsp; Settings</span>
+                              </li>
+                            </ul>
+                        </script>
+
+                        <link href="~/lib/jbox/jbox.all.min.css" rel="stylesheet" />
+                        <script src="~/lib/jbox/jbox.all.min.js"></script>
+
+                        <script>
+                            $(document).ready(function () {
+                                InitSideMenuItemToolTips();
+
+                                if (detectMob())
+                                {
+                                    localStorage.setItem("showDrawer", false);
+                                    $("#logoImageInLayout").hide();
+                                    $("#logoImageTextInLayout").hide();
+                                }
+                               
+                                var windowLocation = localStorage.getItem("selectedUrlAddress");
+
+                                var drawerInstance = $("#drawer").data().kendoDrawer;
+                                var drawerContainer = drawerInstance.drawerContainer;
+
+                                var showDrawer = localStorage.getItem("showDrawer");
+
+                                var selectedMenu = localStorage.getItem("selectedMenu");
+                                var selectedExpandedMenu = localStorage.getItem("selectedExpandedMenu");
+
+                                if (showDrawer == "false") {
+                                    $(".k-icon.k-i-none").hide()
+                                    drawerInstance.hide();
+                                }
+                                else {
+                                    $(".k-icon.k-i-none").show()
+                                    drawerInstance.show();
+                                }
+
+                                $("#" + selectedMenu).addClass("k-selected");
+
+                                try
+                                {
+                                    if (!selectedExpandedMenu.includes("Mst") && !selectedExpandedMenu.includes("Trn") && !selectedExpandedMenu.includes("Sys") && !selectedExpandedMenu.includes("Rpt")) {
+                                        var el = $("#" + selectedExpandedMenu);
+                                        var elementId = el[0].id;
+
+                                        var drawerContainer = $("drawer").parent().find("#drawer-content > div");
+                                        var expandIcon = el.find("span.k-i-arrow-chevron-right");
+                                        var collapseIcon = el.find("span.k-i-arrow-chevron-down");
+                                        drawerContainer.find("#drawer-content > div").addClass("hidden");
+                                        drawerContainer.find("#drawer-content").find("#" + el.find(".k-item-text").attr("data-id")).removeClass("hidden");
+
+                                        var itemCount = 0;
+
+                                        //Setup sub menu count
+                                        if (elementId == "Setup" || elementId.includes("Mst") || elementId.includes("Sys") || elementId.includes("Rpt")) {
+                                            itemCount = 9;
+                                        }
+
+                                        //Transactions sub menu count
+                                        if (elementId == "Transactions" || elementId.includes("Trn")) {
+                                            itemCount = 9;
+                                        }
+
+                                        //Reports sub menu count
+                                        if (elementId == "Reports" || elementId.includes("Rpt")) {
+                                            itemCount = 9;
+                                        }
+
+                                        if (expandIcon.length) {
+                                            el.nextAll(".k-drawer-item:not(.k-drawer-separator):lt(" + itemCount + ")").removeClass("hidden");
+                                            expandIcon.removeClass("k-i-arrow-chevron-right").addClass("k-i-arrow-chevron-down");
+                                        }
+
+                                        if (collapseIcon.length) {
+                                            el.nextAll(".k-drawer-item:not(.k-drawer-separator):lt(" + itemCount + ")").addClass("hidden");
+                                            collapseIcon.addClass("k-i-arrow-chevron-right").removeClass("k-i-arrow-chevron-down");
+                                        }
+                                    }
+                                }
+                                catch(err)
+                                {
+                                    console.log("Document loaded...");
+                                }
+                                
+                            });
+
+                            function onItemClick(e) {
+                                var elementId = e.item[0].id;
+
+                                localStorage.setItem("selectedMenu", elementId);
+                                localStorage.setItem("selectedUrlAddress", location.href)
+
+                                if (elementId.includes("Mst") || elementId.includes("Trn") || elementId.includes("Sys") || elementId.includes("Rpt")) {
+                                    window.location = window.location.origin + "/" + elementId + "/Index";
+                                }
+
+                                if (!e.item.hasClass("k-drawer-separator")) {
+
+                                    if (!elementId.includes("Mst") && !elementId.includes("Trn") && !elementId.includes("Sys") && !elementId.includes("Rpt")) {
+                                        localStorage.setItem("selectedExpandedMenu", elementId);
+                                    }
+
+                                    var drawerContainer = e.sender.drawerContainer;
+                                    var expandIcon = e.item.find("span.k-i-arrow-chevron-right");
+                                    var collapseIcon = e.item.find("span.k-i-arrow-chevron-down");
+                                    drawerContainer.find("#drawer-content > div").addClass("hidden");
+                                    drawerContainer.find("#drawer-content").find("#" + e.item.find(".k-item-text").attr("data-id")).removeClass("hidden");
+
+                                    var itemCount = 0;
+
+                                    //Setup sub menu count
+                                    if (elementId == "Setup" || elementId.includes("Mst") || elementId.includes("Sys")) {
+                                        itemCount = 9;
+                                    }
+
+                                    //Transactions sub menu count
+                                    if (elementId == "Transactions" || elementId.includes("Trn")) {
+                                        itemCount = 9;
+                                    }
+
+                                    //Reports sub menu count
+                                    if (elementId == "Reports" || elementId.includes("Rpt")) {
+                                        itemCount = 9;
+                                    }
+
+                                    if (expandIcon.length) {
+                                        e.item.nextAll(".k-drawer-item:not(.k-drawer-separator):lt(" + itemCount + ")").removeClass("hidden");
+                                        expandIcon.removeClass("k-i-arrow-chevron-right").addClass("k-i-arrow-chevron-down");
+                                    }
+
+                                    if (collapseIcon.length) {
+                                        e.item.nextAll(".k-drawer-item:not(.k-drawer-separator):lt(" + itemCount + ")").addClass("hidden");
+                                        collapseIcon.addClass("k-i-arrow-chevron-right").removeClass("k-i-arrow-chevron-down");
+                                    }
+                                }
+                            }
+
+                            function showMenu() {
+                                var drawerInstance = $("#drawer").data().kendoDrawer;
+                                var drawerContainer = drawerInstance.drawerContainer;
+
+                                if (drawerContainer.hasClass("k-drawer-expanded")) {
+                                    localStorage.setItem("showDrawer", false);
+
+                                    $(".k-icon.k-i-none").hide()
+                                    drawerInstance.hide();
+                                }
+                                else {
+                                    localStorage.setItem("showDrawer", true);
+
+                                    $(".k-icon.k-i-none").show()
+                                    drawerInstance.show();
+                                }
+
+                                resizeTrnGrids();
+                            }
+
+                            function InitSideMenuItemToolTips()
+                            {
+                                GetToolTip($("#MstUser"), "Users");
+                                GetToolTip($("#MstEmployee"), "Employees");
+                                GetToolTip($("#MstCompany"), "Company");
+                                GetToolTip($("#MstMandatoryDeductionTable"), "Mandatory Deduction Tables");
+                                GetToolTip($("#MstShiftCode"), "Shift Codes");
+                                GetToolTip($("#MstDayType"), "Day Type");
+                                GetToolTip($("#MstOtherIncome"), "Other Income");
+                                GetToolTip($("#MstOtherDeduction"), "Other Deductions");
+                                GetToolTip($("#SysTables"), "System Tables");
+                                GetToolTip($("#TrnDtr"), "DTR");
+                                GetToolTip($("#TrnLeaveApplication"), "Leave Application");
+                                GetToolTip($("#TrnOTApplication"), "Overtime Application");
+                                GetToolTip($("#TrnLoans"), "Loans");
+                                GetToolTip($("#TrnPayrollOtherIncome"), "Payroll Other Income");
+                                GetToolTip($("#TrnPayrollOtherDeduction"), "Payrolll Other Deduction");
+                                GetToolTip($("#TrnLastWithholdingTax"), "Last Withholding Tax");
+                                GetToolTip($("#TrnPayroll"), "Payroll");
+                                GetToolTip($("#TrnChangeShiftCode"), "Change Shift Code");
+                                GetToolTip($("#RptDtr"), "DTR Reports");
+                                GetToolTip($("#RptPayroll"), "Payroll Reports");
+                                GetToolTip($("#RptMandatory"), "Mandatory Reports");
+                                GetToolTip($("#RptWithTax"), "Withholding Tax Reports");
+                                GetToolTip($("#RptLeave"), "Leave Reports");
+                                GetToolTip($("#RptLoans"), "Loan Reports");
+                                GetToolTip($("#RptAccounting"), "Accounting Reports");
+                                GetToolTip($("#RptATMBank"), "ATM/Bank");
+                                GetToolTip($("#RptDemographic"), "Demographic");
+                                GetToolTip($("#Setup"), "Setup");
+                                GetToolTip($("#Transactions"), "Transactions");
+                                GetToolTip($("#Reports"), "Reports");
+                                GetToolTip($("#SysUtilities"), "Utilities");
+                                GetToolTip($("#SysSettings"), "Settings");
+                            }
+
+                            function GetToolTip($menu, $content)
+                            {
+                                new jBox("Tooltip", {
+                                    attach: $menu,
+                                    theme: "TooltipDark",
+                                    animation: "zoomOut",
+                                    content: $content,
+                                    position: {
+                                        x: "right",
+                                        y: "center"
+                                    },
+                                    outside: "x",
+                                    pointer: "top:15",
+                                    content: $content,
+                                    animation: "move",
+                                    adjustDistance: {
+                                        top: 55,
+                                        right: 5,
+                                        bottom: 5,
+                                        left: 5
+                                    }
+                                })
+                            }
+                        </script>
+                    }
+                    else
+                    {
+                        @RenderBody()
+                    }
+                </div>
+
+        </div>
+        </main>
+    </div>
+
+
+    @if (Context?.Request?.Path.Value?.Split('/').Max() != "Login")
+    {
+        <footer id="footerDefault" class="border-top footer text-muted">
+            <div class="container" style="max-inline-size: fit-content;">
+                Liteclerk Corporation.
+                LiteStaffv2025.06.12.1 &copy; @DateTime.Now.Year. All rights reserved.
+            </div>
+        </footer>
+
+        <footer id="footerMobile" class="border-top footer-mobile text-muted">
+            <div class="container" style="max-inline-size: fit-content;">
+                Liteclerk Corporation.
+                LiteStaffv2025.06.12.1 &copy; @DateTime.Now.Year. All rights reserved.
+            </div>
+        </footer>
+    }
+
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <script>
+            window.addEventListener('load', function () {
+                $.ajax({
+                    url: "@(Url.Action("DisplayUser", "Home"))",
+                    success: function (data) {
+                        if (data == null) {
+                            data = "User not eligible"
+                        }
+
+                        $("#DisplayUser").text(data.toUpperCase());
+                    }
+                });
+
+            }, false);            
+        </script>     
+    }
+
+    <script>
+        if (detectMob()) {
+            $("#footerDefault").hide();
+        }
+        else {
+            $("#footerMobile").hide();
+        }        
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

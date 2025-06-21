@@ -1,0 +1,99 @@
+﻿@page
+@model DocumentationModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Documentation";
+
+    var token = Xsrf.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    .about-section {
+        margin-bottom: 30px;
+    }
+
+    .about-section h2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .about-section p {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+</style>
+
+<div class="container" style="font-family: 'Roboto Slab', serif;">
+    <div class="text-center">
+        <h1><b>EAZY</b>Payroll Documentation</h1>
+    </div>
+
+    <div class="about-section">
+        <h2><span class='fas fa-user' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>User</h2>
+        <p>This function allows you to set up user accounts for accessing the payroll system. User accounts can be assigned different levels of access, such as administrator or regular user. This function also allows you to manage user passwords and other security settings.</p>
+
+        <h2><span class='fas fa-people-line' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Employee Information</h2>
+        <p>This function allows you to set up employee information, such as name, address, contact details, and other relevant personal data. This information is used for payroll processing and other administrative tasks.</p>
+
+        <h2><span class='fas fa-building' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Company</h2>
+        <p>This function allows you to set up company information, such as name, address, contact details, and other relevant data. This information is used for payroll processing and other administrative tasks.</p>
+
+        <h2><span class='fas fa-landmark' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Mandatory Deduction Tables</h2>
+        <p>This function allows you to set up tax tables that are mandatory for payroll processing. This includes income tax, social security contributions, and other similar taxes. The tax tables are used to calculate the amount of tax that needs to be deducted from an employee's paycheck.</p>
+
+        <h2><span class='fas fa-calendar' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Shift Codes</h2>
+        <p>This function allows you to set up different shift codes that employees can be assigned to. This includes regular day shifts, night shifts, and other similar shift types. The shift codes are used to calculate an employee's hours worked and overtime pay.</p>
+
+        <h2><span class='fas fa-sun' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Day Type</h2>
+        <p>This function allows you to set up different day types that employees can be assigned to. This includes regular work days, weekends, holidays, and other similar day types. The day types are used to calculate an employee's pay based on their schedule.</p>
+        
+        <h2><span class='fas fa-user-plus' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Other Income</h2>
+        <p>
+            The Other Income Setup function allows HR managers to set up and define the different types of Other Income that employees can receive. This can include specifying the name of the income type, its description, and the amount or percentage that the employee will receive.
+        </p>
+
+        <h2><span class='fas fa-user-minus' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Other Deductions</h2>
+        <p>
+            The Other Deduction Setup function allows HR managers to set up and define the different types of Other Deductions that employees can have. This can include specifying the name of the deduction type, its description, and the amount or percentage that will be withheld from the employee's pay.
+        </p>
+
+        <h2><span class='fas fa-fingerprint' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>DTR</h2>
+        <p>The DTR function is used to track the attendance and working hours of employees. The employee can log in to the system and enter their daily attendance information. The system will calculate the total working hours based on the employee's schedule and provide a summary of the employee's daily, weekly, and monthly attendance.</p>
+
+        <h2><span class='fas fa-calendar-xmark' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Leave Application</h2>
+        <p>The Leave Application function allows employees to request for leave online. Employees can apply for different types of leave, such as sick leave, vacation leave, and maternity leave, among others. Once the employee submits a leave application, the system will notify the manager or supervisor for approval. The employee can track the status of their leave application through the system.</p>
+
+        <h2><span class='fas fa-clock' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Overtime Application</h2>
+        <p>The Overtime Application function allows employees to apply for overtime work. The employee can enter the date, time, and reason for the overtime work, and submit the application online. Once the application is submitted, the manager or supervisor will receive a notification for approval. The employee can track the status of their overtime application through the system.</p>
+
+        <h2><span class='fas fa-hand-holding' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Loans</h2>
+        <p>The Loans function allows employees to apply for loans online. Employees can apply for different types of loans, such as salary loans, emergency loans, and personal loans, among others. The employee can enter the loan amount, payment terms, and other necessary information online. Once the application is submitted, the system will notify the manager or supervisor for approval. The employee can track the status of their loan application through the system.</p>
+
+        <h2><span class='fas fa-circle-plus' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Payroll Other Income</h2>
+        <p>The Other Income function allows employees to enter other income that they received, such as bonuses, incentives, and commissions. The user can enter the amount and description of the income, and the system will automatically calculate the total income.</p>
+
+        <h2><span class='fas fa-circle-minus' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Payroll Other Deduction</h2>
+        <p>The Other Deduction function allows employees to enter other deductions, such as taxes, social security contributions, and health insurance premiums. The user can enter the amount and description of the deduction, and the system will automatically calculate the total deduction.</p>
+
+        <h2><span class='fas fa-book' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Last Withholding Tax</h2>
+        <p>The Last Withholding Task function allows the system to automatically compute the employee's tax withholding based on the employee's salary and other income and deduction information entered in the system. The system will generate a summary of the employee's total withholding tax, and this information will be used in the payroll computation.</p>
+  
+        <h2><span class='fas fa-peso-sign' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Payroll</h2>
+        <p>The Payroll function allows the system to automatically compute the employee's salary based on their attendance, overtime work, and other income and deduction information entered in the system. The system will generate a summary of the employee's salary and other payroll information, such as taxes, contributions, and net pay. The employee can view and download their payroll information through the system.</p>
+
+        <h2><span class='fas fa-code' style='margin-top: 7px; margin-left: 0px; margin-right: 18px'></span>Change Shift</h2>
+        <p>The Change Shift function allows employees to request for a change in their work schedule. The employee can select the date, time, and reason for the shift change, and submit the request online. Once the request is submitted, the manager or supervisor will receive a notification for approval. The employee can track the status of their shift change request through the system.</p>
+
+        <h2>Conclusion</h2>
+        <p>WHRMS is a useful tool for managing employee's salary and payroll information. With the features discussed in this documentation, the system can help automate the payroll process, reduce errors, and provide an efficient way to manage employee's attendance, leave, and other payroll-related tasks</p>
+    </div>
+</div>
+
+<script>
+     $(".CmdHome").click(function () {
+        location.href = "@Url.Action("Index","Home")";
+    });
+</script>
+

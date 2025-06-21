@@ -1,0 +1,133 @@
+﻿@page
+@model whris.UI.Pages.ChatToDBModel
+@{
+    ViewData["Title"] = "AI Chat";
+    Layout = "_Layout";
+}
+
+<link href="~/css/chat.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<style>
+    .leaflet-map-container {
+        height: 300px;
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+
+<div class="page-container">
+    <div id="conversation-sidebar">
+        <div class="sidebar-header">
+            <button id="newChatButton" title="Start New Chat">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 10H7v-2h10v2zm-3-4H7V6h7v2z" /></svg>
+                <span>New Chat</span>
+            </button>
+        </div>
+        <div class="sidebar-search-container">
+            <input type="text" id="conversationSearchInput" placeholder="Search conversations..." />
+        </div>
+        <ul id="conversation-list"></ul>
+    </div>
+    <div class="main-content">
+        <div class="chat-title-container">
+            <h4 style="margin-top: 10px;">AI Chat Assistant</h4>
+            <p style="margin-top: -5px; margin-bottom: 11.5px">Ask questions and get answers directly from your database.</p>
+            <div class="ai-insights-toggle-container" style="position: absolute; top: 50%; right: 200px; transform: translateY(-50%); display: flex; align-items: center; gap: 8px; z-index: 10;">
+                <span id="aiInsightsToggleTextLabel" style="font-size: 0.85rem; color: var(--text-color-muted); white-space: nowrap; user-select: none;">AI Insights: ON</span>
+                <label class="switch-style-label" for="aiInsightsToggle" title="Toggle AI Insights On/Off">
+                    <input type="checkbox" id="aiInsightsToggle" />
+                    <span class="slider-style-span round-style-span"></span>
+                </label>
+            </div>
+            <input type="text" id="singleChatSearchInput" placeholder="Search in chat..." title="Search messages in the current conversation" />
+            <button id="exportChatPdfButton" title="Export Current Chat to PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 4.5H14v-2h1.5V13H17v-1.5h-1.5V9H14V7h4v1.5h-1.5v1H17V11h-1.5v2zm-5-3H9v-1h1.5v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z" />
+                </svg>
+            </button>
+            <div class="guidelines-dropdown">
+                <button id="guidelinesButton" title="Chat Guidelines">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v-6h-2v6z" /></svg>
+                </button>
+                <div class="guidelines-dropdown-content">
+                    <h5>How to Ask Questions</h5>
+                    <p>To get the best results, frame your question to match one of the following capabilities:</p>
+
+                    <p><strong>'SQL'</strong>: Ask for data in a simple table format.</p>
+                    <ul><li><em>"how many employees are in the IT department?"</em></li><li><em>"show me all unpaid invoices"</em></li></ul>
+
+                    <p><strong>'MODIFY_SQL'</strong>: Change or filter the previous results.</p>
+                    <ul><li><em>"now sort this by name"</em></li><li><em>"add their email address to the table"</em></li></ul>
+
+                    <p><strong>'MAP'</strong>: Visualize a physical location.</p>
+                    <ul><li><em>"show me the map address of John Doe"</em></li><li><em>"where is the main office located?"</em></li></ul>
+
+                    <p><strong>'CROSSTAB' / 'PIVOT_TABLE'</strong>: Create a grid with aggregated data (like counts or sums).</p>
+                    <ul><li><em>"crosstab employee count by department and city"</em></li><li><em>"show me a pivot table of average salary by department and gender"</em></li></ul>
+
+                    <p><strong>'CHART'</strong>: Create a data-driven chart (bar, line, pie, scatter).</p>
+                    <ul><li><em>"show me sales per month as a line graph"</em></li><li><em>"plot a bar chart of issues by priority"</em></li></ul>
+
+                    <p><strong>'DRAW_DIAGRAM'</strong>: Create a flowchart, sequence diagram, or mind map.</p>
+                    <ul><li><em>"draw a flowchart for the login process"</em></li><li><em>"create a sequence diagram for order fulfillment"</em></li></ul>
+
+                    <p><strong>'TREE_VIEW'</strong>: Display data in a hierarchical or nested list.</p>
+                    <ul><li><em>"show employees by department, then by position"</em></li><li><em>"display a hierarchical list of staff by office, then by team"</em></li></ul>
+
+                    <p><strong>'GENERAL_KNOWLEDGE'</strong>: Ask a general question.</p>
+                    <ul><li><em>"what are the current mandatory sss contributions?"</em></li><li><em>"what is the capital of Japan?"</em></li></ul>
+
+                    <p><strong>'CHAT'</strong>: For greetings or casual conversation.</p>
+                    <ul><li><em>"hi"</em></li><li><em>"thank you"</em></li></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-history" id="chatHistory"></div>
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <textarea id="chatInput" class="chat-input" placeholder="Type your question..." rows="1"></textarea>
+                    <button id="sendButton" class="send-button" aria-label="Send Message">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+<div id="tooltip" class="tooltip"></div>
+<div id="pdf-chart-render-container" style="display: none; position: absolute; left: -9999px;"></div>
+<div id="pdf-mermaid-render-container" style="display: none; position: absolute; left: -9999px;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.5/canvg.min.js"></script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script type="module" src="js/chat/app.js"></script>

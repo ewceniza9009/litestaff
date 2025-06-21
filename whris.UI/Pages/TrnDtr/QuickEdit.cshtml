@@ -1,0 +1,96 @@
+﻿@page
+@model QuickEditModel
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Department: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="EditDepartmentId" style="width: 100%"
+                                datatextfield="Department"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.DepartmentCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="EditEmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="EditDateStart" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+            <div class="col-md-8">
+                <kendo-datepicker name="EditDateEnd" placeholder="DTR Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Time In 1:</label>
+            <div class="col-md-8">
+                <kendo-timepicker name="TimeIn1" placeholder="Time In 1" style="width: 60%" date-input="true" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Time Out 1:</label>
+            <div class="col-md-8">
+                <kendo-timepicker name="TimeOut1" placeholder="Time Out 1" style="width: 60%" date-input="true" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Time In 2:</label>
+            <div class="col-md-8">
+                <kendo-timepicker name="TimeIn2" placeholder="Time In 2" style="width: 60%" date-input="true" />
+            </div>
+        </div>
+
+        <div class="form-group row" style="padding-top: 5px; font-weight: bold;">
+            <label class="col-md-4">Time Out 2:</label>
+            <div class="col-md-8">
+                <kendo-timepicker name="TimeOut2" placeholder="Time Out 2" style="width: 60%" date-input="true" />
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnEdit"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdDtrQuickEdit()">
+                    <span class="btn-label">
+                        <i class="fa fa-gear"></i>
+                    </span>
+                    Edit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,325 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+}
+
+@functions
+{
+
+}
+
+<style>
+    #MstBranches {
+        height: 35vh;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+
+    .browse-input {
+        width: 365px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-building"></i> Company Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()"
+                            disabled>
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.CompanyDetail.Id" readonly="true" style="width: 100px; background-color: lightgray;">
+                    </kendo-textbox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Company name: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Company" placeholder="Company name" value="@Model.CompanyDetail.Company" style="width: 50%">
+                    </kendo-textbox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Contact #: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="ContactNumber" placeholder="Contact Number" value="@Model.CompanyDetail.ContactNumber" style="width: 50%">
+                    </kendo-textbox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Address: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Address" placeholder="Address" value="@Model.CompanyDetail.Address" style="width: 75%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">SSS number: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Sssnumber" placeholder="SSS number" value="@Model.CompanyDetail.Sssnumber" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">PHIC number: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Phicnumber" placeholder="PHIC number" value="@Model.CompanyDetail.Phicnumber" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">HDMF number: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Hdmfnumber" placeholder="HDMF number" value="@Model.CompanyDetail.Hdmfnumber" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">TIN: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Tin" placeholder="TIN" value="@Model.CompanyDetail.Tin" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">CEO: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="CEO" placeholder="CEO" value="@Model.CompanyDetail.CEO" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">HR Manager: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="HRManager" placeholder="HR Manager" value="@Model.CompanyDetail.HRManager" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Staff: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Staff" placeholder="Staff" value="@Model.CompanyDetail.Staff" style="width: 40%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 5px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Logo: </label>
+                <div class="col-md-10">
+                    <div class="input-group browse-input" style="padding-left: 2px">
+                        <input type="file" id="ImageFile" accept="image/x-png,image/gif,image/jpeg" onchange="ImageFileChange(); return false;" style="display: none" />
+                        <input type="text" id="OldImage" name="OldImage" class="form-control" value="@Model.CompanyDetail.OldImageLogo" placeholder="Choose file..." style="width: 100px; background-color: lightgray;" hidden>
+                        <input type="text" name="Image" class="form-control" value="@Model.CompanyDetail.ImageLogo" placeholder="Choose file..." style="width: 100px; background-color: lightgray; pointer-events:none;" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" onclick="document.querySelector('#ImageFile').click(); return false;">Browse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <fieldset>
+                    <div class="form-group row" style="width: 500px">
+                        <div style="width: 200px"></div>
+                        <img id="ImagePath" src="@Url.Content("~/images/" + @Model.CompanyDetail.ImageLogo)" style="width: 200px; height: 180px; border-radius: 50%;" class="img-fluid" />
+                    </div>
+                </fieldset>
+            </div>            
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Biometric Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="DtrnoField" placeholder="Biometric Id" value="@Model.CompanyDetail.DtrnoField" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @* DTR Date/Time | DTR Log Type: *@
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR D/T | DTR Log Tp: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="DtrdateTimeField" placeholder="Date/Time" value="@Model.CompanyDetail.DtrdateTimeField" style="width: 20%">
+                    </kendo-textbox>
+                    <kendo-textbox name="DtrlogTypeField" placeholder="Log Type" value="@Model.CompanyDetail.DtrlogTypeField" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            @* <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Day Type: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="DtrlogTypeField" placeholder="Log Type" value="@Model.CompanyDetail.DtrlogTypeField" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div> *@
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Mandatory Divisor: </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Mandatory Divosor" id="MandatoryDeductionDivisor" name="MandatoryDeductionDivisor" data-inputmask="'alias': 'currency'" value="@Model.CompanyDetail.MandatoryDeductionDivisor" style="width: 20%; text-align: end" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @* Compute Night/OT Non Regular Days *@
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Comp. Night/OT NRD | Premium Tardy Deductions: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsComputeNightOvertimeOnNonRegularDays" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.CompanyDetail.IsComputeNightOvertimeOnNonRegularDays" on-change="onCheckboxChange" />
+                    <kendo-checkbox name="IsHolidayPayLateDeducted" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.CompanyDetail.IsHolidayPayLateDeducted" on-change="onCheckboxChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @* PHIC deduction overtime *@
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">PHIC Deduct.: </label>
+                <div class="col-md-10 d-flex align-items-center gap-3">
+                    <kendo-checkbox name="IsComputePhicByPercentage"
+                                    size=ComponentSize.Medium
+                                    rounded=Rounded.Medium
+                                    checked="@Model.CompanyDetail.IsComputePhicByPercentage"
+                                    on-change="onCheckboxChange" />
+                    <input class="form-control"
+                           placeholder="Phil Health Percentage"
+                           id="PhicPercentage"
+                           name="PhicPercentage"
+                           data-inputmask="'alias': 'currency'"
+                           value="@Model.CompanyDetail.PhicPercentage"
+                           style="width: 20%; text-align: end;" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.CompanyDetail.IsLocked" on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @(Html.Kendo().Grid(Model.CompanyDetail.MstBranches)
+        .Name("MstBranches")
+        .Scrollable()
+        .ToolBar(x =>
+        {
+            x.Custom().Text("Add Form").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddBranch(); return false;" });
+        })
+        .Columns(columns =>
+        {
+            columns.Command(command => command.Custom("Delete").IconClass("k-icon k-i-x").Click("CmdDeleteBranch"))
+                .Width(110);
+            columns.Bound(x => x.Id)
+                .Filterable(false)
+                .Hidden();
+            columns.Bound(column => column.Branch);
+            columns.Bound(x => x.IsDeleted).Hidden();
+        })
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Navigatable()
+        .Selectable(x => x.Mode(GridSelectionMode.Single))
+        .Pageable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model =>
+        {
+            model.Id(p => p.Id);
+            model.Field(p => p.Branch);
+            model.Field(p => p.IsDeleted);
+        })
+        .ServerOperation(false)
+        .PageSize(20)
+        ))
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>
+

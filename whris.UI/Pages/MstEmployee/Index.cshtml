@@ -1,0 +1,226 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Employee";
+}
+<style>
+    #grid
+    {
+        height: 73.8vh;
+    }
+
+    #modal-dialog-lineDetail {
+        max-width: 800px;
+    }
+</style>
+
+<div class="lookUpPanel">
+    <div class="row">
+        @(Html.Kendo().ComboBox()
+            .Name("departmentCmb")
+            .Placeholder("Search department...")
+            .DataValueField("Id")
+            .DataTextField("Department")
+            .Suggest(true)
+            @* .SelectedIndex(0) *@
+            .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
+            .BindTo(Model.allDepartments)
+            .Events(e =>
+            {
+                //e.Change("onChange").Select("onSelect").Open("onOpen").Close("onClose").DataBound("onDataBound").Filtering("onFiltering");
+                e.Change("onDepartmentChange");
+            })
+            )
+        @(Html.Kendo().Button()
+            .Name("clearDepartment")
+            .ThemeColor(ThemeColor.Light)
+            .Content("<i class='fa fa-xmark'></i>")
+            .HtmlAttributes(new { style = "width: 2.5%" })
+            .Events(e => e.Click("onClearDepartmentClick")))
+    </div>
+
+    <div class="row" style="margin-top: 5px;">
+        @(Html.Kendo().TextBox()
+            .Name("searchTxt")
+            .Placeholder("Search...")
+            .HtmlAttributes(new { style = "width: 97%; margin-right: 5px;" })
+            .Events(e => e.Change("onSearchChange")))
+
+        @(Html.Kendo().Button()
+            .Name("clearSearch")
+            .ThemeColor(ThemeColor.Light)
+            .Content("<i class='fa fa-xmark'></i>")
+            .HtmlAttributes(new { style = "width: 2.5%" })
+            .Events(e => e.Click("onClearSearchClick")))
+    </div>
+</div>
+
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fas fa-people-line"></i> Employee</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                   <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdAdd()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @(
+            Html.Kendo().Grid<MstEmployeeDto>()
+                .Name("grid")
+                .Columns(columns =>
+                {
+                    columns.Command(command => command.Custom("Detail")
+                        .Click("CmdDetail")
+                        .IconClass("k-icon k-i-track-changes-enable"))
+                        .Width(120);
+                    columns.Bound(column => column.Id).Width(80).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n0}\", kendo.parseFloat(count))#</div>"); ;
+                    columns.Bound(column => column.BiometricIdNumber).Width(200);
+                    columns.Bound(column => column.FullName).Width(500);
+                    columns.Bound(column => column.DepartmentName).Width(150);
+                    columns.Bound(column => column.BranchName).Width(250);
+                    if (whris.Application.Library.Security.IsUserAdmin())
+                    {
+                        columns.Bound(column => column.MobileCode).Width(150);
+                    }
+                    else
+                    {
+                        columns.Bound(column => column.MobileCodeHidden).Width(150);
+                    }
+                    columns.Bound(column => column.Status).Width(150);
+                    columns.Bound(x => x.IsLocked)
+                        .Title("L")
+                        .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
+                        .Filterable(false)
+                        .Width(50);
+                    columns.Bound(column => column.ForApprove)
+                        .Width(200)
+                        .ClientTemplate(
+                            "# if (ForApprove === 'Verified') { #" +
+                            "<span style='color: limegreen; font-weight: bold;'>Verified</span>" +
+                            "# } else { #" +
+                            "<span style='color: coral; font-weight: bold;'>#= ForApprove #</span>" +
+                            "# } #"
+                        );
+                    columns.Template("").Title("");
+                    columns.Bound(x => x.DepartmentId).Hidden();
+                })
+                .ToolBar(x =>
+                {
+                    if(whris.Application.Library.Security.IsUserAdmin())
+                    {
+                        x.Custom().Text("Export to Excel w/ Salary").HtmlAttributes(new { id = "exportWithSalary" });
+                        x.Excel();
+                        x.Pdf();
+                    }                   
+                })
+                .Excel(excel => excel.FileName("Employees.xlsx").Filterable(true))
+                .Filterable()
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Pageable()
+                .Sortable()
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Scrollable()            
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Aggregates(aggregates =>
+                    {
+                        aggregates.Add(column => column.Id).Count();
+                    })
+                    .Model(model =>
+                    {
+                        model.Field(p => p.Id).Editable(false);
+                        model.Field(p => p.BiometricIdNumber).Editable(false);
+                        model.Field(p => p.FullName).Editable(false);
+                        model.Field(p => p.CellphoneNumber).Editable(false);
+                        model.Field(p => p.DepartmentName).Editable(false);
+                        model.Field(p => p.BranchName).Editable(false);
+                        model.Field(p => p.DepartmentId).Editable(false);
+                        model.Field(p => p.IsLocked).Editable(false);
+                    })            
+                    .ServerOperation(true)
+                    .PageSize(20)
+                    .Read(read => read.Url("/MstEmployee/Index?handler=ReadEmployeeList")
+                    .Data("forgeryToken")))
+                .Events(events => events.DataBound("onGridDatabound"))
+        )
+    </div>
+</div>
+
+<div style="position: absolute;
+    width: 100px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px; 
+    margin-top: -25px;">
+    <div id="loading" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div class="detailView" hidden="hidden">
+    <div id="detailFormView" />
+</div>
+
+<section id="lineDetailSection">
+    <div class="modal fade" id="lineDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="lineModalLabel" aria-hidden="true">
+        <div id="modal-dialog-lineDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="lineModalLabel"><i class="fa fa-file-edit"></i> Employee Memo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="detailEmloyeeMemoView" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary cmd-buttons float-right btn-labeled"
+                            type="button" 
+                            data-bs-dismiss="modal" 
+                            onclick="CmdSaveEmployeeMemo()">
+                    <i class="fas fa-check"></i> Save
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@(Html.Kendo().Dialog()
+    .Name("confirmSaveDialog")
+    .Title("WHRIS")
+    .Content("<p>Record has been change, Do you want to save and continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelSave"); 
+        actions.Add().Text("Yes").Action("onConfirmSave").Primary(true);
+    }))
+
+@section Scripts {
+    <script src="~/Pages/MstEmployee/Index.cshtml.js"></script>
+}

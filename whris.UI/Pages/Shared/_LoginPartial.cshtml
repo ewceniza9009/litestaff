@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+.k-switch-on .k-switch-track {
+    border-color: #3C8FB1;
+    background-color: #3C8FB1;
+}
+</style>
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+        <li style=" margin-top: 9px;">
+            @{
+                var fullName = new whris.Data.Data.HRISContext()
+                ?.MstUsers
+                ?.FirstOrDefault(x => x.ASPUserId == (User.Claims.FirstOrDefault().Value ?? "NA"))
+                ?.FullName ?? "NA";
+
+                if (fullName == "Administrator")
+                {
+                    @(Html.Kendo().Switch()
+                    .Name("switch")
+                    .Messages(c => c.Checked("YES").Unchecked("NO"))
+                    .Events(ev => ev.Change("onChange"))
+                    .Width(60)
+                        );
+                }
+            }
+        </li>
+
+    <li class="nav-item">
+        @*<a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>*@
+        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><div id="DisplayUser" style="margin-top: 2px; margin-left: 5px;"></div></a>
+    </li>
+    <li class="nav-item">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
+            @*<button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>*@
+                <button type="submit" class="nav-link btn btn-link"><i class="fas fa-right-from-bracket" style="font-size: 25px; margin-top: 2px; color: #dc3545"></i></button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">REGISTER</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">LOGIN</a>
+    </li>
+}
+</ul>
+
+
+<script>
+    var switchInstance = $("#switch");
+    var isSwitchedOn = localStorage.getItem("adminSwitch");
+
+    if (switchInstance[0] != undefined)
+    {
+        if (isSwitchedOn == "true") {
+            switchInstance[0].checked = true;
+        }
+        else {
+            switchInstance[0].checked = false;
+        }
+    }
+
+    function onChange(e) {
+        if (e.checked) {
+            $("#menu").hide();
+            $("#dashboard").show();
+
+            localStorage.setItem("adminSwitch", true);        
+        }
+        else {
+            $("#menu").show();
+            $("#dashboard").hide();
+
+            localStorage.setItem("adminSwitch", false);
+        }
+    }
+</script>
+

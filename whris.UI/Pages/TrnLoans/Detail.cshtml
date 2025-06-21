@@ -1,0 +1,269 @@
+﻿@page
+@model DetailModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    Layout = null;
+
+    var loanNumberList = new List<string>()
+    {
+        "0","1","2","3","4"
+    };
+}
+
+@functions
+{
+
+}
+
+<style>
+    #gridLoanPayments {
+        height: 60vh; 
+        width: 96vw;
+    }
+
+    .form-group {
+        margin-top: 5px;
+    }
+</style>
+
+<form id="frmDetail" method="post" style="margin-top: 10px">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color"><i class="fa fa-hand-holding"></i> Loan Detail</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    @*<button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreviousPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                    </button>*@
+
+                    @*<button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdNextPage()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>*@
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdPreview()">
+                        <span class="btn-label">
+                            <i class="fa fa-print"></i>
+                        </span>
+                        Print
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="button"
+                            onclick="CmdDelete()">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="btnSave"
+                            class="btn btn-primary  cmd-buttons"
+                            type="button"
+                            onclick="CmdSave()">
+                        <span class="btn-label">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        Save
+                    </button>
+
+                    <button class="btn btn-light cmd-buttons"
+                            type="button"
+                            onclick="CmdBack()">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <div class="form-group row" hidden>
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Id: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Id" placeholder="Id" value="@Model.LoanDetail.Id" style="width: 20%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="EmployeeId" style="width: 60%"
+                                    placeholder="Employee"
+                                    datatextfield="FullName"
+                                    datavaluefield="Id"
+                                    value="@Model.LoanDetail.EmployeeId"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.EmployeeCmbDs">
+                    </kendo-combobox>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Loan: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="OtherDeductionId" style="width: 60%"
+                                    placeholder="Loan"
+                                    datatextfield="OtherDeduction"
+                                    datavaluefield="Id"
+                                    value="@Model.LoanDetail.OtherDeductionId"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@Model.ComboboxDataSources.DeductionLoanCmbDs">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Loan Number: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="LoanNumber" style="width: 30%"
+                                    placeholder="Loan"
+                                    value="@Model.LoanDetail.LoanNumber"
+                                    height="520"
+                                    on-change="onEntityComboboxChange"
+                                    bind-to="@loanNumberList">
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Loan Amount: </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Loan Amount" id="LoanAmount" name="LoanAmount" data-inputmask="'alias': 'currency'" value="@Model.LoanDetail.LoanAmount" style="width: 30%; text-align: end" onchange="computeBalance()" />
+                </div>
+            </div>
+            
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">No. Of Payments: </label>
+                <div class="col-md-10">
+                    @*<input class="form-control" placeholder="No. Of Months" name="NumberOfMonths" data-inputmask="'alias': 'currency'" value="@Model.LoanDetail.NumberOfMonths" style="width: 30%; text-align: end" />*@
+                    <kendo-numerictextbox max="100" min="0" placeholder="No. Of Months" id="NumberOfMonths" name="NumberOfMonths" value="@Model.LoanDetail.NumberOfMonths" style="width: 30%; text-align: end" on-change="computeAmortization"> </kendo-numerictextbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Amortization: </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Amortization" id="MonthlyAmortization" name="MonthlyAmortization" data-inputmask="'alias': 'currency'" value="@Model.LoanDetail.MonthlyAmortization" style="width: 30%; text-align: end" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateStart" placeholder="Date Start" value="@Model.LoanDetail.DateStart" style="width: 20%; text-align:end;" on-change="onDateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Total Payment: </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Total Payment" id="TotalPayment" name="TotalPayment" data-inputmask="'alias': 'currency'" value="@Model.LoanDetail.TotalPayment" style="width: 30%; text-align: end" disabled />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Balance: </label>
+                <div class="col-md-10">
+                    <input class="form-control" placeholder="Balance" id="Balance" name="Balance" data-inputmask="'alias': 'currency'" value="@Model.LoanDetail.Balance" style="width: 30%; text-align: end" disabled />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
+                <div class="col-md-10">
+                    <kendo-textbox name="Remarks" placeholder="Remarks" value="@Model.LoanDetail.Remarks" style="width: 100%">
+                    </kendo-textbox>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Paid: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsPaid" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.LoanDetail.IsPaid" on-change="onCheckboxChange" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.LoanDetail.IsLocked" on-change="onCheckboxChange" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @(
+        Html.Kendo().Grid<whris.Application.Queries.TrnLoan.PaymentList.OtherDeduction>()
+        .Name("gridLoanPayments")
+        .ToolBar(x =>
+        {
+            x.Excel();
+            x.Pdf();
+        })
+        .Columns(columns =>
+        {
+            columns.Bound(column => column.PODDate).Title("Date").Width(150);
+            columns.Bound(column => column.PODNumber).Title("Other Deduction").Width(150);
+            columns.Bound(column => column.Remarks).Title("Remarks").Width(500);
+            columns.Bound(column => column.Amount).Title("Payment").Width(150);
+            columns.Template("").Title("");
+        })
+        .Filterable()
+        .Selectable(x => x.Mode(GridSelectionMode.Single))
+        .Pageable()
+        .Sortable()
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Scrollable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model =>
+        {
+            model.Field(p => p.PODDate).Editable(false);
+            model.Field(p => p.PODNumber).Editable(false);
+            model.Field(p => p.Remarks).Editable(false);
+            model.Field(p => p.EmployeeLoanId).Editable(false);
+            model.Field(p => p.Amount).Editable(false);
+            model.Field(p => p.IsLocked).Editable(false);
+        })
+        .ServerOperation(true)
+        .PageSize(20)
+        .Read(read => read.Url("/TrnLoans/Detail?handler=ReadLoanPaymentList")
+        .Data("forgeryToken2")))
+        )
+</form>
+
+<script>
+    $("#frmDetail").keydown(function (e) {
+        if (isFormDirty(e)) {
+            $isDirty = true;
+        }
+    });
+</script>

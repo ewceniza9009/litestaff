@@ -1,0 +1,284 @@
+﻿@page
+@model IndexModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "DTR";
+
+    var token = Xsrf.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    #grid {
+        height: 73.8vh;
+    }
+
+    #modal-dialog-logs {
+        max-width: 60vw;
+    }
+
+    #modal-dialog-missingPunches {
+        max-width: 60vw;
+    }
+    
+    #modal-dialog-editDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-computeDetail {
+        max-width: 800px;
+    }
+
+    #modal-dialog-processDetail {
+        max-width: 800px;
+    }
+</style>
+
+<div class="lookUpPanel">
+    <div class="row">
+     @(Html.Kendo().ComboBox()
+        .Name("payrollGroupCmb")
+        .Placeholder("Search payroll group...")
+        .DataValueField("Id")
+        .DataTextField("PayrollGroup")
+        .Suggest(true)
+        .SelectedIndex(0)
+        .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
+        .BindTo(Model.allPayrollGroups)
+        .Events(e => { e.Change("onPayrollGroupChange"); })
+        .Value("51"))
+    @(Html.Kendo().Button()
+        .Name("clearPayrollGroup")
+        .ThemeColor(ThemeColor.Light)
+        .Content("<i class='fa fa-xmark'></i>")
+        .HtmlAttributes(new { style = "width: 2.5%" })
+        .Events(e => e.Click("onClearPayrollGroupClick")))
+    </div>
+</div>
+
+<div class="indexView">
+    <div class="row" style="margin-bottom: 5px; margin-top: 5px">
+        <div class="col-md-6">
+            <h5 class="title-color" style="margin-top: 10px;"><i class="fa fa-fingerprint"></i> DTR</h5>
+        </div>
+
+        <div class="col-md-6" style="padding: 0px">
+            <div class="float-end">
+                <div class="hstack gap-3 float end">
+                    <a class="btn btn-light cmd-buttons" asp-area="" asp-page="/Index">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>Home
+                    </a>
+
+                    <button class="btn btn-info"
+                            type="button"
+                            onclick="CmdShowLogs()">
+                        <span class="btn-label">
+                            <i class="fa fa-fingerprint"></i>
+                        </span>
+                        Logs
+                    </button>
+
+                    <button class="btn btn-primary"
+                            type="button"
+                            onclick="CmdAdd()">
+                        <span class="btn-label">
+                            <i class="fa fa-plus-square"></i>
+                        </span>
+                        Add
+                    </button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @(Html.Kendo().Grid<TrnDtrDto>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                columns.Command(command => command.Custom("Detail")
+                .Click("CmdDetail")
+                .IconClass("k-icon k-i-track-changes-enable"))
+                .Width(120);
+                columns.Bound(column => column.Dtrdate).Title("Date").Width(150);
+                columns.Bound(column => column.Dtrnumber).Title("DTR Number").Width(170);
+                columns.Bound(column => column.DateStart).Title("Date Start").Width(150);
+                columns.Bound(column => column.DateEnd).Title("Date End").Width(150);
+                columns.Bound(column => column.Remarks).Title("Remarks");
+                columns.Bound(x => x.IsLocked)
+                .Title("L")
+                .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
+                .Filterable(false)
+                .Width(50);
+            })
+            .Filterable()
+            .Selectable(x => x.Mode(GridSelectionMode.Single))
+            .Pageable()
+            .Sortable()
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .Scrollable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model =>
+            {
+                model.Id(p => p.Id);
+                model.Field(p => p.Dtrdate).Editable(false);
+                model.Field(p => p.Dtrnumber).Editable(false);
+                model.Field(p => p.DateStart).Editable(false);
+                model.Field(p => p.DateEnd).Editable(false);
+                model.Field(p => p.Remarks).Editable(false);
+                model.Field(p => p.IsLocked).Editable(false);
+            })
+            .ServerOperation(true)
+            .PageSize(20)
+            .Read(read => read.Url("/TrnDtr/Index?handler=ReadDtrList")
+            .Data("forgeryToken")))
+            .Events(events => events.DataBound("onGridDatabound"))
+            )
+    </div>
+</div>
+
+<div style="position: absolute;
+    width: 100px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -25px;">
+    <div id="loading" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<section id="logsSection">
+    <div class="modal fade" id="logsModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="logsModalLabel" aria-hidden="true">
+        <div id="modal-dialog-logs" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="logsModalLabel"><i class="fa fa-fingerprint"></i> Logs</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="logsView" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="missingPunchesSection">
+    <div class="modal fade" id="missingPunchesModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="missingModalLabel" aria-hidden="true">
+        <div id="modal-dialog-missingPunches" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="missingModalLabel"><i class="fa fa-fingerprint"></i> Missing Punches</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="missingView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Quickly edit missing time swipes.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="editDetailSection">
+    <div class="modal fade" id="editDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div id="modal-dialog-editDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="editModalLabel"><i class="fa fa-fingerprint"></i> DTR Quick Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="editView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Quickly edit time in time out.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="computeDetailSection">
+    <div class="modal fade" id="computeDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="computeModalLabel" aria-hidden="true">
+        <div id="modal-dialog-computeDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="computeModalLabel"><i class="fa fa-fingerprint"></i> DTR Compute</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="computeView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> Computes work hours, lates, change shifts, overtime, rates of each mentioned and etc.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="processDetailSection">
+    <div class="modal fade" id="processDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="processModalLabel" aria-hidden="true">
+        <div id="modal-dialog-processDetail" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-color" id="processModalLabel"><i class="fa fa-fingerprint"></i> DTR Process</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="processView" />
+                </div>
+                <div class="modal-footer">
+                    <div style="color: orangered"><strong>Info:</strong> This function maps the Time In/Out logs based on assigned shift code.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="detailView" hidden="hidden">
+    <div id="detailFormView" />
+</div>
+
+@(Html.Kendo().Dialog()
+    .Name("confirmSaveDialog")
+    .Title("WHRIS")
+    .Content("<p>Record has been change, Do you want to save and continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelSave");
+        actions.Add().Text("Yes").Action("onConfirmSave").Primary(true);
+    }))
+
+@(Html.Kendo().Dialog()
+    .Name("confirmQuickChangeDialog")
+    .Title("WHRIS")
+    .Content("<p>Quickly change the shift code based on logs on lines, Do you want to continue?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelQuickChange");
+        actions.Add().Text("Yes").Action("onConfirmQuickChange").Primary(true);
+    }))
+
+@section Scripts {
+    <script src="~/Pages/TrnDtr/Index.cshtml.js"></script>
+}
+

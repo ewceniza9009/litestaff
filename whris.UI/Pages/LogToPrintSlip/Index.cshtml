@@ -1,0 +1,83 @@
+﻿@page
+@model whris.UI.Pages.LogToPrintSlip.IndexModel
+@{
+    ViewData["Title"] = "Log to print";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px; /* Adjust width as needed */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background-color: #2d89ad;
+            border-color: #2798c2;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #128a5a;
+            border-color: #128a5a;
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h3>Log to print slip</h3>
+        <form method="post">
+            <div class="form-group text-center"> 
+                <label for="MobileCode" class="form-label d-block">Mobile Code</label>
+                <input type="password" class="form-control mx-auto" id="MobileCode" asp-for="MobileCode" placeholder="Enter Mobile Code" style="max-width: 300px;">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

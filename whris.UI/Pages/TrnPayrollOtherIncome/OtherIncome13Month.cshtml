@@ -1,0 +1,95 @@
+﻿@page
+@model OtherIncome13Month
+@{
+    Layout = null;
+}
+
+<div class="row" style="margin: 5px">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">13th Month Income: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="OI13OtherIncomeId" style="width: 60%"
+                                datatextfield="OtherIncome"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.OtherIncomeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-8">
+                <kendo-combobox name="OI13EmployeeId" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.EmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll No. Start: </label>
+            <div class="col-md-8">
+                @*<kendo-datepicker name="OI13DateStart" placeholder="Payroll Start Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />*@
+                <kendo-combobox name="OI13StartPayNo" style="width: 100%"
+                                datatextfield="Remarks"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.PayrollNoWithRemarksCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">Payroll No. End: </label>
+            <div class="col-md-8">
+                @*<kendo-datepicker name="OI13DateEnd" placeholder="Payroll End Date" value="@DateTime.Now.Date" style="width: 60%; text-align:end;" on-change="onDateChange" />*@
+                <kendo-combobox name="OI13EndPayNo" style="width: 100%"
+                                datatextfield="Remarks"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.PayrollNoWithRemarksCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-4" style="padding-top: 5px; font-weight: bold;">No. Of Payroll: </label>
+            <div class="col-md-8">
+                <input id="NoOfPayroll" class="form-control" placeholder="No Of Payroll" name="NoOfPayroll" data-inputmask="'alias': 'currency'" style="width: 40%; text-align: end" />
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
+            <div class="text-center">
+                <button id="btnSave"
+                        class="btn btn-primary  cmd-buttons"
+                        type="button"
+                        onclick="CmdPayrollOtherIncomeGenerate13Month()">
+                    <span class="btn-label">
+                        <i id="btnComputeGear" class="fa fa-gear"></i>
+                    </span>
+                    Process
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
