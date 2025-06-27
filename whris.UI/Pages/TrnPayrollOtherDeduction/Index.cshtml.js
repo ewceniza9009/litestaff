@@ -367,7 +367,9 @@ function CmdPayrollOtherDeductionLoans() {
                 __RequestVerificationToken: token,
                 "podId": $("#Id").val(),
                 "payrollGroupId": $("#PayrollGroupId").val(),
-                "loanNumber": $("#LoanNumber").val()
+                "loanNumber": $("#LoanNumber").val(),
+                "dateFilter": $("#DateFilter").val(),
+                "employeeIdFilter": $("#EmployeeIdFilter").val()
             },
             success: function (data) {
                 $("#loanDetailModal").modal("hide");
@@ -443,7 +445,7 @@ function CmdAddPayrollOtherDeductionLine(e)
             data.EmployeeId = null;
 
             $("#TrnPayrollOtherDeductionLines").getKendoGrid()
-                .dataSource.insert(data);
+                .dataSource.insert(0, data);
         }
     });
 }

@@ -778,6 +778,15 @@ function onCheckboxChange(e)
 
 function onIsApprovedCheckboxChange() {
     $isDirty = true;
+
+    var controls = document.getElementsByClassName("inputControl");
+    var isLocked = $("#IsApproved")[0].checked;
+
+    if (isLocked == null) {
+        isLocked = false;
+    }
+
+    disableEnableControls(controls, isLocked);
 }
 
 function onSearchEmployee() {
@@ -922,6 +931,14 @@ function loadPartialView(id)
             }
             else {
                 $("#loading").hide();
+                var controls = document.getElementsByClassName("inputControl");
+                var isLocked = $("#IsApproved")[0].checked;
+
+                if (isLocked == null) {
+                    isLocked = false;
+                }
+
+                disableEnableControls(controls, isLocked);
             }
         });
     }
@@ -1000,3 +1017,30 @@ function loadPartialViewExpandPOD(id) {
     $("#expandPODView").load("/TrnPayroll/OtherDeduction?id=" + id);
 }
 
+function disableEnableControls(controls, isLocked) {
+    if (isLocked) {
+        for (var i = 0; i < controls.length; i++) {
+            controls[i].style.pointerEvents = 'none';
+            controls[i].style.opacity = '0.75';
+        }
+    }
+    else {
+        for (var i = 0; i < controls.length; i++) {
+            controls[i].style.pointerEvents = 'auto';
+            controls[i].style.opacity = '1';
+        }
+    }
+
+    var inputControlApproved = document.getElementsByClassName("inputControlApproved");
+    var isAdmin = $("#isAdmin")[0].checked;
+
+    if (!isAdmin && isLocked) {
+        inputControlApproved[0].style.pointerEvents = 'none';
+        inputControlApproved[0].style.opacity = '0.75';
+    }
+    else
+    {
+        inputControlApproved[0].style.pointerEvents = 'auto';
+        inputControlApproved[0].style.opacity = '1';
+    }
+}

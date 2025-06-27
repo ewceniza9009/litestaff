@@ -16,6 +16,7 @@ using whris.Application.CQRS.TrnDtr.Queries;
 using whris.Application.Dtos;
 using whris.Application.Library;
 using whris.Application.Queries.TrnDtr;
+using whris.Data.Data;
 using whris.UI.Authorization;
 using whris.UI.Services;
 using whris.UI.Services.Datasources;
@@ -30,17 +31,19 @@ namespace whris.UI.Pages.TrnDtr
         private IWebHostEnvironment _environment;
         private IMediator _mediator;
         private IMemoryCache _cache;
+        private HRISContext _context;
 
         public TrnDtrDetailDto DtrDetail { get; set; } = new TrnDtrDetailDto();
         public TrnDtrComboboxDatasources ComboboxDataSources = TrnDtrComboboxDatasources.Instance;
         public bool IsAdmin = false;
         public bool CanEditDtrTime = false;
 
-        public DetailModel(IWebHostEnvironment environment, IMediator mediator, IMemoryCache cache)
+        public DetailModel(IWebHostEnvironment environment, IMediator mediator, IMemoryCache cache, HRISContext context)
         {
             _environment = environment;
             _mediator = mediator;
             _cache = cache;
+            _context = context;
         }
 
         public async Task OnGetAsync(int Id)
@@ -261,7 +264,7 @@ namespace whris.UI.Pages.TrnDtr
 
                 if (validFileTypes.Contains(extension))
                 {
-                    tmplLogs = FileUtil.ProcessLogs(departmentId, employeeId, startDate, endDate, filePath, extension);
+                    tmplLogs = FileUtil.ProcessLogs(_context, departmentId, employeeId, startDate, endDate, filePath, extension);
                 }
                 else
                 {
@@ -270,7 +273,7 @@ namespace whris.UI.Pages.TrnDtr
             }
             else
             {
-                tmplLogs = DTR.ProcessLogsFromDb(departmentId, employeeId, startDate, endDate);
+                tmplLogs = DTR.ProcessLogsFromDb(departmentId, employeeId, startDate, endDate, _context);
 
                 if ((tmplLogs?.Count() ?? 0) == 0) 
                 {

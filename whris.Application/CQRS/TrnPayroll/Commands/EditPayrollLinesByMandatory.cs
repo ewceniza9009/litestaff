@@ -27,13 +27,13 @@ namespace whris.Application.CQRS.TrnPayroll.Commands
                 switch (command.MandatoryType) 
                 {
                     case 1:
-                        await Payroll.ProcessSSS(command);
+                        await Payroll.ProcessSSS(command, _context);
                         break;
                     case 2:
-                        await Payroll.ProcessPHIC(command);
+                        await Payroll.ProcessPHIC(command, _context);
                         break;
                     case 3:
-                        await Payroll.ProcessHDMF(command);
+                        await Payroll.ProcessHDMF(command, _context);
                         break;
                 }
 

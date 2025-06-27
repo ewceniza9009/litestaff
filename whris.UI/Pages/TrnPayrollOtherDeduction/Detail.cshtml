@@ -265,76 +265,76 @@
 
     @(
         Html.Kendo().Grid(Model.PayrollOtherDeductionDetail.TrnPayrollOtherDeductionLines)
-            .Name("TrnPayrollOtherDeductionLines")
-            .Scrollable()
-            .ToolBar(x =>
-            {
-                x.Custom().Text("Add POD Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddPayrollOtherDeductionLine(); return false;" });
-                x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
-                x.Excel();
-                x.Pdf();
-            })
-            .Excel(excel => excel.FileName("Other Deduction Lines.xlsx").Filterable(true))
-            .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound"))
-            .Columns(columns =>
-            {
-                columns.Command(command => command.Custom("Delete")
-                    .IconClass("k-icon k-i-x")
-                    .Click("CmdDeletePayrollOtherDeductionLine"))
-                    .Width(110);
-                columns.Bound(x => x.EmployeeId).Title("Employee")
-                    .Filterable(false).EditorTemplateName("FKForPODEmployee")
-                    .ClientTemplate("#= GetEmployeeText(data) #")
-                    .Width(300);
-                columns.Bound(x => x.OtherDeductionId)
-                    .Title("Other Deduction")
-                    .Filterable(false)
-                    .EditorTemplateName("FKForPODOtherDeduction")
-                    .ClientTemplate("#= GetDeductionText(data) #")
-                    .Width(250);
-                columns.Bound(x => x.EmployeeLoanId)
-                    .Title("Loan Date")
-                    .Filterable(false)
-                    .EditorTemplateName("FKForPODLoan")
-                    .ClientTemplate("#= GetLoanText(data) #")
-                    .Width(250);
-                columns.Bound(x => x.Amount)
-                    .Title("Amount")
-                    .Filterable(false)
-                    .Width(130)
-                    .HtmlAttributes(new { @style = "text-align: end;" })
-                    .ClientFooterTemplate("<div style='text-align: end'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                columns.Bound(x => x.EmployeeName)
-                    .Title("Filter Employee")
-                    .Filterable(true)
-                    .Width(250);
-                columns.Bound(x => x.OtherDeductionText)
-                    .Title("Filter Other Deduction")
-                    .Filterable(true)
-                    .Width(250);
-                columns.Template("").Title("");
-                columns.Bound(x => x.Id).Filterable(false).Hidden();
-                columns.Bound(x => x.IsDeleted).Hidden();
-            })
-            .Editable(editable => editable.Mode(GridEditMode.InCell))
-            .Filterable()
-            .Navigatable()
-            .Selectable(x => x.Mode(GridSelectionMode.Single))
-            .Pageable()
-            .DataSource(dataSource => dataSource
-            .Ajax()
-            .Aggregates(aggregates =>
-            {
-                aggregates.Add(x => x.Amount).Sum();      
-            })
-            .Model(model =>
-            {
-                model.Id(p => p.Id);
-                model.Field(x => x.EmployeeId);
-                model.Field(x => x.Amount);
-                model.Field(x => x.OtherDeductionText);
-                model.Field(x => x.IsDeleted);
-            })
+                .Name("TrnPayrollOtherDeductionLines")
+                .Scrollable()
+                .ToolBar(x =>
+                {
+                    x.Custom().Text("Add POD Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddPayrollOtherDeductionLine(); return false;" });
+                    x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
+                    x.Excel();
+                    x.Pdf();
+                })
+                .Excel(excel => excel.FileName("Other Deduction Lines.xlsx").Filterable(true))
+                .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound"))
+                .Columns(columns =>
+                {
+                    columns.Command(command => command.Custom("Delete")
+                        .IconClass("k-icon k-i-x")
+                        .Click("CmdDeletePayrollOtherDeductionLine"))
+                        .Width(110);
+                    columns.Bound(x => x.EmployeeId).Title("Employee")
+                        .Filterable(false).EditorTemplateName("FKForPODEmployee")
+                        .ClientTemplate("#= GetEmployeeText(data) #")
+                        .Width(300);
+                    columns.Bound(x => x.OtherDeductionId)
+                        .Title("Other Deduction")
+                        .Filterable(false)
+                        .EditorTemplateName("FKForPODOtherDeduction")
+                        .ClientTemplate("#= GetDeductionText(data) #")
+                        .Width(250);
+                    columns.Bound(x => x.EmployeeLoanId)
+                        .Title("Loan Date")
+                        .Filterable(false)
+                        .EditorTemplateName("FKForPODLoan")
+                        .ClientTemplate("#= GetLoanText(data) #")
+                        .Width(250);
+                    columns.Bound(x => x.Amount)
+                        .Title("Amount")
+                        .Filterable(false)
+                        .Width(130)
+                        .HtmlAttributes(new { @style = "text-align: end;" })
+                        .ClientFooterTemplate("<div style='text-align: end'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    columns.Bound(x => x.EmployeeName)
+                        .Title("Filter Employee")
+                        .Filterable(true)
+                        .Width(250);
+                    columns.Bound(x => x.OtherDeductionText)
+                        .Title("Filter Other Deduction")
+                        .Filterable(true)
+                        .Width(250);
+                    columns.Template("").Title("");
+                    columns.Bound(x => x.Id).Filterable(false).Hidden();
+                    columns.Bound(x => x.IsDeleted).Hidden();
+                })
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Filterable()
+                .Navigatable()
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Pageable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Aggregates(aggregates =>
+                {
+                    aggregates.Add(x => x.Amount).Sum();      
+                })
+                .Model(model =>
+                {
+                    model.Id(p => p.Id);
+                    model.Field(x => x.EmployeeId);
+                    model.Field(x => x.Amount);
+                    model.Field(x => x.OtherDeductionText);
+                    model.Field(x => x.IsDeleted);
+                })
             .Sort(x => x.Add("EmployeeName").Ascending())
             .ServerOperation(false)
             .PageSize(100))

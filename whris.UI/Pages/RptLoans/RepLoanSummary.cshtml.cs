@@ -9,7 +9,7 @@ namespace whris.UI.Pages.RptLoans
     public class RepLoanSummaryModel : PageModel
     {
         public Reports.RepLoanSummary? LoanSummary = null;
-        public void OnGet(DateTime paramDateStart, DateTime paramDateEnd)
+        public void OnGet(DateTime paramDateStart, DateTime paramDateEnd, bool? isPaid, int employeeId, int companyId)
         {
             LoanSummary = new Reports.RepLoanSummary();
 
@@ -18,6 +18,15 @@ namespace whris.UI.Pages.RptLoans
 
             LoanSummary.Parameters["ParamDateEnd"].Value = paramDateEnd;
             LoanSummary.Parameters["ParamDateEnd"].Visible = false;
+
+            LoanSummary.Parameters["IsPaid"].Value = isPaid;
+            LoanSummary.Parameters["IsPaid"].Visible = false;
+
+            LoanSummary.Parameters["EmployeeId"].Value = employeeId;
+            LoanSummary.Parameters["EmployeeId"].Visible = false;
+
+            LoanSummary.Parameters["CompanyId"].Value = companyId;
+            LoanSummary.Parameters["CompanyId"].Visible = false;
         }
     }
 }

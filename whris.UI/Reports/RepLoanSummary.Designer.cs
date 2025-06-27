@@ -32,6 +32,9 @@
             DevExpress.DataAccess.Sql.CustomSqlQuery customSqlQuery1 = new DevExpress.DataAccess.Sql.CustomSqlQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter1 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter4 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter5 = new DevExpress.DataAccess.Sql.QueryParameter();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepLoanSummary));
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
@@ -61,6 +64,9 @@
             this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource(this.components);
             this.PayrollGroupHeader = new DevExpress.XtraReports.UI.GroupHeaderBand();
             this.xrLabel5 = new DevExpress.XtraReports.UI.XRLabel();
+            this.IsPaid = new DevExpress.XtraReports.Parameters.Parameter();
+            this.EmployeeId = new DevExpress.XtraReports.Parameters.Parameter();
+            this.CompanyId = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // TopMargin
@@ -411,9 +417,21 @@
             queryParameter2.Name = "ParamDateEnd";
             queryParameter2.Type = typeof(global::DevExpress.DataAccess.Expression);
             queryParameter2.Value = new DevExpress.DataAccess.Expression("?ParamDateEnd", typeof(System.DateTime));
+            queryParameter3.Name = "IsPaid";
+            queryParameter3.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter3.Value = new DevExpress.DataAccess.Expression("?IsPaid", typeof(bool));
+            queryParameter4.Name = "EmployeeId";
+            queryParameter4.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter4.Value = new DevExpress.DataAccess.Expression("?EmployeeId", typeof(int));
+            queryParameter5.Name = "CompanyId";
+            queryParameter5.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter5.Value = new DevExpress.DataAccess.Expression("?CompanyId", typeof(int));
             customSqlQuery1.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
             queryParameter1,
-            queryParameter2});
+            queryParameter2,
+            queryParameter3,
+            queryParameter4,
+            queryParameter5});
             customSqlQuery1.Sql = resources.GetString("customSqlQuery1.Sql");
             this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
             customSqlQuery1});
@@ -441,6 +459,25 @@
             this.xrLabel5.StylePriority.UseFont = false;
             this.xrLabel5.Text = "xrLabel5";
             // 
+            // IsPaid
+            // 
+            this.IsPaid.AllowNull = true;
+            this.IsPaid.Name = "IsPaid";
+            this.IsPaid.Type = typeof(bool);
+            this.IsPaid.ValueInfo = "False";
+            // 
+            // EmployeeId
+            // 
+            this.EmployeeId.Name = "EmployeeId";
+            this.EmployeeId.Type = typeof(int);
+            this.EmployeeId.ValueInfo = "0";
+            // 
+            // CompanyId
+            // 
+            this.CompanyId.Name = "CompanyId";
+            this.CompanyId.Type = typeof(int);
+            this.CompanyId.ValueInfo = "0";
+            // 
             // RepLoanSummary
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -454,9 +491,18 @@
             this.DataSource = this.sqlDataSource1;
             this.Font = new DevExpress.Drawing.DXFont("Arial", 9.75F);
             this.Margins = new DevExpress.Drawing.DXMargins(100F, 100F, 121.875F, 74.78447F);
+            this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.ParamDateStart, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.ParamDateEnd, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.IsPaid, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.EmployeeId, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.CompanyId, DevExpress.XtraReports.Parameters.Orientation.Horizontal)});
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.ParamDateStart,
-            this.ParamDateEnd});
+            this.ParamDateEnd,
+            this.IsPaid,
+            this.EmployeeId,
+            this.CompanyId});
             this.Version = "22.2";
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
@@ -492,5 +538,8 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel5;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo2;
         private DevExpress.XtraReports.UI.XRPageInfo pageInfo1;
+        private DevExpress.XtraReports.Parameters.Parameter IsPaid;
+        private DevExpress.XtraReports.Parameters.Parameter EmployeeId;
+        private DevExpress.XtraReports.Parameters.Parameter CompanyId;
     }
 }

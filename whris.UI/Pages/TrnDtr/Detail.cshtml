@@ -50,35 +50,37 @@
                 <div class="hstack gap-3 float end">
                     <label style="padding-top: 0px; font-weight: bold;"> | Edit RD: </label>
 
-                    <kendo-checkbox name="IsComputeRestDay" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsComputeRestDay" on-change="onCheckboxChange" />
+                    <div class="inputControl">
+                        <kendo-checkbox name="IsComputeRestDay" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsComputeRestDay" on-change="onCheckboxChange" />
+                    </div>
 
                     <label style="padding-top: 0px; font-weight: bold;"> | </label>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdQuickEdit()">
                         Quick Edit
                     </button>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdQuickShift()">
                         Quick Shift
                     </button>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdCompute()">
                         Compute
                     </button>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdProcess()">
                         Process
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdPreviousPage()">
                         <span class="btn-label">
@@ -86,7 +88,7 @@
                         </span>
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdNextPage()">
                         <span class="btn-label">
@@ -94,7 +96,7 @@
                         </span>
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdPreview()">
                         <span class="btn-label">
@@ -103,7 +105,7 @@
                         Print
                     </button>
 
-                    <button class="btn btn-danger"
+                    <button class="inputControl btn btn-danger"
                             type="button"
                             onclick="CmdDelete()">
                         <span class="btn-label">
@@ -113,7 +115,7 @@
                     </button>
 
                     <button id="btnSave"
-                            class="btn btn-primary  cmd-buttons"
+                            class="inputControl btn btn-primary  cmd-buttons"
                             type="button"
                             onclick="CmdSave()">
                         <span class="btn-label">
@@ -170,7 +172,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Number: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-textbox name="Dtrnumber" placeholder="DTR Number" enable="false" value="@Model.DtrDetail.Dtrnumber" style="width: 20%">
                     </kendo-textbox>
                     <button class="btn btn-info"
@@ -193,7 +195,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR Date: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-datepicker name="Dtrdate" placeholder="DTR Date" value="@Model.DtrDetail.Dtrdate" style="width: 20%; text-align:end;" on-change="onDateChange" />
                 </div>
             </div>
@@ -218,21 +220,21 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-datepicker name="DateStart" placeholder="Date Start" value="@Model.DtrDetail.DateStart" style="width: 20%; text-align:end;" on-change="onDateChange" />
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date End: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-datepicker name="DateEnd" placeholder="Date End" value="@Model.DtrDetail.DateEnd" style="width: 20%; text-align:end;" on-change="onDateChange" />
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-textbox name="Remarks" placeholder="Remarks" value="@Model.DtrDetail.Remarks" style="width: 100%">
                     </kendo-textbox>
                 </div>
@@ -241,7 +243,7 @@
         <div class="col-md-6">
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Overtime: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="OvertTimeId" style="width: 35%"
                                     placeholder="Overtime"
                                     datatextfield="Otnumber"
@@ -258,7 +260,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Leave Application: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="LeaveApplicationId" style="width: 35%"
                                     placeholder="Leave"
                                     datatextfield="Lanumber"
@@ -275,7 +277,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Change Shift: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="ChangeShiftId" style="width: 35%"
                                     placeholder="Change Shift"
                                     datatextfield="Csnumber"
@@ -292,7 +294,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Prepared By: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="PreparedBy" style="width: 35%"
                                     placeholder="Prepared By"
                                     datatextfield="FullName"
@@ -308,7 +310,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Checked By: </label>
+                <label class="inputControl col-md-2" style="padding-top: 5px; font-weight: bold;">Checked By: </label>
                 <div class="col-md-10">
                     <kendo-combobox name="CheckedBy" style="width: 35%"
                                     placeholder="Checked By"
@@ -326,7 +328,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Approved By: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="ApprovedBy" style="width: 35%"
                                     placeholder="Approved By"
                                     datatextfield="FullName"
@@ -343,19 +345,24 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked/Is Approved: </label>
-                <div class="col-md-10">
-                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsLocked" on-change="onCheckboxChange" />
-                    <kendo-checkbox name="IsApproved" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.DtrDetail.IsApproved" on-change="onIsApprovedCheckboxChange" />
+                <div class="col-md-10 d-flex align-items-center">
+                    <div class="inputControl mr-2">
+                        <kendo-checkbox name="IsLocked" size="ComponentSize.Medium" rounded="Rounded.Medium" checked="@Model.DtrDetail.IsLocked" on-change="onCheckboxChange"></kendo-checkbox>
+                    </div>
+                    &nbsp;
+                    <div class="inputControlApproved">
+                        <kendo-checkbox name="IsApproved" size="ComponentSize.Medium" rounded="Rounded.Medium" checked="@Model.DtrDetail.IsApproved" on-change="onIsApprovedCheckboxChange"></kendo-checkbox>
+                    </div>
 
-                    <div style="width: 40%; padding-right: 1.2vw; text-align: left !important; float: inline-end !important; float: right !important;">
-                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 100%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()" />
+                    <div style="width: 40%; margin-left: auto;">
+                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 95%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-   <div>
+    <div class="inputControl">
         @(
             Html.Kendo().Grid<TrnDtrLineDto>()
             .Name("TrnDtrlines")

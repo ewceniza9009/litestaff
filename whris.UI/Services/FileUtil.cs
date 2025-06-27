@@ -6,6 +6,7 @@ using System.Data.OleDb;
 using whris.Application.Common;
 using whris.Application.Dtos;
 using whris.Application.Library;
+using whris.Data.Data;
 
 namespace whris.UI.Services
 {
@@ -201,7 +202,7 @@ namespace whris.UI.Services
             return dataTable;
         }
 
-        public static List<TmpDtrLogs> ProcessLogs(int? departmentId, int? employeeId, DateTime startDate, DateTime endDate, string filePath, string? extension)
+        public static List<TmpDtrLogs> ProcessLogs(HRISContext _context, int? departmentId, int? employeeId, DateTime startDate, DateTime endDate, string filePath, string? extension)
         {
             List<TmpDtrLogs> tmplLogs;
             var dataTable = new DataTable();
@@ -224,15 +225,15 @@ namespace whris.UI.Services
                 dataTable = FileUtil.ConvertDatToDataTable(filePath);
             }
 
-            tmplLogs = GetLogs(extentionType, dataTable ?? new DataTable(), departmentId, employeeId, startDate, endDate);
+            tmplLogs = GetLogs(_context, extentionType, dataTable ?? new DataTable(), departmentId, employeeId, startDate, endDate);
             return tmplLogs;
         }
 
-        private static List<TmpDtrLogs> GetLogs(string extensionType, DataTable dataTable, int? departmentId = null, int? employeeId = null, DateTime? dateStart = null, DateTime? dateEnd = null)
+        private static List<TmpDtrLogs> GetLogs(HRISContext _context, string extensionType, DataTable dataTable, int? departmentId = null, int? employeeId = null, DateTime? dateStart = null, DateTime? dateEnd = null)
         {
             var logs = new List<TmpDtrLogs>();
-            var employees = DTR.GetEmployees();
-            var shiftCodeDays = DTR.GetShiftCodeDays();
+            var employees = DTR.GetEmployees(_context);
+            var shiftCodeDays = DTR.GetShiftCodeDays(_context);
 
             //if (extensionType == "Type2")
             //{
@@ -248,7 +249,7 @@ namespace whris.UI.Services
 
             var empIds = new List<int>();
 
-            empIds = DTR.GetEmployeeIds(departmentId);
+            empIds = DTR.GetEmployeeIds(departmentId, _context);
 
             if (employeeId is not null) 
             {
@@ -450,14 +451,15 @@ namespace whris.UI.Services
 
                 foreach (DataRow row in table.Rows)
                 {
-                    var withPay = int.Parse(row["WithPay"]?.ToString() ?? "0");
-                    var debitToLedger = int.Parse(row["DebitToLedger"]?.ToString() ?? "0");
+                    var withPay = int.Parse((string.IsNullOrEmpty(row["WithPay"]?.ToString()?.Trim()) ? "0" : row["WithPay"].ToString()) ?? "0");
+                    var debitToLedger = int.Parse((string.IsNullOrEmpty(row["DebitToLedger"]?.ToString()?.Trim()) ? "0" : row["DebitToLedger"].ToString()) ?? "0");
+                    var date = DateTime.Parse((string.IsNullOrEmpty(row["Date"]?.ToString()?.Trim()) ? new DateTime(1990, 09, 15).ToString() : row["Date"]?.ToString()) ?? new DateTime(1990, 09, 15).ToString());
 
                     LeaveImports.Add(new TmpImportLeave
                     {
                         EmployeeId = Lookup.GetEmployeeIdByBioId(row["BiometricId"]?.ToString() ?? ""),
                         LeaveId = Lookup.GetLeaveIdByDescription(row["Leave"]?.ToString() ?? ""),
-                        Date = DateTime.Parse(row["Date"]?.ToString() ?? new DateTime(1990, 09, 15).ToString()),
+                        Date = date,
                         NumberOfHours = decimal.Parse(row["NoOfHours"]?.ToString() ?? "0"),
                         WithPay = withPay == 1 ? true : false,
                         DebitToLedger = debitToLedger == 1 ? true : false,

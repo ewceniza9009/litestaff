@@ -23,7 +23,7 @@ namespace whris.Application.CQRS.TrnDtr.Commands
                     .Include(x => x.TrnDtrlines)
                     .FirstOrDefault(x => x.Id == command.DTRId);
 
-                DTR.QuickChangeLines(dtr);
+                DTR.QuickChangeLines(dtr, _context);
 
                 _context.SaveChanges();
 

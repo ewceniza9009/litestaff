@@ -84,9 +84,10 @@ namespace whris.UI.Pages.MstEmployee
                 worksheet.Cells[1, 20].Value = "Daily Rate";
                 worksheet.Cells[1, 21].Value = "Allowance";
                 worksheet.Cells[1, 22].Value = "Mobile Code";
+                worksheet.Cells[1, 23].Value = "Leave Balance";
 
                 // Make headers bold
-                using (var range = worksheet.Cells[1, 1, 1, 22])
+                using (var range = worksheet.Cells[1, 1, 1, 23])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -120,6 +121,7 @@ namespace whris.UI.Pages.MstEmployee
                     worksheet.Cells[i + 2, 20].Value = employee.DailyRate;
                     worksheet.Cells[i + 2, 21].Value = employee.Allowance;
                     worksheet.Cells[i + 2, 22].Value = employee.MobileCode;
+                    worksheet.Cells[i + 2, 23].Value = employee.LeaveBalance;
                 }
 
                 //for (int col = 9; col <= 17; col++)

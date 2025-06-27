@@ -27,7 +27,7 @@ namespace whris.Application.CQRS.TrnDtr.Commands
                     .Include(x => x.TrnDtrlines)
                     .FirstOrDefault(x => x.Id == command.DTRId);
 
-                DTR.ComputeDtrLines(dtr, command);
+                DTR.ComputeDtrLines(dtr, command, _context);
 
                 var toBeDeletedLines = dtr.TrnDtrlines.Where(x =>
                         (DateOnly.FromDateTime(x.Date) == DateOnly.FromDateTime(command.DateStart) ||

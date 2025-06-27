@@ -10,6 +10,8 @@ namespace whris.Application.CQRS.TrnPayrollOtherDeduction.Commands
         public int PODId { get; set; }
         public int PayrollGroupId { get; set; }
         public int? LoanNumber { get; set; }
+        public DateTime? DateFilter { get; set; }
+        public int? EmployeeIdFilter { get; set; }
         public List<TmpOtherDeduction>? SelectedOtherDeductions { get; set; }
 
         public class AddPayrollOtherDeductionLinesHandler : IRequestHandler<AddPayrollOtherDeductionsByLoans, int>

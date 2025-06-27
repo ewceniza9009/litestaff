@@ -5,20 +5,19 @@ using whris.Application.Common;
 using whris.Application.CQRS.TrnPayroll.Commands;
 using whris.Data.Data;
 using whris.Data.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace whris.Application.Library
 {
     internal class Payroll
     {
-        public static HRISContext _context => new HRISContext();
+        //public static HRISContext _context => new HRISContext();
 
-        static MstCompany company => _context.MstCompanies.FirstOrDefault() ?? new MstCompany();
-
-        static int mandantoryDeductionDivisor = company?.MandatoryDeductionDivisor ?? 0;
-        static bool isComputeNightOvertimeOnNonRegularDays => company?.IsComputeNightOvertimeOnNonRegularDays ?? false;
-        static bool isComputePhicByPercentage => company?.IsComputePhicByPercentage ?? false;
-        static decimal phicPercentage => company?.PhicPercentage ?? 0;
-        static bool isHolidayPayLateDeducted => company?.IsHolidayPayLateDeducted ?? false;
+        static int mandantoryDeductionDivisor = CompanySettings.Instance.MandatoryDeductionDivisor;
+        static bool isComputeNightOvertimeOnNonRegularDays = CompanySettings.Instance.IsComputeNightOvertimeOnNonRegularDays;
+        static bool isComputePhicByPercentage = CompanySettings.Instance.IsComputePhicByPercentage;
+        static decimal phicPercentage = CompanySettings.Instance.PhicPercentage;
+        static bool isHolidayPayLateDeducted = CompanySettings.Instance.IsHolidayPayLateDeducted;
 
         #region Assign Values
         public static decimal GetRegularWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
@@ -369,7 +368,7 @@ namespace whris.Application.Library
             return 0;
         }
 
-        public static decimal ComputeSSSContribution(TrnPayrollLine line) 
+        public static decimal ComputeSSSContribution(TrnPayrollLine line, HRISContext _context) 
         {
             var amount = 0m;
             var sssContribution = 0m;
@@ -448,7 +447,7 @@ namespace whris.Application.Library
             return sssContribution;
         }
 
-        public static decimal ComputeSSSECContribution(TrnPayrollLine line)
+        public static decimal ComputeSSSECContribution(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var sssEcContribution = 0m;
@@ -520,7 +519,7 @@ namespace whris.Application.Library
             return sssEcContribution;
         }
 
-        public static decimal ComputeSSSContributionEmployer(TrnPayrollLine line)
+        public static decimal ComputeSSSContributionEmployer(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var sSSECContributionEmployer = 0m;
@@ -580,7 +579,7 @@ namespace whris.Application.Library
             return sSSECContributionEmployer;
         }
 
-        public static decimal ComputeSSSECContributionEmployer(TrnPayrollLine line)
+        public static decimal ComputeSSSECContributionEmployer(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var sSSECContributionEmployer = 0m;
@@ -637,7 +636,7 @@ namespace whris.Application.Library
             return sSSECContributionEmployer;
         }
 
-        public static decimal ComputePHICContribution(TrnPayrollLine line)
+        public static decimal ComputePHICContribution(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var phicContribution = 0m;
@@ -699,7 +698,7 @@ namespace whris.Application.Library
             return phicContribution;
         }
 
-        public static decimal ComputePHICContributionEmployer(TrnPayrollLine line)
+        public static decimal ComputePHICContributionEmployer(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var phicContributionEmployer = 0m;
@@ -761,7 +760,7 @@ namespace whris.Application.Library
             return phicContributionEmployer;
         }
 
-        public static decimal ComputeHDMFContribution(TrnPayrollLine line)
+        public static decimal ComputeHDMFContribution(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var hdmfContribution = 0m;
@@ -837,7 +836,7 @@ namespace whris.Application.Library
             return Math.Round(hdmfContribution, 2) + hrmdAddOn; // > 100 ? 100 : Math.Round(hdmfContribution, 2) + hrmdAddOn;
         }
 
-        public static decimal ComputeHDMFContributionEmployer(TrnPayrollLine line)
+        public static decimal ComputeHDMFContributionEmployer(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var hdmfContributionEmployer = 0m;
@@ -909,7 +908,7 @@ namespace whris.Application.Library
             return Math.Round(hdmfContributionEmployer, 2); //> 100 ? 100 : Math.Round(hdmfContributionEmployer, 2);
         }
 
-        public static decimal ComputeTax(TrnPayrollLine line)
+        public static decimal ComputeTaxOld(TrnPayrollLine line, HRISContext _context)
         {
             var query = new Queries.TrnPayroll.PayrollDetailWithholdingList();
 
@@ -1033,10 +1032,20 @@ namespace whris.Application.Library
 
             return Math.Round(dblTax, 2);
         }
+
+        public static decimal ComputeTax(TrnPayrollLine line, HRISContext _context)
+        {
+            var dblTotalSalaryAmount = Lookup.GetEmployeeBasic(line.EmployeeId);
+            var dblTax = _context.MstTableWtaxSemiMonthlies
+                .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount == dblTotalSalaryAmount)
+                ?.Max(x => (decimal?)x.Tax) ?? 0;
+
+            return Math.Round(dblTax, 2);
+        }
         #endregion
 
-        #region Edit Payroll Lines based on DTR Line inputs
-        internal static async Task ProcessDtrLines(AddPayrollLinesByProcessDtr command)
+            #region Edit Payroll Lines based on DTR Line inputs
+        internal static async Task ProcessDtrLines(AddPayrollLinesByProcessDtr command, HRISContext _context)
         {
             try 
             {
@@ -1510,7 +1519,7 @@ namespace whris.Application.Library
             }
         }
 
-        internal static async Task ProcessSSS(EditPayrollLinesByMandatory command) 
+        internal static async Task ProcessSSS(EditPayrollLinesByMandatory command, HRISContext _context) 
         {
             using (var ctx = new HRISContext()) 
             {
@@ -1545,17 +1554,17 @@ namespace whris.Application.Library
 
                 foreach (var line in payrollLines) 
                 {
-                    line.Ssscontribution = ComputeSSSContribution(line);
-                    line.Ssseccontribution = ComputeSSSECContribution(line);
-                    line.SsscontributionEmployer = ComputeSSSContributionEmployer(line);
-                    line.SsseccontributionEmployer = ComputeSSSECContributionEmployer(line);
+                    line.Ssscontribution = ComputeSSSContribution(line, _context);
+                    line.Ssseccontribution = ComputeSSSECContribution(line, _context);
+                    line.SsscontributionEmployer = ComputeSSSContributionEmployer(line, _context);
+                    line.SsseccontributionEmployer = ComputeSSSECContributionEmployer(line, _context);
                 }
 
                 await ctx.SaveChangesAsync();
             }
         }
 
-        internal static async Task ProcessPHIC(EditPayrollLinesByMandatory command)
+        internal static async Task ProcessPHIC(EditPayrollLinesByMandatory command, HRISContext _context)
         {
             using (var ctx = new HRISContext())
             {
@@ -1590,15 +1599,15 @@ namespace whris.Application.Library
 
                 foreach (var line in payrollLines)
                 {
-                    line.Phiccontribution = ComputePHICContribution(line);
-                    line.PhiccontributionEmployer = ComputePHICContributionEmployer(line);
+                    line.Phiccontribution = ComputePHICContribution(line, _context);
+                    line.PhiccontributionEmployer = ComputePHICContributionEmployer(line, _context);
                 }
 
                 await ctx.SaveChangesAsync();
             }
         }
 
-        internal static async Task ProcessHDMF(EditPayrollLinesByMandatory command)
+        internal static async Task ProcessHDMF(EditPayrollLinesByMandatory command, HRISContext _context)
         {
             using (var ctx = new HRISContext())
             {
@@ -1633,15 +1642,15 @@ namespace whris.Application.Library
 
                 foreach (var line in payrollLines)
                 {
-                    line.Hdmfcontribution = ComputeHDMFContribution(line);
-                    line.HdmfcontributionEmployer = ComputeHDMFContributionEmployer(line);
+                    line.Hdmfcontribution = ComputeHDMFContribution(line, _context);
+                    line.HdmfcontributionEmployer = ComputeHDMFContributionEmployer(line, _context);
                 }
 
                 await ctx.SaveChangesAsync();
             }
         }
 
-        internal static async Task ProcessWithholdingTax(EditPayrollLinesByWithholding command) 
+        internal static async Task ProcessWithholdingTax(EditPayrollLinesByWithholding command, HRISContext _context) 
         {
             using (var ctx = new HRISContext())
             {
@@ -1655,7 +1664,7 @@ namespace whris.Application.Library
                 foreach (var line in payrollLines)
                 {
                     line.GrossIncome = line.TotalNetSalaryAmount + line.TotalOtherIncomeTaxable;
-                    line.Tax = ComputeTax(line);
+                    line.Tax = ComputeTax(line, _context);
                 }
 
                 await ctx.SaveChangesAsync();

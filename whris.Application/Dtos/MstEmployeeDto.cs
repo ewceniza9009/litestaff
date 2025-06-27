@@ -105,6 +105,8 @@ namespace whris.Application.Dtos
             }
         }
 
+        public decimal LeaveBalance { get; set; }
+
         public string? Search => $"{FullName} {BiometricIdNumber} {EmailAddress}";
     }
 }

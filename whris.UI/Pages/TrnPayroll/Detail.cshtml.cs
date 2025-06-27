@@ -9,6 +9,7 @@ using whris.Application.CQRS.TrnDtr.Commands;
 using whris.Application.CQRS.TrnPayroll.Commands;
 using whris.Application.CQRS.TrnPayroll.Queries;
 using whris.Application.Dtos;
+using whris.Application.Library;
 using whris.UI.Authorization;
 using whris.UI.Services;
 using whris.UI.Services.Datasources;
@@ -26,6 +27,8 @@ namespace whris.UI.Pages.TrnPayroll
         public TrnDtrComboboxDatasources ComboboxDataSources = TrnDtrComboboxDatasources.Instance;
         public TrnPayrollComboboxDatasources PayrollComboboxDataSources = TrnPayrollComboboxDatasources.Instance;
 
+        public bool IsAdmin = false;
+
         public DetailModel(IMediator mediator, IMemoryCache cache)
         {
             _mediator = mediator;
@@ -40,6 +43,7 @@ namespace whris.UI.Pages.TrnPayroll
             };
 
             PayrollDetail = await _mediator.Send(dtr);
+            IsAdmin = Security.IsUserAdmin();
 
             PayrollComboboxDataSources.DTRCmbDs = PayrollComboboxDataSources.DTRCmbDs
                .Where(x => x.PayrollGroupId == PayrollDetail.PayrollGroupId)

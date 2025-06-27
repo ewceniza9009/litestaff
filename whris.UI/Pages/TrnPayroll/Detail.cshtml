@@ -43,30 +43,33 @@
     <div class="row" style="margin-bottom: 5px; margin-top: 5px">
         <div class="col-md-6">
             <h5 class="title-color"><i class="fa fa-peso-sign"></i> Payroll Detail</h5>
+            <div hidden>
+                <kendo-checkbox name="isAdmin" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.IsAdmin" />
+            </div>
         </div>
 
-        <div class="col-md-6" style="padding: 0px">
+        <div class="col-md-6" style="padding: 0px">           
             <div class="float-end">
-                <div class="hstack gap-3 float end">
-                    <button class="btn btn-info"
+                 <div class="hstack gap-3 float end">
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdShowMandatory()">
                         Mandatory
                     </button>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdShowProcessWithholding()">
                         Withholding Tax
                     </button>
 
-                    <button class="btn btn-info"
+                    <button class="inputControl btn btn-info"
                             type="button"
                             onclick="CmdShowProcessTotals()">
                         Totals
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdPreviousPage()">
                         <span class="btn-label">
@@ -74,7 +77,7 @@
                         </span>
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdNextPage()">
                         <span class="btn-label">
@@ -82,7 +85,7 @@
                         </span>
                     </button>
 
-                    <button class="btn btn-light cmd-buttons"
+                    <button class="inputControl btn btn-light cmd-buttons"
                             type="button"
                             onclick="CmdPreview()">
                         <span class="btn-label">
@@ -91,7 +94,7 @@
                         Print
                     </button>
 
-                    <button class="btn btn-danger"
+                    <button class="inputControl btn btn-danger"
                             type="button"
                             onclick="CmdDelete()">
                         <span class="btn-label">
@@ -101,7 +104,7 @@
                     </button>
 
                     <button id="btnSave"
-                            class="btn btn-primary  cmd-buttons"
+                            class="inputControl btn btn-primary  cmd-buttons"
                             type="button"
                             onclick="CmdSave()">
                         <span class="btn-label">
@@ -117,9 +120,9 @@
                             <i class="fa fa-arrow-left"></i>
                         </span>
                         Back
-                    </button>
+                    </button>                   
                 </div>
-            </div>
+           </div>
         </div>
     </div>
 
@@ -162,14 +165,14 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Date: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-datepicker name="PayrollDate" placeholder="Payroll Date" value="@Model.PayrollDetail.PayrollDate" style="width: 20%; text-align:end;" on-change="onDateChange" />
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Month: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="MonthId" style="width: 40%"
                                     placeholder="Payroll Group"
                                     datatextfield="Month"
@@ -204,7 +207,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Remarks: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-textarea name="Remarks" placeholder="Remarks" value="@Model.PayrollDetail.Remarks" style="width: 100%; height:115px;">
                     </kendo-textarea>
                 </div>
@@ -213,7 +216,7 @@
         <div class="col-md-6">
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">DTR: </label>
-                <div class="col-md-8">
+                <div class="inputControl col-md-8">
                     <kendo-combobox name="Dtrid" style="width: 35%"
                                     placeholder="DTR"
                                     datatextfield="Dtrnumber"
@@ -225,7 +228,7 @@
                                     on-change="onEntityComboboxChange"
                                     bind-to="@Model.PayrollComboboxDataSources.DTRCmbDs">
                     </kendo-combobox>
-                    <button class="btn btn-info"
+                   <button class="btn btn-info"
                             type="button"
                             onclick="CmdShowProcessDtr()"
                             style="width: 200px">
@@ -236,7 +239,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Other Income: </label>
-                <div class="col-md-8">
+                <div class="inputControl col-md-8">
                     <kendo-combobox name="PayrollOtherIncomeId" style="width: 35%"
                                     placeholder="Other Income"
                                     datatextfield="Poinumber"
@@ -259,7 +262,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Other Deduction: </label>
-                <div class="col-md-8">
+                <div class="inputControl col-md-8">
                     <kendo-combobox name="PayrollOtherDeductionId" style="width: 35%"
                                     placeholder="Other Deduction"
                                     datatextfield="Podnumber"
@@ -282,7 +285,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Last Withholding Tax: </label>
-                <div class="col-md-8">
+                <div class="inputControl col-md-8">
                     <kendo-combobox name="LastWithholdingTaxId" style="width: 35%"
                                     placeholder="Last Withholding Tax"
                                     datatextfield="Lwtnumber"
@@ -299,7 +302,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Prepared By: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="PreparedBy" style="width: 35%"
                                     placeholder="Prepared By"
                                     datatextfield="FullName"
@@ -316,7 +319,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Checked By: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="CheckedBy" style="width: 35%"
                                     placeholder="Checked By"
                                     datatextfield="FullName"
@@ -333,7 +336,7 @@
 
             <div class="form-group row">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Approved By: </label>
-                <div class="col-md-10">
+                <div class="inputControl col-md-10">
                     <kendo-combobox name="ApprovedBy" style="width: 35%"
                                     placeholder="Approved By"
                                     datatextfield="FullName"
@@ -349,128 +352,135 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked/Is Approved: </label>
-                <div class="col-md-10">
-                    <kendo-checkbox name="IsLocked" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.PayrollDetail.IsLocked" on-change="onCheckboxChange" />
-                    <kendo-checkbox name="IsApproved" size=ComponentSize.Medium rounded=Rounded.Medium checked="@Model.PayrollDetail.IsApproved" on-change="onIsApprovedCheckboxChange" />
-                
-                    <div style="width: 40%; padding-right: 1.2vw; text-align: left !important; float: inline-end !important; float: right !important;">
-                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 100%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()" />
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Is Locked/Is Approved:</label>
+                <div class="col-md-10 d-flex align-items-center">
+                    <div class="inputControl mr-2">
+                        <kendo-checkbox name="IsLocked" size="ComponentSize.Medium" rounded="Rounded.Medium" checked="@Model.PayrollDetail.IsLocked" on-change="onCheckboxChange"></kendo-checkbox>
+                    </div>
+                    &nbsp;
+                    <div class="inputControlApproved">
+                        <kendo-checkbox name="IsApproved" size="ComponentSize.Medium" rounded="Rounded.Medium" checked="@Model.PayrollDetail.IsApproved" on-change="onIsApprovedCheckboxChange"></kendo-checkbox>
+                    </div>
+
+                    <div style="width: 40%; margin-left: auto;">
+                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 100%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()"></kendo-textbox>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    @(
-        Html.Kendo().Grid(Model.PayrollDetail.TrnPayrollLines)
-        .Name("TrnPayrollLines")
-        .Scrollable()
-        .ToolBar(x =>
-        {
-            x.Custom().Text("Add Payroll Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddPayrollLine(); return false;" });
-            x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
-            x.Excel().Text("Payroll.xlsx");
-            x.Pdf();
-        })
-        .Excel(excel => excel.FileName("Payroll Lines.xlsx").Filterable(true))
-        .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound"))
-        .Columns(columns =>
-        {
-            columns.Command(command => command.Custom("Delete")
-                .IconClass("k-icon k-i-x")
-                .Click("CmdDeletePayrollLine"))
-                .Width(110)
-                .Locked(true)
-                .Lockable(true);
-            columns.Bound(x => x.EmployeeId)
-                .Title("Employee")
-                .Filterable(false)
-                .EditorTemplateName("FKForPayrollEmployee")
-                .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoEmployeeDetail(#= data.EmployeeId#)'>#= GetEmployeeText(data) #</a>")
-                .Width(300)
-            .Locked(true)
-            .Lockable(true); ;
-            columns.ForeignKey(column => column.PayrollTypeId, x => x.Read(b => b.Url("/TrnPayroll/Detail?handler=PayrollTypes")), "Id", "PayrollType")
-                .Width(150)
-                .Title("Payroll Type")
-                .HtmlAttributes(new { onchange = "onFKPayrollTypeChange()" });
-            columns.ForeignKey(column => column.TaxCodeId, x => x.Read(b => b.Url("/TrnPayroll/Detail?handler=TaxCodes")), "Id", "TaxCode")
-                .Width(100)
-                .Title("Tax Code")
-                .HtmlAttributes(new { onchange = "onFKTaxCodeChange()" });
-
-            columns.Bound(x => x.Basic).Title("Basic").Filterable(false).Width(150);
-            columns.Bound(x => x.TotalNetSalaryAmount).Title("Salary").Filterable(false).Width(150);
-            columns.Command(command => command.Custom("S").Click("CmdExpandSalary")).Width(55);
-            columns.Bound(x => x.TotalOtherIncomeTaxable).Title("Other Income (Taxable)").Filterable(false).Width(150);
-            columns.Command(command => command.Custom("OI").Click("CmdExpandOtherIncome")).Width(60);
-            columns.Bound(x => x.GrossIncome).Title("Gross Income").Filterable(false).Width(150);
-            columns.Bound(x => x.TotalOtherIncomeNonTaxable).Title("Gross Income (Non-Taxable").Filterable(false).Width(150);
-            columns.Command(command => command.Custom("OIN").Click("CmdExpandOtherIncomeNonTax")).Width(70);
-            columns.Bound(x => x.GrossIncomeWithNonTaxable).Title("Total Income").Filterable(false).Width(150);
-
-            columns.Group(y => y.Title("Mandatory Deduction")
-                .Columns(z =>
+    <div class="inputControl">
+        @(
+                Html.Kendo().Grid(Model.PayrollDetail.TrnPayrollLines)
+                .Name("TrnPayrollLines")
+                .Scrollable()
+                .ToolBar(x =>
                 {
-                    z.Bound(x => x.Ssscontribution).Title("SSS").Filterable(false).Width(150);
-                    z.Bound(x => x.Phiccontribution).Title("PHIC").Filterable(false).Width(150);
-                    z.Bound(x => x.Hdmfcontribution).Title("HDMF").Filterable(false).Width(150);
-                   
-                }));
-
-            columns.Bound(x => x.Tax).Title("Withholding Tax").Filterable(false).Width(100);
-            columns.Bound(x => x.TotalOtherDeduction).Title("Other Deduction").Filterable(false).Width(100);
-            columns.Command(command => command.Custom("OD").Click("CmdExpandOtherDeduction")).Width(65);
-            columns.Bound(x => x.NetIncome).Title("Net Income").Filterable(false).Width(100);
-
-            columns.Group(y => y.Title("Employer Contribution")
-                .Columns(z =>
+                    x.Custom().Text("Add Payroll Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddPayrollLine(); return false;" });
+                    x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
+                    x.Excel().Text("Payroll.xlsx");
+                    x.Pdf();
+                })
+                .Excel(excel => excel.FileName("Payroll Lines.xlsx").Filterable(true))
+                .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound"))
+                .Columns(columns =>
                 {
-                    z.Bound(x => x.SsscontributionEmployer).Title("SSS").Filterable(false).Width(150);
-                    z.Bound(x => x.SsseccontributionEmployer).Title("SSS-EC").Filterable(false).Width(150);
-                    z.Bound(x => x.PhiccontributionEmployer).Title("PHIC").Filterable(false).Width(150);
-                    z.Bound(x => x.HdmfcontributionEmployer).Title("HDMF").Filterable(false).Width(150);
+                    columns.Command(command => command.Custom("Delete")
+                    .IconClass("k-icon k-i-x")
+                    .Click("CmdDeletePayrollLine"))
+                    .Width(110)
+                    .Locked(true)
+                    .Lockable(true);
+                    columns.Bound(x => x.EmployeeId)
+                    .Title("Employee")
+                    .Filterable(false)
+                    .EditorTemplateName("FKForPayrollEmployee")
+                    .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoEmployeeDetail(#= data.EmployeeId#)'>#= GetEmployeeText(data) #</a>")
+                    .Width(300)
+                    .Locked(true)
+                    .Lockable(true); ;
+                    columns.ForeignKey(column => column.PayrollTypeId, x => x.Read(b => b.Url("/TrnPayroll/Detail?handler=PayrollTypes")), "Id", "PayrollType")
+                    .Width(150)
+                    .Title("Payroll Type")
+                    .HtmlAttributes(new { onchange = "onFKPayrollTypeChange()" });
+                    columns.ForeignKey(column => column.TaxCodeId, x => x.Read(b => b.Url("/TrnPayroll/Detail?handler=TaxCodes")), "Id", "TaxCode")
+                    .Width(100)
+                    .Title("Tax Code")
+                    .HtmlAttributes(new { onchange = "onFKTaxCodeChange()" });
 
-                }));
-            
-            columns.Template("").Title("");
-            columns.Bound(x => x.Id).Filterable(false).Hidden();
-            columns.Bound(x => x.IsDeleted).Hidden();
-        })
-        .Editable(editable => editable.Mode(GridEditMode.InCell))
-        .Navigatable()
-        .Selectable(x => x.Mode(GridSelectionMode.Single))
-        .Pageable()
-        .DataSource(dataSource => dataSource
-        .Ajax()
-        .Model(model =>
-        {
-            model.Id(p => p.Id);
-            model.Field(x => x.EmployeeId);
-            model.Field(x => x.PayrollTypeId);
-            model.Field(x => x.TaxCodeId);
-            model.Field(x => x.Basic).Editable(false);
-            model.Field(x => x.TotalNetSalaryAmount).Editable(false);
-            model.Field(x => x.TotalOtherIncomeTaxable).Editable(false);
-            model.Field(x => x.GrossIncome).Editable(false);
-            model.Field(x => x.TotalOtherIncomeNonTaxable).Editable(false);
-            model.Field(x => x.GrossIncomeWithNonTaxable).Editable(false);
-            model.Field(x => x.Ssscontribution).Editable(true);
-            model.Field(x => x.Phiccontribution).Editable(true);
-            model.Field(x => x.Hdmfcontribution).Editable(true);
-            model.Field(x => x.Tax).Editable(true);
-            model.Field(x => x.TotalOtherDeduction).Editable(false);
-            model.Field(x => x.NetIncome).Editable(false);
-            model.Field(x => x.SsscontributionEmployer).Editable(false);
-            model.Field(x => x.SsseccontributionEmployer).Editable(false);
-            model.Field(x => x.PhiccontributionEmployer).Editable(false);
-            model.Field(x => x.HdmfcontributionEmployer).Editable(false);
-        })
-        .Sort(x => x.Add("EmployeeName").Ascending())
-        .ServerOperation(false)
-        .PageSize(100))
-    )
+                    columns.Bound(x => x.Basic).Title("Basic").Filterable(false).Width(150);
+                    columns.Bound(x => x.TotalNetSalaryAmount).Title("Salary").Filterable(false).Width(150);
+                    columns.Command(command => command.Custom("S").Click("CmdExpandSalary")).Width(55);
+                    columns.Bound(x => x.TotalOtherIncomeTaxable).Title("Other Income (Taxable)").Filterable(false).Width(150);
+                    columns.Command(command => command.Custom("OI").Click("CmdExpandOtherIncome")).Width(60);
+                    columns.Bound(x => x.GrossIncome).Title("Gross Income").Filterable(false).Width(150);
+                    columns.Bound(x => x.TotalOtherIncomeNonTaxable).Title("Gross Income (Non-Taxable").Filterable(false).Width(150);
+                    columns.Command(command => command.Custom("OIN").Click("CmdExpandOtherIncomeNonTax")).Width(70);
+                    columns.Bound(x => x.GrossIncomeWithNonTaxable).Title("Total Income").Filterable(false).Width(150);
+
+                    columns.Group(y => y.Title("Mandatory Deduction")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.Ssscontribution).Title("SSS").Filterable(false).Width(150);
+                        z.Bound(x => x.Phiccontribution).Title("PHIC").Filterable(false).Width(150);
+                        z.Bound(x => x.Hdmfcontribution).Title("HDMF").Filterable(false).Width(150);
+
+                    }));
+
+                    columns.Bound(x => x.Tax).Title("Withholding Tax").Filterable(false).Width(100);
+                    columns.Bound(x => x.TotalOtherDeduction).Title("Other Deduction").Filterable(false).Width(100);
+                    columns.Command(command => command.Custom("OD").Click("CmdExpandOtherDeduction")).Width(65);
+                    columns.Bound(x => x.NetIncome).Title("Net Income").Filterable(false).Width(100);
+
+                    columns.Group(y => y.Title("Employer Contribution")
+                    .Columns(z =>
+                    {
+                        z.Bound(x => x.SsscontributionEmployer).Title("SSS").Filterable(false).Width(150);
+                        z.Bound(x => x.SsseccontributionEmployer).Title("SSS-EC").Filterable(false).Width(150);
+                        z.Bound(x => x.PhiccontributionEmployer).Title("PHIC").Filterable(false).Width(150);
+                        z.Bound(x => x.HdmfcontributionEmployer).Title("HDMF").Filterable(false).Width(150);
+
+                    }));
+
+                    columns.Template("").Title("");
+                    columns.Bound(x => x.Id).Filterable(false).Hidden();
+                    columns.Bound(x => x.IsDeleted).Hidden();
+                })
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Navigatable()
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Pageable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+                    model.Id(p => p.Id);
+                    model.Field(x => x.EmployeeId);
+                    model.Field(x => x.PayrollTypeId);
+                    model.Field(x => x.TaxCodeId);
+                    model.Field(x => x.Basic).Editable(false);
+                    model.Field(x => x.TotalNetSalaryAmount).Editable(false);
+                    model.Field(x => x.TotalOtherIncomeTaxable).Editable(false);
+                    model.Field(x => x.GrossIncome).Editable(false);
+                    model.Field(x => x.TotalOtherIncomeNonTaxable).Editable(false);
+                    model.Field(x => x.GrossIncomeWithNonTaxable).Editable(false);
+                    model.Field(x => x.Ssscontribution).Editable(true);
+                    model.Field(x => x.Phiccontribution).Editable(true);
+                    model.Field(x => x.Hdmfcontribution).Editable(true);
+                    model.Field(x => x.Tax).Editable(true);
+                    model.Field(x => x.TotalOtherDeduction).Editable(false);
+                    model.Field(x => x.NetIncome).Editable(false);
+                    model.Field(x => x.SsscontributionEmployer).Editable(false);
+                    model.Field(x => x.SsseccontributionEmployer).Editable(false);
+                    model.Field(x => x.PhiccontributionEmployer).Editable(false);
+                    model.Field(x => x.HdmfcontributionEmployer).Editable(false);
+                })
+                .Sort(x => x.Add("EmployeeName").Ascending())
+                .ServerOperation(false)
+                .PageSize(100))
+                )
+    </div>
     <div id="TrnPayrollLinesMobile" style="width: 95vw; height: 50vh; margin-top: 100px;">
         <text class="text-center" style="font-family: 'Roboto Slab', serif;">Cannot view the grid please use desktop...</text>
     </div>

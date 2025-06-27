@@ -31,7 +31,7 @@ namespace whris.Application.CQRS.TrnDtr.Commands
                     .Include(x => x.TrnDtrlines)
                     .FirstOrDefault(x => x.Id == command.DTRId) ?? new Data.Models.TrnDtr();
 
-                DTR.QuickEditLines(dtr, command);
+                DTR.QuickEditLines(dtr, command, _context);
 
                 _context.SaveChanges();
 

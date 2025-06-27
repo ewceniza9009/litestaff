@@ -77,6 +77,18 @@
             </div>
 
             <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Is Paid: </label>
+                <div class="col-md-10">
+                    <kendo-checkbox name="IsPaid" size=ComponentSize.Medium rounded=Rounded.Medium/> &nbsp
+                    <button class="btn btn-light"
+                            type="button"
+                            onclick="IsPaidClear()">
+                        All
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
                 <label class="col-md-2" style="padding-top: 10px; font-weight: bold;">Loan: </label>
                 <div class="col-md-10">
                     <kendo-combobox name="LoanId" style="width: 20%"

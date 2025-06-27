@@ -14,19 +14,19 @@ namespace whris.Application.Queries.TrnDtr
         {
             var result = new List<Employee>();
             //string sql = $@"SELECT ID FROM MstEmployee WHERE IsLocked=1 AND Id={EmployeeId}";
-            string sql = $@"SELECT ID, IsLocked FROM MstEmployee WHERE Id={EmployeeId}";
+            string sql = $@"SELECT ID, ShiftCodeId, BranchId, IsLocked FROM MstEmployee WHERE Id={EmployeeId}";
 
             if (EmployeeId is null)
             {
                 if (DepartmentId is null)
                 {
                     //sql = $@"SELECT ID FROM MstEmployee WHERE IsLocked=1 AND PayrollGroupId={PayrollGroupId}";
-                    sql = $@"SELECT ID, IsLocked FROM MstEmployee WHERE PayrollGroupId={PayrollGroupId}";
+                    sql = $@"SELECT ID, ShiftCodeId, BranchId, IsLocked FROM MstEmployee WHERE PayrollGroupId={PayrollGroupId}";
                 }
                 else
                 {
                     //sql = $@"SELECT ID FROM MstEmployee WHERE IsLocked=1 AND DepartmentId={DepartmentId} AND PayrollGroupId={PayrollGroupId}";
-                    sql = $@"SELECT ID, IsLocked FROM MstEmployee WHERE DepartmentId={DepartmentId} AND PayrollGroupId={PayrollGroupId}";
+                    sql = $@"SELECT ID, ShiftCodeId, BranchId, IsLocked FROM MstEmployee WHERE DepartmentId={DepartmentId} AND PayrollGroupId={PayrollGroupId}";
                 }
             }
 
@@ -41,6 +41,8 @@ namespace whris.Application.Queries.TrnDtr
         public class Employee
         {
             public int Id { get; set; }
+            public int ShiftCodeId { get; set; }
+            public int BranchId { get; set; }
             public bool IsLocked { get; set; }
         }
     }

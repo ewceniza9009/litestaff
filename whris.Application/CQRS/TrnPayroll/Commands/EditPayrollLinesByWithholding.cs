@@ -21,7 +21,7 @@ namespace whris.Application.CQRS.TrnPayroll.Commands
 
             public async Task<int> Handle(EditPayrollLinesByWithholding command, CancellationToken cancellationToken)
             {
-                await Payroll.ProcessWithholdingTax(command);
+                await Payroll.ProcessWithholdingTax(command, _context);
 
                 return await Task.Run(() => 0);
             }

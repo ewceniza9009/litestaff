@@ -33,8 +33,8 @@ namespace whris.Application.CQRS.TrnDtr.Commands
                     return dtrLines;
                 }
 
-                DTR.ProcessDtrLog(command, dtrLines);
-                DTR.ProcessDtrLines(command.ChangeShiftId ?? 0, command.TmpDtrLogs, dtrLines, command.DateStart, command.DateEnd);
+                DTR.ProcessDtrLog(command, dtrLines, _context);
+                DTR.ProcessDtrLines(command.ChangeShiftId ?? 0, command.TmpDtrLogs, dtrLines, command.DateStart, command.DateEnd, _context);
 
                 return await Task.Run(() => dtrLines);
             }

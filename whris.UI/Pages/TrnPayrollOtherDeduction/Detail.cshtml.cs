@@ -110,13 +110,15 @@ namespace whris.UI.Pages.TrnPayrollOtherDeduction
             return new JsonResult(new { Id = dtrId });
         }
 
-        public async Task<IActionResult> OnPostLoans(int podId, int payrollGroupId, int? loanNumber)
+        public async Task<IActionResult> OnPostLoans(int podId, int payrollGroupId, int? loanNumber, DateTime? dateFilter, int? employeeIdFilter)
         {
             var addPodLines = new AddPayrollOtherDeductionsByLoans()
             {
                 PODId = podId,
                 PayrollGroupId = payrollGroupId,
-                LoanNumber = loanNumber
+                LoanNumber = loanNumber,
+                DateFilter = dateFilter,
+                EmployeeIdFilter = employeeIdFilter
             };
 
             var statusCode = await _mediator.Send(addPodLines);

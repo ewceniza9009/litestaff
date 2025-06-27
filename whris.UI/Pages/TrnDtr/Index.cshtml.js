@@ -899,6 +899,15 @@ function onCheckboxChange()
 function onIsApprovedCheckboxChange()
 {
     $isDirty = true;
+
+    var controls = document.getElementsByClassName("inputControl");
+    var isLocked = $("#IsApproved")[0].checked;
+
+    if (isLocked == null) {
+        isLocked = false;
+    }
+
+    disableEnableControls(controls, isLocked);
 }
 
 function onSearchEmployee()
@@ -1149,6 +1158,15 @@ function loadPartialView(id)
 
                 var grid = $("#TrnDtrlines").data("kendoGrid");
                 grid.bind("edit", onGridEdit);
+
+                var controls = document.getElementsByClassName("inputControl");
+                var isLocked = $("#IsApproved")[0].checked;
+
+                if (isLocked == null) {
+                    isLocked = false;
+                }
+
+                disableEnableControls(controls, isLocked);
             }
         });
     }
@@ -1250,5 +1268,32 @@ function onGridEdit(e) {
         e.container.find("input[name='TimeOut1']").attr("disabled", "disabled");
         e.container.find("input[name='TimeIn2']").attr("disabled", "disabled");
         e.container.find("input[name='TimeOut2']").attr("disabled", "disabled");
+    }
+}
+
+function disableEnableControls(controls, isLocked) {
+    if (isLocked) {
+        for (var i = 0; i < controls.length; i++) {
+            controls[i].style.pointerEvents = 'none';
+            controls[i].style.opacity = '0.75';
+        }
+    }
+    else {
+        for (var i = 0; i < controls.length; i++) {
+            controls[i].style.pointerEvents = 'auto';
+            controls[i].style.opacity = '1';
+        }
+    }
+
+    var inputControlApproved = document.getElementsByClassName("inputControlApproved");
+    var isAdmin = $("#isAdmin")[0].checked;
+
+    if (!isAdmin && isLocked) {
+        inputControlApproved[0].style.pointerEvents = 'none';
+        inputControlApproved[0].style.opacity = '0.75';
+    }
+    else {
+        inputControlApproved[0].style.pointerEvents = 'auto';
+        inputControlApproved[0].style.opacity = '1';
     }
 }

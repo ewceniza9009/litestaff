@@ -64,13 +64,20 @@ namespace whris.Application.Library
         {
             using (var ctx = new HRISContext())
             {
-                var employeeIds = new List<int>();
                 var removeExistingLines = ctx.TrnPayrollOtherDeductionLines.Where(x => x.PayrollOtherDeductionId == command.PODId && x.EmployeeLoanId != null);
+                var employeeIds = ctx.MstEmployees
+                    .Where(x => x.PayrollGroupId == command.PayrollGroupId && x.IsLocked)
+                    .Select(x => x.Id)
+                    .ToList();
 
-                 employeeIds = ctx.MstEmployees
-                       .Where(x => x.PayrollGroupId == command.PayrollGroupId && x.IsLocked)
-                       .Select(x => x.Id)
-                       .ToList();
+                if (command.EmployeeIdFilter is not null) 
+                {
+                    removeExistingLines = ctx.TrnPayrollOtherDeductionLines
+                        .Where(x => x.PayrollOtherDeductionId == command.PODId && 
+                            x.EmployeeLoanId != null && 
+                            x.EmployeeId == command.EmployeeIdFilter);
+                    employeeIds = employeeIds.Where(x => x == command.EmployeeIdFilter).ToList();
+                }
 
                 ctx.TrnPayrollOtherDeductionLines.RemoveRange(removeExistingLines);
 
@@ -79,9 +86,11 @@ namespace whris.Application.Library
                 foreach (var empId in employeeIds)
                 {
                     var loans = ctx.MstEmployeeLoans
-                        .Where(x => (x.LoanNumber == 0 || x.LoanNumber == command.LoanNumber) 
-                            && !x.IsPaid && 
-                            x.EmployeeId == empId)
+                        .Where(x => (x.LoanNumber == 0 || x.LoanNumber == command.LoanNumber) &&
+                            !x.IsPaid &&
+                            x.EmployeeId == empId && 
+                            x.DateStart.Date <= command.DateFilter &&
+                            x.IsLocked)
                         .ToList();
 
                     foreach (var loan in loans) 

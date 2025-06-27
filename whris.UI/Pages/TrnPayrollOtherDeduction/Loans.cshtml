@@ -21,6 +21,36 @@
             </div>
         </div>
 
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Employee: </label>
+            <div class="col-md-9">
+                <kendo-combobox name="EmployeeIdFilter" style="width: 100%"
+                                datatextfield="FullName"
+                                datavaluefield="Id"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange"
+                                bind-to="@Model.ComboboxDatasources.AllEmployeeCmbDs">
+
+                </kendo-combobox>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-3" style="padding-top: 5px; font-weight: bold;">Date Filter: </label>
+            <div class="col-md-9">
+                <kendo-datepicker name="DateFilter" style="width: 50%"
+                                value="@DateTime.Now.Date"
+                                min-length="3"
+                                height="520"
+                                filter="FilterType.Contains"
+                                on-change="onEntityComboboxChange">
+
+                </kendo-datepicker>
+            </div>
+        </div>
+
         <div class="form-group row" style="margin-top: 20px; margin-bottom: 20px">
             <div class="text-center">
                 <button id="btnSave"

@@ -24,7 +24,7 @@ namespace whris.Application.CQRS.TrnPayroll.Commands
             {
                 var payrollLines = new List<TrnPayrollLineDto>();
 
-                await Payroll.ProcessDtrLines(command);
+                await Payroll.ProcessDtrLines(command, _context);
 
                 return await Task.Run(() => payrollLines);
             }
