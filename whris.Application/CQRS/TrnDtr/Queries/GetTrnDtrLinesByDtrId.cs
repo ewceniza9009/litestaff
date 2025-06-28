@@ -48,6 +48,7 @@ namespace whris.Application.CQRS.TrnDtr.Queries
                         .Include(x => x.Employee)
                         .Where(x => x.Dtrid == request.Id && x.Employee.IsLocked && x.Employee.FullName.Contains(filterEmployee))
                         .OrderBy(x => x.Employee.FullName)
+                        .ThenBy(x => x.Date)
                         .Skip(page * pageSize)
                         .Take(pageSize)                        
                         .ToListAsync();
@@ -63,6 +64,7 @@ namespace whris.Application.CQRS.TrnDtr.Queries
                         .Include(x => x.Employee)
                         .Where(x => x.Dtrid == request.Id && x.Employee.IsLocked)
                         .OrderBy(x => x.Employee.FullName)
+                        .ThenBy(x => x.Date)
                         .Skip(page * pageSize)
                         .Take(pageSize)                       
                         .ToListAsync();
