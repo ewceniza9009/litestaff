@@ -647,10 +647,10 @@ function CmdDtrQuickEdit()
                 "dateEnd": $("#EditDateEnd").val(),
                 "departmentId": $("#EditDepartmentId").val(),
                 "employeeId": $("#EditEmployeeId").val(),
-                "timeIn1": $("#TimeIn1").val(),
-                "timeOut1": $("#TimeOut1").val(),
-                "timeIn2": $("#TimeIn2").val(),
-                "timeOut2": $("#TimeOut2").val()
+                "timeIn1": $("#PickTimeIn1").val(),
+                "timeOut1": $("#PickTimeOut1").val(),
+                "timeIn2": $("#PickTimeIn2").val(),
+                "timeOut2": $("#PickTimeOut2").val()
             },
             success: function (data) {
                 $("#editDetailModal").modal("hide");
