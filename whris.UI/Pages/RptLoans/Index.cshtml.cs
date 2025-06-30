@@ -28,6 +28,7 @@ namespace whris.UI.Pages.RptLoans
                 new ReportList(){ Value = "1", Text = "Loan Summary" },
                 new ReportList(){ Value = "2", Text = "Loan Ledger" },
                 new ReportList(){ Value = "2.1", Text = "Loan Cross Tab" },
+                new ReportList(){ Value = "2.2", Text = "Payroll Deduction Cross Tab" },
                 new ReportList(){ Value = "3", Text = "" },
                 new ReportList(){ Value = "4", Text = "Loan Deduction" },
                 new ReportList(){ Value = "5", Text = "" },
