@@ -803,18 +803,44 @@ function CmdAddDtrLine(e)
     });
 }
 
-function CmdDeleteAllLines(e)
-{
+//DTR delete all line
+function CmdDeleteAllLinesModal(e) {
+    $("#deleteConfirmModal").modal("show");
+
+    window._deleteConfirmed = function () {
+        CmdDeleteAllLines();
+        $("#deleteConfirmModal").modal("hide");
+    };
+
+    $("#cancelDeleteBtn").off("click").on("click", function () {
+        $("#deleteConfirmModal").modal("hide");
+    });
+}
+
+function CmdDeleteAllLines() {
     $isDirty = true;
+    var token = $('input[name="__RequestVerificationToken"]', $("#frmDetail")).val();
+    var dtrHeaderId = $("#Id").val(); 
 
-    var subGrid = $("#TrnDtrlines").getKendoGrid();
-    var subGridData = $("#TrnDtrlines").getKendoGrid().dataSource.data();
-
-    for (let i = 0; i < subGridData.length; i++) {
-        subGridData[i].set("IsDeleted", true);
-    }
-
-    subGrid.dataSource.filter({ field: "IsDeleted", operator: "eq", value: false });
+    $.ajax({
+        url: "/TrnDtr/Detail?handler=DeleteAllLines",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: {
+            __RequestVerificationToken: token,
+            dtrHeaderId: dtrHeaderId
+        },
+        success: function () {
+            $("#TrnDtrlines").data("kendoGrid").dataSource.read();
+            $isDirty = false;
+            GetPostMessage($("#Dtrnumber").val());
+        },
+        error: function (xhr) {
+            console.error("❌ Delete failed:", xhr.status, xhr.responseText);
+            alert("Delete failed: " + xhr.status);
+        }
+    });
 }
 
 function CmdDeleteDtrLine(e)

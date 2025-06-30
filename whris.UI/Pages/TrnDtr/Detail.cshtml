@@ -370,7 +370,7 @@
             .ToolBar(x =>
             {
                 x.Custom().Text("Add DTR Line").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddDtrLine(); return false;" });
-                x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLines(); return false;" });
+                x.Custom().Text("Delete All Lines").IconClass("k-icon k-i-table-delete").HtmlAttributes(new { onclick = "CmdDeleteAllLinesModal(); return false;" });
                 x.Excel();
                 x.Pdf();
             })

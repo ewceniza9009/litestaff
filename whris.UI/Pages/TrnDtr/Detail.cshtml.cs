@@ -1,3 +1,4 @@
+﻿using DevExpress.Xpo;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using MediatR;
@@ -105,6 +106,18 @@ namespace whris.UI.Pages.TrnDtr
             await _mediator.Send(deleteDtr);
 
             return new JsonResult(await Task.Run(() => id));
+        }
+
+        public async Task<IActionResult> OnPostDeleteAllLines(int dtrHeaderId)
+        {
+            var deleteAllLines   = new DeleteAllLinesDtr()
+            {
+                DtrHeaderId = dtrHeaderId
+            };
+
+            await _mediator.Send(deleteAllLines);
+
+            return new JsonResult(await Task.Run(() => dtrHeaderId));
         }
 
         public async Task<IActionResult> OnPostSave(TrnDtrDetailDto dtr)

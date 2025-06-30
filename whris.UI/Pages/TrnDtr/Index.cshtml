@@ -210,6 +210,29 @@
     </div>
 </section>
 
+<section>
+    <div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 1.1rem;">Are you sure you want to delete all lines?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-danger" onclick="_deleteConfirmed()">
+                        <i class="fa fa-trash"></i> Yes, delete it
+                    </button>
+                    <button type="button" id="cancelDeleteBtn" class="btn btn-outline-secondary">
+                        No, don't delete anything
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="computeDetailSection">
     <div class="modal fade" id="computeDetailModal" data-bs-backdrop="static" tabindex="-" role="dialog" aria-labelledby="computeModalLabel" aria-hidden="true">
         <div id="modal-dialog-computeDetail" class="modal-dialog modal-dialog-centered" role="document">
