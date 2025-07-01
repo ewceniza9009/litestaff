@@ -34,6 +34,12 @@ function CmdPreview()
             "&paramDateEnd=" + $("#DateEnd").val(), '_blank').focus();
     }
 
+    if ($selectedReportId == 2.2) {
+        window.open(window.location.origin + "/RptLoans/RepPayrollLoanDeductionCrossTab?paramPayrollId=" + $("#PayrollId").val() + 
+            "&paramDateStart=" + $("#DateStart").val() +
+            "&paramDateEnd=" + $("#DateEnd").val(), '_blank').focus();
+    }
+
     if ($selectedReportId == 4) {
         window.open(window.location.origin + "/RptLoans/RepLoanDeduction?paramPayrollId=" + $("#PayrollId").val(), '_blank').focus();
     }
