@@ -353,10 +353,19 @@
                     <div class="inputControlApproved">
                         <kendo-checkbox name="IsApproved" size="ComponentSize.Medium" rounded="Rounded.Medium" checked="@Model.DtrDetail.IsApproved" on-change="onIsApprovedCheckboxChange"></kendo-checkbox>
                     </div>
-
-                    <div style="width: 40%; margin-left: auto;">
-                        <kendo-textbox name="SearchEmployee" placeholder="Search employee..." style="width: 95%;" on-change="onSearchEmployee()" onblur="onSearchEmployee()" />
-                    </div>
+                        <div style="width: 30%; margin-left: auto;">
+                            @(Html.Kendo().AutoComplete()
+                                                        .Name("SearchEmployee") 
+                                                        .Filter("contains")
+                                                        .DataTextField("Text")
+                                                .HtmlAttributes(new { id = "SearchEmployee", placeholder = "Search Employee", style = "width: 100%;", onblur = "onSearchEmployee()", onchange = "onSearchEmployee()" })
+                                                        .DataSource(dataSource =>
+                                                        dataSource.Read("GetEmployees", "AutoComplete")                    
+                                                        .ServerFiltering(false)
+                                                        )
+                                                        .Separator(", ")
+                                                        )
+                        </div>                  
                 </div>
             </div>
         </div>
@@ -378,12 +387,20 @@
             .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound").CellClose("onCellEdited"))
             .Columns(columns =>
             {
-                @* columns.Command(command => command.Custom("Delete")
-                .IconClass("k-icon k-i-x")
-                .Click("CmdDeleteDtrLine"))
-                .Width(110)
-                .Locked(true)
-                .Lockable(true); *@
+                @* columns.Command(command => 
+                    command.Custom("Delete")
+                    .IconClass("k-icon k-i-x") //still needs to revise the functionality
+                    .Click("CmdDeleteDtrLine")
+                    .HtmlAttributes(new { 
+                    @class = "k-button btn btn-danger",
+                    style = "background-color: #dc3545 !important; color: white !important; border: none !important;"
+   
+                    })
+                    )
+                    .Width(110)
+                    .Locked(true)
+                    .Lockable(true); *@
+
                 columns.Bound(x => x.EmployeeId).Title("Employee")
                     .Filterable(false)
                     .EditorTemplateName("FKForDTREmployee")
