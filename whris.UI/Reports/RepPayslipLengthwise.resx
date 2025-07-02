@@ -117,58 +117,189 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="xrRichText2.SerializableRtfString" xml:space="preserve">
+    <value>ewBcAHIAdABmADEAXABkAGUAZgBmADAAewBcAGYAbwBuAHQAdABiAGwAewBcAGYAMAAgAEMAYQBsAGkAYgByAGkAOwB9AHsAXABmADEAIABUAGkAbQBlAHMAIABOAGUAdwAgAFIAbwBtAGEAbgA7AH0AewBcAGYAMgAgAFQAYQBoAG8AbQBhADsAfQB9AHsAXABjAG8AbABvAHIAdABiAGwAIAA7AFwAcgBlAGQAMABcAGcAcgBlAGUAbgAwAFwAYgBsAHUAZQAwACAAOwBcAHIAZQBkADAAXABnAHIAZQBlAG4AMABcAGIAbAB1AGUAMgA1ADUAIAA7AH0AewBcACoAXABkAGUAZgBjAGgAcAAgAFwAZgAxAFwAZgBzADIANAB9AHsAXAAqAFwAZABlAGYAcABhAHAAIABcAHcAaQBkAGMAdABsAHAAYQByAH0AewBcAHMAdAB5AGwAZQBzAGgAZQBlAHQAIAB7AFwAcQBsAFwAZgAxAFwAZgBzADIANAAgAE4AbwByAG0AYQBsADsAfQB7AFwAKgBcAGMAcwAxAFwAZgAxAFwAZgBzADIANABcAGMAZgAxACAARABlAGYAYQB1AGwAdAAgAFAAYQByAGEAZwByAGEAcABoACAARgBvAG4AdAA7AH0AewBcACoAXABjAHMAMgBcAHMAYgBhAHMAZQBkAG8AbgAxAFwAZgAxAFwAZgBzADIANABcAGMAZgAxACAATABpAG4AZQAgAE4AdQBtAGIAZQByADsAfQB7AFwAKgBcAGMAcwAzAFwAZgAxAFwAZgBzADIANABcAHUAbABcAGMAZgAyACAASAB5AHAAZQByAGwAaQBuAGsAOwB9AHsAXAAqAFwAdABzADQAXAB0AHMAcgBvAHcAZABcAGYAMQBcAGYAcwAyADQAXABxAGwAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAbAAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABsADEAMAA4AFwAdABzAGMAZQBsAGwAcABhAGQAZABmAGIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgByADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAHIAMQAwADgAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAdAAzAFwAdABzAHYAZQByAHQAYQBsAHQAXABjAGwAdAB4AGwAcgB0AGIAIABOAG8AcgBtAGEAbAAgAFQAYQBiAGwAZQA7AH0AewBcACoAXAB0AHMANQBcAHQAcwByAG8AdwBkAFwAcwBiAGEAcwBlAGQAbwBuADQAXABmADEAXABmAHMAMgA0AFwAcQBsAFwAdAByAGIAcgBkAHIAdABcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgBsAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGIAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAcgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgBoAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAHYAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdABzAGMAZQBsAGwAcABhAGQAZABmAGwAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAbAAxADAAOABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgByADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAHIAMQAwADgAXAB0AHMAdgBlAHIAdABhAGwAdABcAGMAbAB0AHgAbAByAHQAYgAgAFQAYQBiAGwAZQAgAFMAaQBtAHAAbABlACAAMQA7AH0AfQB7AFwAKgBcAGwAaQBzAHQAbwB2AGUAcgByAGkAZABlAHQAYQBiAGwAZQB9AFwAbgBvAHUAaQBjAG8AbQBwAGEAdABcAGgAdABtAGEAdQB0AHMAcABcAHMAcABsAHkAdAB3AG4AaQBuAGUAXABhAGwAbgB0AGIAbABpAG4AZABcAGUAeABwAHMAaAByAHQAbgBcAHMAcABsAHQAcABnAHAAYQByAFwAbgBvAGcAcgBvAHcAYQB1AHQAbwBmAGkAdABcAHUAdABpAG4AbABcAG4AbwBiAHIAawB3AHIAcAB0AGIAbABcAGYAdABuAGwAeQB0AHcAbgBpAG4AZQBcAG4AbwB0AGMAdgBhAHMAcABcAGQAbgB0AGIAbABuAHMAYgBkAGIAXABuAGUAdwB0AGIAbABzAHQAeQByAHUAbABzAFwAZgBvAHIAbQBzAGgAYQBkAGUAXABwAGEAcgBkAFwAcABsAGEAaQBuAFwAcQBsAFwAdwBpAGQAYwB0AGwAcABhAHIAewBcAGYAMgBcAGYAcwAxADYAXABjAGYAMQAgAHgAcgBSAGkAYwBoAFQAZQB4AHQAfQB7AFwAZgAyAFwAZgBzADEANgBcAGwAYQBuAGcAMQAwADMAMwBcAGwAYQBuAGcAZgBlADEAMAAzADMAXABjAGYAMQAgADIAfQBcAGYAMgBcAGYAcwAxADYAXABsAGEAbgBnADEAMAAzADMAXABsAGEAbgBnAGYAZQAxADAAMwAzAFwAYwBmADEAXABwAGEAcgBcAHAAYQByAGQAXABwAGwAYQBpAG4AXABxAGwAXAB3AGkAZABjAHQAbABwAGEAcgBcAGYAMgBcAGYAcwAxADYAXABjAGYAMQBcAHAAYQByAH0A</value>
+  </data>
+  <data name="xrRichText3.SerializableRtfString" xml:space="preserve">
+    <value>ewBcAHIAdABmADEAXABkAGUAZgBmADAAewBcAGYAbwBuAHQAdABiAGwAewBcAGYAMAAgAEMAYQBsAGkAYgByAGkAOwB9AHsAXABmADEAIABUAGkAbQBlAHMAIABOAGUAdwAgAFIAbwBtAGEAbgA7AH0AewBcAGYAMgAgAFQAYQBoAG8AbQBhADsAfQB9AHsAXABjAG8AbABvAHIAdABiAGwAIAA7AFwAcgBlAGQAMABcAGcAcgBlAGUAbgAwAFwAYgBsAHUAZQAwACAAOwBcAHIAZQBkADAAXABnAHIAZQBlAG4AMABcAGIAbAB1AGUAMgA1ADUAIAA7AH0AewBcACoAXABkAGUAZgBjAGgAcAAgAFwAZgAxAFwAZgBzADIANAB9AHsAXAAqAFwAZABlAGYAcABhAHAAIABcAHcAaQBkAGMAdABsAHAAYQByAH0AewBcAHMAdAB5AGwAZQBzAGgAZQBlAHQAIAB7AFwAcQBsAFwAZgAxAFwAZgBzADIANAAgAE4AbwByAG0AYQBsADsAfQB7AFwAKgBcAGMAcwAxAFwAZgAxAFwAZgBzADIANABcAGMAZgAxACAARABlAGYAYQB1AGwAdAAgAFAAYQByAGEAZwByAGEAcABoACAARgBvAG4AdAA7AH0AewBcACoAXABjAHMAMgBcAHMAYgBhAHMAZQBkAG8AbgAxAFwAZgAxAFwAZgBzADIANABcAGMAZgAxACAATABpAG4AZQAgAE4AdQBtAGIAZQByADsAfQB7AFwAKgBcAGMAcwAzAFwAZgAxAFwAZgBzADIANABcAHUAbABcAGMAZgAyACAASAB5AHAAZQByAGwAaQBuAGsAOwB9AHsAXAAqAFwAdABzADQAXAB0AHMAcgBvAHcAZABcAGYAMQBcAGYAcwAyADQAXABxAGwAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAbAAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABsADEAMAA4AFwAdABzAGMAZQBsAGwAcABhAGQAZABmAGIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgByADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAHIAMQAwADgAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAdAAzAFwAdABzAHYAZQByAHQAYQBsAHQAXABjAGwAdAB4AGwAcgB0AGIAIABOAG8AcgBtAGEAbAAgAFQAYQBiAGwAZQA7AH0AewBcACoAXAB0AHMANQBcAHQAcwByAG8AdwBkAFwAcwBiAGEAcwBlAGQAbwBuADQAXABmADEAXABmAHMAMgA0AFwAcQBsAFwAdAByAGIAcgBkAHIAdABcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgBsAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGIAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAcgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgBoAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAHYAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdABzAGMAZQBsAGwAcABhAGQAZABmAGwAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAbAAxADAAOABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgByADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAHIAMQAwADgAXAB0AHMAdgBlAHIAdABhAGwAdABcAGMAbAB0AHgAbAByAHQAYgAgAFQAYQBiAGwAZQAgAFMAaQBtAHAAbABlACAAMQA7AH0AfQB7AFwAKgBcAGwAaQBzAHQAbwB2AGUAcgByAGkAZABlAHQAYQBiAGwAZQB9AFwAbgBvAHUAaQBjAG8AbQBwAGEAdABcAGgAdABtAGEAdQB0AHMAcABcAHMAcABsAHkAdAB3AG4AaQBuAGUAXABhAGwAbgB0AGIAbABpAG4AZABcAGUAeABwAHMAaAByAHQAbgBcAHMAcABsAHQAcABnAHAAYQByAFwAbgBvAGcAcgBvAHcAYQB1AHQAbwBmAGkAdABcAHUAdABpAG4AbABcAG4AbwBiAHIAawB3AHIAcAB0AGIAbABcAGYAdABuAGwAeQB0AHcAbgBpAG4AZQBcAG4AbwB0AGMAdgBhAHMAcABcAGQAbgB0AGIAbABuAHMAYgBkAGIAXABuAGUAdwB0AGIAbABzAHQAeQByAHUAbABzAFwAZgBvAHIAbQBzAGgAYQBkAGUAXABwAGEAcgBkAFwAcABsAGEAaQBuAFwAcQBsAFwAdwBpAGQAYwB0AGwAcABhAHIAewBcAGYAMgBcAGYAcwAxADYAXABjAGYAMQAgAHgAcgBSAGkAYwBoAFQAZQB4AHQAfQB7AFwAZgAyAFwAZgBzADEANgBcAGwAYQBuAGcAMQAwADMAMwBcAGwAYQBuAGcAZgBlADEAMAAzADMAXABjAGYAMQAgADMAfQBcAGYAMgBcAGYAcwAxADYAXABjAGYAMQBcAHAAYQByAH0A</value>
+  </data>
   <data name="xrRichText1.SerializableRtfString" xml:space="preserve">
     <value>ewBcAHIAdABmADEAXABkAGUAZgBmADAAewBcAGYAbwBuAHQAdABiAGwAewBcAGYAMAAgAEMAYQBsAGkAYgByAGkAOwB9AHsAXABmADEAIABUAGkAbQBlAHMAIABOAGUAdwAgAFIAbwBtAGEAbgA7AH0AewBcAGYAMgAgAFQAYQBoAG8AbQBhADsAfQB9AHsAXABjAG8AbABvAHIAdABiAGwAIAA7AFwAcgBlAGQAMABcAGcAcgBlAGUAbgAwAFwAYgBsAHUAZQAyADUANQAgADsAXAByAGUAZAAwAFwAZwByAGUAZQBuADAAXABiAGwAdQBlADAAIAA7AH0AewBcACoAXABkAGUAZgBjAGgAcAAgAFwAZgAxAFwAZgBzADIANAB9AHsAXAAqAFwAZABlAGYAcABhAHAAIABcAHcAaQBkAGMAdABsAHAAYQByAH0AewBcAHMAdAB5AGwAZQBzAGgAZQBlAHQAIAB7AFwAcQBsAFwAZgAxAFwAZgBzADIANAAgAE4AbwByAG0AYQBsADsAfQB7AFwAKgBcAGMAcwAxAFwAZgAxAFwAZgBzADIANAAgAEQAZQBmAGEAdQBsAHQAIABQAGEAcgBhAGcAcgBhAHAAaAAgAEYAbwBuAHQAOwB9AHsAXAAqAFwAYwBzADIAXABzAGIAYQBzAGUAZABvAG4AMQBcAGYAMQBcAGYAcwAyADQAIABMAGkAbgBlACAATgB1AG0AYgBlAHIAOwB9AHsAXAAqAFwAYwBzADMAXABmADEAXABmAHMAMgA0AFwAdQBsAFwAYwBmADEAIABIAHkAcABlAHIAbABpAG4AawA7AH0AewBcACoAXAB0AHMANABcAHQAcwByAG8AdwBkAFwAZgAxAFwAZgBzADIANABcAHEAbABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgBsADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAGwAMQAwADgAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAYgAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABmAHIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAcgAxADAAOABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgB0ADMAXAB0AHMAdgBlAHIAdABhAGwAdABcAGMAbAB0AHgAbAByAHQAYgAgAE4AbwByAG0AYQBsACAAVABhAGIAbABlADsAfQB7AFwAKgBcAHQAcwA1AFwAdABzAHIAbwB3AGQAXABzAGIAYQBzAGUAZABvAG4ANABcAGYAMQBcAGYAcwAyADQAXABxAGwAXAB0AHIAYgByAGQAcgB0AFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGwAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAYgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgByAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGgAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAdgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAbAAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABsADEAMAA4AFwAdABzAGMAZQBsAGwAcABhAGQAZABmAHIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAcgAxADAAOABcAHQAcwB2AGUAcgB0AGEAbAB0AFwAYwBsAHQAeABsAHIAdABiACAAVABhAGIAbABlACAAUwBpAG0AcABsAGUAIAAxADsAfQB9AHsAXAAqAFwAbABpAHMAdABvAHYAZQByAHIAaQBkAGUAdABhAGIAbABlAH0AXABuAG8AdQBpAGMAbwBtAHAAYQB0AFwAaAB0AG0AYQB1AHQAcwBwAFwAcwBwAGwAeQB0AHcAbgBpAG4AZQBcAGEAbABuAHQAYgBsAGkAbgBkAFwAZQB4AHAAcwBoAHIAdABuAFwAcwBwAGwAdABwAGcAcABhAHIAXABuAG8AZwByAG8AdwBhAHUAdABvAGYAaQB0AFwAdQB0AGkAbgBsAFwAbgBvAGIAcgBrAHcAcgBwAHQAYgBsAFwAZgB0AG4AbAB5AHQAdwBuAGkAbgBlAFwAbgBvAHQAYwB2AGEAcwBwAFwAZABuAHQAYgBsAG4AcwBiAGQAYgBcAG4AZQB3AHQAYgBsAHMAdAB5AHIAdQBsAHMAXABmAG8AcgBtAHMAaABhAGQAZQBcAHAAYQByAGQAXABwAGwAYQBpAG4AXABxAGwAXAB3AGkAZABjAHQAbABwAGEAcgB7AFwAZgAyAFwAZgBzADEANgBcAGMAZgAyACAAeAByAFIAaQBjAGgAVABlAHgAdAAxAH0AXABmADIAXABmAHMAMQA2AFwAYwBmADIAXABwAGEAcgB9AA==</value>
   </data>
   <data name="customSqlQuery1.Sql" xml:space="preserve">
-    <value>SELECT TrnPayroll.IsLocked, 
-	TrnPayrollLine.PayrollId, 
-	TrnPayroll.PayrollOtherDeductionId, 
-	TrnPayroll.PayrollNumber, 
-	TrnPayroll.PayrollDate, 
-	TrnPayroll.Remarks, 
-	MstCompany.Company, 
-	TrnPayrollLine.EmployeeId, 
-	MstEmployee.FullName, 
-	[TotalSalaryAmount]-[TotalLegalHolidayWorkingAmount]-[TotalSpecialHolidayWorkingAmount]-[TotalRegularRestdayAmount]-[TotalLegalHolidayRestdayAmount]-[TotalSpecialHolidayRestdayAmount]-[TotalRegularOvertimeAmount]-[TotalLegalHolidayOvertimeAmount]-[TotalSpecialHolidayOvertimeAmount]-[TotalRegularNightAmount]-[TotalLegalHolidayNightAmount]-[TotalSpecialHolidayNightAmount]-[TotalRegularNightOvertimeAmount]-[TotalLegalHolidayNightOvertimeAmount]-[TotalSpecialHolidayNightOvertimeAmount] AS BasicSalary, 
-	[TotalLegalHolidayWorkingAmount]+[TotalSpecialHolidayWorkingAmount]+[TotalRegularRestdayAmount]+[TotalLegalHolidayRestdayAmount]+[TotalSpecialHolidayRestdayAmount]+[TotalRegularOvertimeAmount]+[TotalLegalHolidayOvertimeAmount]+[TotalSpecialHolidayOvertimeAmount]+[TotalRegularNightAmount]+[TotalLegalHolidayNightAmount]+[TotalSpecialHolidayNightAmount]+[TotalRegularNightOvertimeAmount]+[TotalLegalHolidayNightOvertimeAmount]+[TotalSpecialHolidayNightOvertimeAmount] AS OtherSalary, 
-	TrnPayrollLine.TotalSalaryAmount, 
-	TrnPayrollLine.TotalTardyAmount, 
-	TrnPayrollLine.TotalAbsentAmount, 
-	TrnPayrollLine.TotalNetSalaryAmount, 
-	TrnPayrollLine.TotalOtherIncomeTaxable, 
-	TrnPayrollLine.GrossIncome, 
-	TrnPayrollLine.TotalOtherIncomeNonTaxable, 
-	TrnPayrollLine.GrossIncomeWithNonTaxable, 
-	TrnPayrollLine.SSSContribution, 
-	TrnPayrollLine.PHICContribution, 
-	TrnPayrollLine.HDMFContribution, 
-	TrnPayrollLine.Tax, 
-	Coalesce([SSSContribution],0)+Coalesce([PHICContribution],0)+Coalesce([HDMFContribution],0)+Coalesce([Tax],0) AS TotalDeduction, 
-	TrnPayrollLine.TotalOtherDeduction, 
-	('&lt;table&gt;' +
-    STUFF(
-        (
-            SELECT 
-                '&lt;tr&gt;&lt;td style="width: 135px; font-size: 12px;"&gt;' + OtherDeduction + '&lt;/td&gt;&lt;td style="width: 50px; text-align: right; font-size: 12px;"&gt;' + CONVERT(NVARCHAR, FORMAT(Round(Amount, 2), 'N2')) + '&lt;/td&gt;&lt;/tr&gt;'
-            FROM (SELECT TrnPayrollOtherDeductionLine.PayrollOtherDeductionId, TrnPayrollOtherDeductionLine.EmployeeId, TrnPayrollOtherDeductionLine.OtherDeductionId, MstOtherDeduction.OtherDeduction, TrnPayrollOtherDeductionLine.EmployeeLoanId, TrnPayrollOtherDeductionLine.Amount
-			    FROM TrnPayrollOtherDeductionLine INNER JOIN MstOtherDeduction ON TrnPayrollOtherDeductionLine.OtherDeductionId = MstOtherDeduction.Id
-			) PayslipLengthwiseSub
-			WHERE PayslipLengthwiseSub.PayrollOtherDeductionId = TrnPayroll.PayrollOtherDeductionId AND PayslipLengthwiseSub.EmployeeId = TrnPayrollLine.EmployeeId
-            FOR XML PATH(''), ROOT('root'), TYPE
-        ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
-    ) +
-    '&lt;/table&gt;') as OtherDeductionBreakdown,
-	TrnPayrollLine.NetIncome, 
-	TrnPayroll.PreparedBy,
-	[TotalRegularWorkingHours]+[TotalLegalHolidayWorkingHours]+[TotalSpecialHolidayWorkingHours] - [TotalTardyLateHours] - [TotalTardyUndertimeHours] AS TotalWorkingHours
-FROM ((TrnPayrollLine INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
-	INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id) 
-	INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
+    <value>SELECT 
+    TrnPayroll.IsLocked, 
+    TrnPayrollLine.PayrollId, 
+    TrnPayroll.PayrollOtherDeductionId, 
+    TrnPayroll.PayrollNumber, 
+    TrnPayroll.PayrollDate, 
+    TrnPayroll.Remarks, 
+    MstCompany.Company, 
+    TrnPayrollLine.EmployeeId, 
+    MstEmployee.FullName,
+    MstPosition.Position,
+    MstPayrollType.PayrollType,	 
+    TotalRegularWorkingHours,
 
-WHERE TrnPayroll.IsLocked=1 AND TrnPayrollLine.PayrollId=@ParamPayrollId AND IsNull(MstEmployee.EmploymentType, 1) LIKE IsNull(@ParamEmploymentType, '%');</value>
+     CAST(
+    DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 
+    AS DECIMAL(18, 2)
+) AS ComputedRegularRestdayAmount,
+
+    IIF(MstEmployee.PayrollTypeId &lt;&gt; 1,
+           MstEmployee.PayrollRate,
+           [TotalSalaryAmount] - [TotalLegalHolidayWorkingAmount] - [TotalSpecialHolidayWorkingAmount]
+           - CAST(DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 AS DECIMAL(18, 2))  - [TotalLegalHolidayRestdayAmount] - [TotalSpecialHolidayRestdayAmount]
+           - [TotalRegularOvertimeAmount] - [TotalLegalHolidayOvertimeAmount] - [TotalSpecialHolidayOvertimeAmount]
+           - [TotalRegularNightAmount] - [TotalLegalHolidayNightAmount] - [TotalSpecialHolidayNightAmount]
+           - [TotalRegularNightOvertimeAmount] - [TotalLegalHolidayNightOvertimeAmount]
+           - [TotalSpecialHolidayNightOvertimeAmount]) AS BasicSalary,
+
+    		[TotalLegalHolidayWorkingAmount] + [TotalSpecialHolidayWorkingAmount] + CAST(DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 AS DECIMAL(18, 2)) 
+       + [TotalLegalHolidayRestdayAmount] + [TotalSpecialHolidayRestdayAmount] + [TotalRegularOvertimeAmount]
+       + [TotalLegalHolidayOvertimeAmount] + [TotalSpecialHolidayOvertimeAmount] + [TotalRegularNightAmount]
+       + [TotalLegalHolidayNightAmount] + [TotalSpecialHolidayNightAmount] + [TotalRegularNightOvertimeAmount]
+       + [TotalLegalHolidayNightOvertimeAmount] + [TotalSpecialHolidayNightOvertimeAmount] AS OtherSalary,	
+
+    TotalLegalHolidayWorkingHours,
+    [TotalLegalHolidayWorkingAmount],
+    TotalSpecialHolidayWorkingHours,
+    TotalSpecialHolidayWorkingAmount,
+    TotalRegularNightHours,
+    TotalRegularNightAmount,
+    TotalRegularRestdayHours,
+    TotalRegularRestdayAmount,
+    [TotalRegularOvertimeHours],
+    [TotalRegularOvertimeAmount],
+
+    TrnPayrollLine.TotalSalaryAmount,
+       TrnPayrollLine.TotalTardyAmount,
+       TrnPayrollLine.TotalAbsentAmount,
+       TrnPayrollLine.TotalNetSalaryAmount,
+       TrnPayrollLine.TotalOtherIncomeTaxable,
+       TrnPayrollLine.GrossIncome,
+       TrnPayrollLine.TotalOtherIncomeNonTaxable,
+    --TrnDTRLine.RatePerHour,
+
+	       ('&lt;table&gt;'
+        + STUFF(
+                   (
+                       SELECT '&lt;tr&gt;&lt;td style="width: 135px; font-size: 12px;"&gt;' + OtherIncome
+                              + '&lt;/td&gt;&lt;td style="width: 50px; text-align: right; font-size: 12px;"&gt;'
+                              + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '&lt;/td&gt;&lt;/tr&gt;'
+                       FROM
+                       (
+                           SELECT TrnPayrollOtherIncomeLine.PayrollOtherIncomeId,
+                                  TrnPayrollOtherIncomeLine.EmployeeId,
+                                  TrnPayrollOtherIncomeLine.OtherIncomeId,
+                                  dbo.MstOtherIncome.OtherIncome,
+                                  TrnPayrollOtherIncomeLine.Amount
+                           FROM TrnPayrollOtherIncomeLine
+                               INNER JOIN MstOtherIncome
+                                   ON TrnPayrollOtherIncomeLine.OtherIncomeId = dbo.MstOtherIncome.Id
+                       ) AS PayslipOtherIncomeNonTaxableSub
+                       WHERE PayslipOtherIncomeNonTaxableSub.PayrollOtherIncomeId = dbo.TrnPayroll.PayrollOtherIncomeId
+                             AND PayslipOtherIncomeNonTaxableSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+               ) + '&lt;/table&gt;'
+  ) AS OtherIncomeNonTaxableBreakdown,
+       TrnPayrollLine.GrossIncomeWithNonTaxable,
+       TrnPayrollLine.SSSContribution,
+	 TrnPayrollLine.OrigSSSContribution,
+	 TrnPayrollLine.SSSWISP,
+       TrnPayrollLine.PHICContribution,
+       TrnPayrollLine.HDMFContribution,
+       TrnPayrollLine.Tax,
+       COALESCE([SSSContribution], 0) + COALESCE([PHICContribution], 0) + COALESCE([HDMFContribution], 0)
+       + COALESCE([Tax], 0) AS TotalDeduction,
+       TrnPayrollLine.TotalOtherDeduction,
+       ('&lt;table&gt;'
+        + STUFF(
+                   (
+                       SELECT '&lt;tr&gt;&lt;td style="width: 135px; font-size: 12px;"&gt;' + OtherDeduction
+                              + '&lt;/td&gt;&lt;td style="width: 50px; text-align: right; font-size: 12px;"&gt;'
+                              + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '&lt;/td&gt;&lt;/tr&gt;'
+                       FROM
+                       (
+                           SELECT TrnPayrollOtherDeductionLine.PayrollOtherDeductionId,
+                                  TrnPayrollOtherDeductionLine.EmployeeId,
+                                  TrnPayrollOtherDeductionLine.OtherDeductionId,
+                                  MstOtherDeduction.OtherDeduction,
+                                  TrnPayrollOtherDeductionLine.EmployeeLoanId,
+                                  TrnPayrollOtherDeductionLine.Amount
+                           FROM TrnPayrollOtherDeductionLine
+                               INNER JOIN MstOtherDeduction
+                                   ON TrnPayrollOtherDeductionLine.OtherDeductionId = MstOtherDeduction.Id
+                       ) PayslipLengthwiseSub
+                       WHERE PayslipLengthwiseSub.PayrollOtherDeductionId = TrnPayroll.PayrollOtherDeductionId
+                             AND PayslipLengthwiseSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+               ) + '&lt;/table&gt;'
+       ) AS OtherDeductionBreakdown,
+       ('&lt;table&gt;'
+	 + STUFF(
+                   (
+                       SELECT '&lt;tr&gt;&lt;td style="width: 135px; font-size: 12px;"&gt;' + OtherDeduction
+                              + '&lt;/td&gt;&lt;td style="width: 50px; text-align: right; font-size: 12px;"&gt;'
+                              + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) + '&lt;/td&gt;&lt;/tr&gt;'
+                       FROM
+                       (
+                           SELECT MstEmployeeLoan.Id,
+                                  MstEmployeeLoan.EmployeeId,
+                                  MstEmployeeLoan.OtherDeductionId,
+                                  MstOtherDeduction.OtherDeduction,
+                                  MstEmployeeLoan.Balance
+                           FROM MstEmployeeLoan
+                               INNER JOIN MstOtherDeduction
+                                   ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
+                       ) LoanSub
+                       WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+               ) + '&lt;/table&gt;'
+       ) AS LoanBalances,
+       TrnPayrollLine.NetIncome,
+       TrnPayroll.PreparedBy
+
+
+FROM((TrnPayrollLine
+    INNER JOIN TrnPayroll
+        ON TrnPayrollLine.PayrollId = TrnPayroll.Id)
+    INNER JOIN MstEmployee
+        ON TrnPayrollLine.EmployeeId = MstEmployee.Id)
+    INNER JOIN MstCompany
+        ON MstEmployee.CompanyId = MstCompany.Id
+    INNER JOIN MstPosition
+        ON MstEmployee.PositionId = MstPosition.Id
+    INNER JOIN MstPayrollType
+        ON MstEmployee.PayrollTypeId = MstPayrollType.Id
+
+    LEFT JOIN (
+    SELECT 
+        EmployeeId,
+        AVG(RatePerHour) AS AvgRatePerHour
+    FROM TrnDTRLine
+    WHERE RestDay = 1
+    GROUP BY EmployeeId
+) AS DTRSummary ON DTRSummary.EmployeeId = TrnPayrollLine.EmployeeId
+
+
+WHERE TrnPayroll.IsLocked = 1
+  AND TrnPayrollLine.PayrollId = @ParamPayrollId
+  AND ISNULL(MstEmployee.EmploymentType, 1) LIKE ISNULL(@ParamEmploymentType, '%');</value>
   </data>
   <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
-    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iSXNMb2NrZWQiIFR5cGU9IkJvb2xlYW4iIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxPdGhlckRlZHVjdGlvbklkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbE51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlJlbWFya3MiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29tcGFueSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFbXBsb3llZUlkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQmFzaWNTYWxhcnkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ik90aGVyU2FsYXJ5IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFNhbGFyeUFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxUYXJkeUFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxBYnNlbnRBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsTmV0U2FsYXJ5QW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbE90aGVySW5jb21lVGF4YWJsZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iR3Jvc3NJbmNvbWUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsT3RoZXJJbmNvbWVOb25UYXhhYmxlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJHcm9zc0luY29tZVdpdGhOb25UYXhhYmxlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJTU1NDb250cmlidXRpb24iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBISUNDb250cmlidXRpb24iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkhETUZDb250cmlidXRpb24iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRheCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxEZWR1Y3Rpb24iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsT3RoZXJEZWR1Y3Rpb24iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ik90aGVyRGVkdWN0aW9uQnJlYWtkb3duIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9Ik5ldEluY29tZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUHJlcGFyZWRCeSIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlRvdGFsV29ya2luZ0hvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iSXNMb2NrZWQiIFR5cGU9IkJvb2xlYW4iIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxPdGhlckRlZHVjdGlvbklkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbE51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlJlbWFya3MiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29tcGFueSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFbXBsb3llZUlkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUG9zaXRpb24iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUGF5cm9sbFR5cGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVG90YWxSZWd1bGFyV29ya2luZ0hvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDb21wdXRlZFJlZ3VsYXJSZXN0ZGF5QW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCYXNpY1NhbGFyeSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iT3RoZXJTYWxhcnkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsTGVnYWxIb2xpZGF5V29ya2luZ0hvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbExlZ2FsSG9saWRheVdvcmtpbmdBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsU3BlY2lhbEhvbGlkYXlXb3JraW5nSG91cnMiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsU3BlY2lhbEhvbGlkYXlXb3JraW5nQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJOaWdodEhvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJOaWdodEFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxSZWd1bGFyUmVzdGRheUhvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJSZXN0ZGF5QW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJPdmVydGltZUhvdXJzIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJPdmVydGltZUFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxTYWxhcnlBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsVGFyZHlBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsQWJzZW50QW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbE5ldFNhbGFyeUFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxPdGhlckluY29tZVRheGFibGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ikdyb3NzSW5jb21lIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbE90aGVySW5jb21lTm9uVGF4YWJsZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iT3RoZXJJbmNvbWVOb25UYXhhYmxlQnJlYWtkb3duIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9Ikdyb3NzSW5jb21lV2l0aE5vblRheGFibGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlNTU0NvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iT3JpZ1NTU0NvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iU1NTV0lTUCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhJQ0NvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSERNRkNvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVGF4IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbERlZHVjdGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxPdGhlckRlZHVjdGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iT3RoZXJEZWR1Y3Rpb25CcmVha2Rvd24iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTG9hbkJhbGFuY2VzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9Ik5ldEluY29tZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUHJlcGFyZWRCeSIgVHlwZT0iSW50MzIiIC8+PC9WaWV3PjwvRGF0YVNldD4=</value>
   </data>
 </root>
