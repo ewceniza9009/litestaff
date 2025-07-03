@@ -1,4 +1,5 @@
 ﻿@page
+@inject IConfiguration Configuration
 @model whris.UI.Pages.LandingPageModel
 @{
     Layout = null;
@@ -144,7 +145,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Page("/Account/Login", new { area = "Identity" })">
-                            @(ViewContext.HttpContext.Request.Host.Host.Contains("localhost") ? "Demo" : "Login")
+                            @Configuration["LoginDemoMenu"]
                         </a>
                     </li>
                     <li class="nav-item">
