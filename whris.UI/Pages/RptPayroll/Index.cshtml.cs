@@ -22,6 +22,23 @@ namespace whris.UI.Pages.RptPayroll
         };
         public List<MstEmployeeDto> Employees => (List<MstEmployeeDto>)(Common.GetEmployees()?.Value ?? new List<MstEmployeeDto>());
 
+        public List<MstMonthDto> MonthCmbDs => new List<MstMonthDto>()
+        {
+            new MstMonthDto() { Id = 1, Month = "January" },
+            new MstMonthDto() { Id = 2, Month = "February" },
+            new MstMonthDto() { Id = 3, Month = "March" },
+            new MstMonthDto() { Id = 4, Month = "April" },
+            new MstMonthDto() { Id = 5, Month = "May" },
+            new MstMonthDto() { Id = 6, Month = "June" },
+            new MstMonthDto() { Id = 7, Month = "July" },
+            new MstMonthDto() { Id = 8, Month = "August" },
+            new MstMonthDto() { Id = 9, Month = "September" },
+            new MstMonthDto() { Id = 10, Month = "October" },
+            new MstMonthDto() { Id = 11, Month = "November" },
+            new MstMonthDto() { Id = 12, Month = "December" }
+        };
+
+           
         public void OnGet()
         {
             Reports = new List<ReportList>
@@ -32,10 +49,11 @@ namespace whris.UI.Pages.RptPayroll
                 new ReportList(){ Value = "3", Text = "" },
                 new ReportList(){ Value = "4", Text = "Payroll Worksheet w/ No. of Hrs" },
                 new ReportList(){ Value = "5", Text = "Payroll Worksheet w/ Departments" },
-                //new ReportList(){ Value = "6", Text = "Payroll Worksheet w/ Departments and Details" },
-                new ReportList(){ Value = "7", Text = "" },
-                new ReportList(){ Value = "8", Text = "Other Deduction Detail Report" },
-                new ReportList(){ Value = "9", Text = "Other Income Detail Report" },
+                new ReportList(){ Value = "6", Text = "Payroll Worksheet w/ No. of Hrs - Monthly" },
+                new ReportList(){ Value = "7", Text = "Payroll Worksheet w/ Departments - Monthly" },
+                new ReportList(){ Value = "8", Text = "" },
+                new ReportList(){ Value = "9", Text = "Other Deduction Detail Report" },
+                new ReportList(){ Value = "10", Text = "Other Income Detail Report" },
                 //new ReportList(){ Value = "10", Text = "" },
                 //new ReportList(){ Value = "11", Text = "Overtime/Holiday Payslip" },
                 //new ReportList(){ Value = "12", Text = "Overtime/Holiday Worksheet w/ No. of Hrs" },                 

@@ -139,6 +139,24 @@
 
                     </kendo-combobox>
                 </div>
+
+                <div class="form-group row" style="margin-top: 10px">
+                    <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Month: </label>
+                    <div class="col-md-10">
+                        <kendo-combobox name="MonthId" style="width: 300px"
+                                        datatextfield="Month"
+                                        datavaluefield="Id"
+                                        min-length="3"
+                                        height="520"
+                                        filter="FilterType.Contains"
+                                        placeholder="Month"
+                                        bind-to="@Model.MonthCmbDs"
+                                        >
+
+                        </kendo-combobox>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
