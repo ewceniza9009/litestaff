@@ -358,7 +358,7 @@
                                                         .Name("SearchEmployee") 
                                                         .Filter("contains")
                                                         .DataTextField("Text")
-                                                .HtmlAttributes(new { id = "SearchEmployee", placeholder = "Search Employee", style = "width: 100%;", onblur = "onSearchEmployee()", onchange = "onSearchEmployee()" })
+                                                .HtmlAttributes(new { id = "SearchEmployee", placeholder = "Search Employee", style = "width: 95%;", onblur = "onSearchEmployee()", onchange = "onSearchEmployee()" })
                                                         .DataSource(dataSource =>
                                                         dataSource.Read("GetEmployees", "AutoComplete")                    
                                                         .ServerFiltering(false)
