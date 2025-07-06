@@ -387,21 +387,16 @@
             .Events(e => e.ExcelExport("ExcelExport").DataBound("onDetailGridDataBound").CellClose("onCellEdited"))
             .Columns(columns =>
             {
-                @* columns.Command(command => 
+                    columns.Command(command =>
                     command.Custom("Delete")
-                    .IconClass("k-icon k-i-x") //still needs to revise the functionality
+                    .IconClass("k-icon k-i-x")
                     .Click("CmdDeleteDtrLine")
-                    .HtmlAttributes(new { 
-                    @class = "k-button btn btn-danger",
-                    style = "background-color: #dc3545 !important; color: white !important; border: none !important;"
-   
-                    })
                     )
                     .Width(110)
                     .Locked(true)
-                    .Lockable(true); *@
+                    .Lockable(true);
 
-                columns.Bound(x => x.EmployeeId).Title("Employee")
+                    columns.Bound(x => x.EmployeeId).Title("Employee")
                     .Filterable(false)
                     .EditorTemplateName("FKForDTREmployee")
                     .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoEmployeeDetail(#= data.EmployeeId#)'>#= GetEmployeeText(data) #</a>")
@@ -414,18 +409,20 @@
                 .Width(280)
                 .Locked(true)
                 .Lockable(true); *@
-                columns.Bound(x => x.ShiftCodeId).Title("Shift Code")
+                    columns.Bound(x => x.ShiftCodeId).Title("Shift Code")
                     .Filterable(false)
                     .EditorTemplateName("FKForDTRShiftCode")
                     .ClientTemplate("<a href='javascript:void(0)' style='color: blue; text-decoration: underline;' onclick='gotoShiftCodeDetail(#= data.ShiftCodeId#)'>#= GetShiftCodeText(data) #</a>")
                     .Width(250)
                     .Locked(true)
-                    .Lockable(true); 
-                columns.Bound(x => x.Date)
+                    .Lockable(true);
+
+                    columns.Bound(x => x.Date)
                     .Width(180)
                     .Locked(true)
                     .Lockable(true);
-                columns.Group(y => y.Title("Day")
+
+                    columns.Group(y => y.Title("Day")
                     .Locked(true)
                     .Lockable(true)
                     .HtmlAttributes(new { style = "text-align:center;" })
@@ -434,41 +431,43 @@
                         z.Bound(x => x.DayTypeId).Title("Type").Filterable(false).EditorTemplateName("FKForDTRDayType").ClientTemplate("#= GetDayTypeText(data) #").Width(190);
                         z.Bound(x => x.DayMultiplier).Title("M").Filterable(false).Width(100).HtmlAttributes(new { @style = "text-align: end;" });
                     }));
-                columns.Bound(x => x.RestDay).Title("Rest Day").ClientTemplate("<input type='checkbox' #= RestDay ? checked='checked' : '' # disabled/>").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
-                columns.Bound(x => x.TimeIn1).Format("{0:hh:mm tt}").Width(180).Title("Time In 1");
-                columns.Bound(x => x.TimeOut1).Format("{0:hh:mm tt}").Width(180).Title("Time Out 1");
-                columns.Bound(x => x.TimeIn2).Format("{0:hh:mm tt}").Width(180).Title("Time In 2");
-                columns.Bound(x => x.TimeOut2).Format("{0:hh:mm tt}").Width(180).Title("Time Out 2");
-                columns.Bound(x => x.Dtrremarks).Width(180).Title("Remarks");
-                columns.Group(y => y.Title("DTR Status")
+
+                    columns.Bound(x => x.RestDay).Title("Rest Day").ClientTemplate("<input type='checkbox' #= RestDay ? checked='checked' : '' # disabled/>").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                    columns.Bound(x => x.TimeIn1).Format("{0:hh:mm tt}").Width(180).Title("Time In 1");
+                    columns.Bound(x => x.TimeOut1).Format("{0:hh:mm tt}").Width(180).Title("Time Out 1");
+                    columns.Bound(x => x.TimeIn2).Format("{0:hh:mm tt}").Width(180).Title("Time In 2");
+                    columns.Bound(x => x.TimeOut2).Format("{0:hh:mm tt}").Width(180).Title("Time Out 2");
+                    columns.Bound(x => x.Dtrremarks).Width(180).Title("Remarks");
+
+                    columns.Group(y => y.Title("DTR Status")
                     .Columns(z =>
                     {
-                        z.Bound(x => x.OfficialBusiness).Title("OB")
-                    .ClientTemplate("<input type='checkbox' #= OfficialBusiness ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
-                        z.Bound(x => x.OnLeave).Title("OL")
-                    .ClientTemplate("<input type='checkbox' #= OnLeave ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
-                        z.Bound(x => x.Absent).Title("A")
-                    .ClientTemplate("<input type='checkbox' #= Absent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
-                        z.Bound(x => x.HalfdayAbsent).Title("HA")
-                    .ClientTemplate("<input type='checkbox' #= HalfdayAbsent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.OfficialBusiness).Title("OB").ClientTemplate("<input type='checkbox' #= OfficialBusiness ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.OnLeave).Title("OL").ClientTemplate("<input type='checkbox' #= OnLeave ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.Absent).Title("A").ClientTemplate("<input type='checkbox' #= Absent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
+                        z.Bound(x => x.HalfdayAbsent).Title("HA").ClientTemplate("<input type='checkbox' #= HalfdayAbsent ? checked='checked' : '' # />").HtmlAttributes(new { onchange = "onCheckBoxChange()" }).Filterable(false).Width(50);
                     }));
-                columns.Group(y => y.Title("Work Hours")
+
+                    columns.Group(y => y.Title("Work Hours")
                     .Columns(z =>
                     {
-                        z.Bound(x => x.RegularHours).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.NightHours).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.OvertimeHours).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.OvertimeNightHours).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.GrossTotalHours).Title("Total").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.RegularHours).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='RegularHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.NightHours).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='NightHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeHours).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='OvertimeHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeNightHours).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='OvertimeNightHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.GrossTotalHours).Title("Total").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='GrossTotalHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
                     }));
-                columns.Group(y => y.Title("Tardy Hours")
+
+                    columns.Group(y => y.Title("Tardy Hours")
                     .Columns(z =>
                     {
-                        z.Bound(x => x.TardyLateHours).Title("Late").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.TardyUndertimeHours).Title("UT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.TardyLateHours).Title("Late").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='TardyLateHours' style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.TardyUndertimeHours).Title("UT").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='TardyUndertimeHours' style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
                     }));
-                columns.Bound(x => x.NetTotalHours).Title("Net Hours").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                columns.Group(y => y.Title("Rate per Hour")
+
+                    columns.Bound(x => x.NetTotalHours).Title("Net Hours").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='NetTotalHours' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+
+                    columns.Group(y => y.Title("Rate per Hour")
                     .Columns(z =>
                     {
                         z.Bound(x => x.RatePerHour).Title("Reg").Filterable(false).Width(100);
@@ -476,25 +475,26 @@
                         z.Bound(x => x.RatePerOvertimeHour).Title("OT").Filterable(false).Width(100);
                         z.Bound(x => x.RatePerOvertimeNightHour).Title("OTN").Filterable(false).Width(100);
                     }));
-                columns.Group(y => y.Title("Amount")
+
+                    columns.Group(y => y.Title("Amount")
                     .Columns(z =>
                     {
-                        z.Bound(x => x.RegularAmount).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.NightAmount).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.OvertimeAmount).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                        z.Bound(x => x.OvertimeNightAmount).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-
+                        z.Bound(x => x.RegularAmount).Title("Reg").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='RegularAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.NightAmount).Title("Night").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='NightAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeAmount).Title("OT").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='OvertimeAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                        z.Bound(x => x.OvertimeNightAmount).Title("OTN").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='OvertimeNightAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
                     }));
-                columns.Bound(x => x.TotalAmount).Title("Total Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                columns.Bound(x => x.RatePerHourTardy).Title("Tardy Rate per Hour").Filterable(false).Width(100);
-                columns.Bound(x => x.TardyAmount).Title("Tardy Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
-                columns.Bound(x => x.RatePerAbsentDay).Title("Absent Rate per Day").Filterable(false).Width(100);
-                columns.Bound(x => x.AbsentAmount).Title("Absent Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                columns.Bound(x => x.NetAmount).Title("Net Amt").Filterable(false).Width(100).ClientFooterTemplate("<div style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
-                columns.Template("").Title("");
-                columns.Bound(x => x.Id).Filterable(false).Hidden();
-                columns.Bound(x => x.IsDeleted).Hidden();
-                columns.Bound(x => x.IsEdited).Hidden();
+
+                    columns.Bound(x => x.TotalAmount).Title("Total Amt").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='TotalAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    columns.Bound(x => x.RatePerHourTardy).Title("Tardy Rate per Hour").Filterable(false).Width(100);
+                    columns.Bound(x => x.TardyAmount).Title("Tardy Amt").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='TardyAmount' style='text-align: start'>#=kendo.format(\"{0:n5}\", kendo.parseFloat(sum))#</div>");
+                    columns.Bound(x => x.RatePerAbsentDay).Title("Absent Rate per Day").Filterable(false).Width(100);
+                    columns.Bound(x => x.AbsentAmount).Title("Absent Amt").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='AbsentAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    columns.Bound(x => x.NetAmount).Title("Net Amt").Filterable(false).Width(100).ClientFooterTemplate("<div data-footer-for='NetAmount' style='text-align: start'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    columns.Template("").Title("");
+                    columns.Bound(x => x.Id).Filterable(false).Hidden();
+                    columns.Bound(x => x.IsDeleted).Hidden();
+                    columns.Bound(x => x.IsEdited).Hidden();
             })
             .Editable(editable => editable.Mode(GridEditMode.InCell))
             .Navigatable()

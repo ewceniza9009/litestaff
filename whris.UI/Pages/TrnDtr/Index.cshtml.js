@@ -20,6 +20,8 @@ $employees = null;
 $shiftCodes = null;
 $dayTypes = null;
 
+let dtrLinesToDelete = [];
+
 window.addEventListener('beforeunload', function (e) {
     if ($isDirty) {
         e.preventDefault();
@@ -435,6 +437,10 @@ function CmdSave()
 
     for (var item of frmDataSF1.TrnDtrlines)
     {
+        if (dtrLinesToDelete.includes(item.Id)) {
+            item.IsDeleted = true;
+        }
+
         if (item.Date != null)
         {
             item.Date = new Date(item.Date).toLocaleDateString();
@@ -843,16 +849,66 @@ function CmdDeleteAllLines() {
     });
 }
 
-function CmdDeleteDtrLine(e)
-{
+/**
+ * A helper function to manually update a Kendo Grid aggregate footer.
+ * This definitive version uses a 'data-footer-for' attribute for reliability.
+ * @param {object} grid - The Kendo Grid instance.
+ * @param {string} fieldName - The data field of the column to update.
+ * @param {number} value - The value to ADD or SUBTRACT from the sum.
+ * @param {string} format - The Kendo format string (e.g., "{0:n2}").
+ */
+function updateAggregateValue(grid, fieldName, value, format) {
+    var aggregates = grid.dataSource.aggregates();
+    if (!aggregates[fieldName] || aggregates[fieldName].sum === undefined) {
+        return;
+    }
+
+    // 1. Calculate the new sum
+    var newSum = aggregates[fieldName].sum + value;
+    aggregates[fieldName].sum = newSum;
+
+    // 2. Find the specific footer div using our custom attribute and update it.
+    var footerElement = grid.footer.find("div[data-footer-for='" + fieldName + "']");
+
+    if (footerElement.length) {
+        footerElement.text(kendo.format(format, newSum));
+    }
+}
+
+/**
+ * Handles the click event for the delete button on a row.
+ */
+function CmdDeleteDtrLine(e) {
+    e.preventDefault();
     $isDirty = true;
 
-    var subGrid = $("#TrnDtrlines").getKendoGrid();
-    var item = subGrid.dataItem($(e.target).closest("tr"));
+    var grid = $("#TrnDtrlines").getKendoGrid();
+    var tr = $(e.target).closest("tr");
+    var dataItem = grid.dataItem(tr);
 
-    item.set("IsDeleted", true);
+    // Call the helper for each aggregated column, passing the value to subtract
+    updateAggregateValue(grid, "RegularHours", -dataItem.RegularHours, "{0:n2}");
+    updateAggregateValue(grid, "NightHours", -dataItem.NightHours, "{0:n2}");
+    updateAggregateValue(grid, "OvertimeHours", -dataItem.OvertimeHours, "{0:n2}");
+    updateAggregateValue(grid, "OvertimeNightHours", -dataItem.OvertimeNightHours, "{0:n2}");
+    updateAggregateValue(grid, "GrossTotalHours", -dataItem.GrossTotalHours, "{0:n2}");
+    updateAggregateValue(grid, "TardyLateHours", -dataItem.TardyLateHours, "{0:n5}");
+    updateAggregateValue(grid, "TardyUndertimeHours", -dataItem.TardyUndertimeHours, "{0:n5}");
+    updateAggregateValue(grid, "NetTotalHours", -dataItem.NetTotalHours, "{0:n2}");
+    updateAggregateValue(grid, "RegularAmount", -dataItem.RegularAmount, "{0:n2}");
+    updateAggregateValue(grid, "NightAmount", -dataItem.NightAmount, "{0:n2}");
+    updateAggregateValue(grid, "OvertimeAmount", -dataItem.OvertimeAmount, "{0:n2}");
+    updateAggregateValue(grid, "OvertimeNightAmount", -dataItem.OvertimeNightAmount, "{0:n2}");
+    updateAggregateValue(grid, "TotalAmount", -dataItem.TotalAmount, "{0:n2}");
+    updateAggregateValue(grid, "TardyAmount", -dataItem.TardyAmount, "{0:n5}");
+    updateAggregateValue(grid, "AbsentAmount", -dataItem.AbsentAmount, "{0:n2}");
+    updateAggregateValue(grid, "NetAmount", -dataItem.NetAmount, "{0:n2}");
 
-    subGrid.dataSource.filter({ field: "IsDeleted", operator: "eq", value: false });
+    // Add the Id to our list for the final save
+    dtrLinesToDelete.push(dataItem.Id);
+
+    // Hide both parts of the row (for locked columns)
+    grid.element.find("tr[data-uid='" + dataItem.uid + "']").hide();
 }
 
 //Dtr Input Events
