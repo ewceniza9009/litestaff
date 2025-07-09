@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using whris.Application.Common;
 using whris.Application.Dtos;
+using whris.Data.Models;
 using whris.UI.Authorization;
 using whris.UI.Services.Datasources;
 
@@ -37,8 +38,22 @@ namespace whris.UI.Pages.RptPayroll
             new MstMonthDto() { Id = 11, Month = "November" },
             new MstMonthDto() { Id = 12, Month = "December" }
         };
+            
+        public List<MstPayrollGroupDto> PayrollGroupCmbDs => new List<MstPayrollGroupDto>()
+        {
+            new MstPayrollGroupDto() { Id = 51, PayrollGroup = "Semi-Monthly" },
+            new MstPayrollGroupDto() { Id = 52, PayrollGroup = "Weekly" },
+            new MstPayrollGroupDto() { Id = 54, PayrollGroup = "Daily" },
+            new MstPayrollGroupDto() { Id = 55, PayrollGroup = "Monthly" }
+        };
 
-           
+        public List<MstPeriodDto> PeriodCmbDs => new List<MstPeriodDto>()
+        {
+            new MstPeriodDto() { Id = 7, Period = "2024" },
+            new MstPeriodDto() { Id = 8, Period = "2025" }
+        };
+
+
         public void OnGet()
         {
             Reports = new List<ReportList>
@@ -49,8 +64,7 @@ namespace whris.UI.Pages.RptPayroll
                 new ReportList(){ Value = "3", Text = "" },
                 new ReportList(){ Value = "4", Text = "Payroll Worksheet w/ No. of Hrs" },
                 new ReportList(){ Value = "5", Text = "Payroll Worksheet w/ Departments" },
-                new ReportList(){ Value = "6", Text = "Payroll Worksheet w/ No. of Hrs - Monthly" },
-                new ReportList(){ Value = "7", Text = "Payroll Worksheet w/ Departments - Monthly" },
+                new ReportList(){ Value = "6", Text = "Monthly Payroll Worksheet" },
                 new ReportList(){ Value = "8", Text = "" },
                 new ReportList(){ Value = "9", Text = "Other Deduction Detail Report" },
                 new ReportList(){ Value = "10", Text = "Other Income Detail Report" },
