@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="customSqlQuery1.Sql" xml:space="preserve">
+    <value>SELECT 
+    TrnPayroll.PeriodId,
+	MstCompany.Company,
+    CASE TrnPayroll.PeriodId
+        WHEN 7 THEN '2024'
+        WHEN 8 THEN '2025'
+    END AS Year,
+
+    TrnPayrollLine.EmployeeId,
+    MstEmployee.FullName,
+    TrnPayroll.MonthId,
+    CASE TrnPayroll.MonthId
+        WHEN 1 THEN 'January'
+        WHEN 2 THEN 'February'
+        WHEN 3 THEN 'March'
+        WHEN 4 THEN 'April'
+        WHEN 5 THEN 'May'
+        WHEN 6 THEN 'June'
+        WHEN 7 THEN 'July'
+        WHEN 8 THEN 'August'
+        WHEN 9 THEN 'September'
+        WHEN 10 THEN 'October'
+        WHEN 11 THEN 'November'
+        WHEN 12 THEN 'December'
+        ELSE 'Unknown'
+    END AS MonthName,
+
+
+SUM(CASE WHEN MstEmployee.PayrollTypeId = 3 THEN MstEmployee.PayrollRate ELSE 0 END) AS FixBasicSalary,
+
+
+SUM(
+    CASE WHEN MstEmployee.PayrollTypeId = 1 THEN
+        TrnPayrollLine.TotalSalaryAmount
+        - TrnPayrollLine.TotalLegalHolidayWorkingAmount
+        - TrnPayrollLine.TotalSpecialHolidayWorkingAmount
+        - TrnPayrollLine.TotalRegularRestdayAmount
+        - TrnPayrollLine.TotalLegalHolidayRestdayAmount
+        - TrnPayrollLine.TotalSpecialHolidayRestdayAmount
+        - TrnPayrollLine.TotalRegularOvertimeAmount
+        - TrnPayrollLine.TotalLegalHolidayOvertimeAmount
+        - TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
+        - TrnPayrollLine.TotalRegularNightAmount
+        - TrnPayrollLine.TotalLegalHolidayNightAmount
+        - TrnPayrollLine.TotalSpecialHolidayNightAmount
+        - TrnPayrollLine.TotalRegularNightOvertimeAmount
+        - TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount
+        - TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount
+    ELSE 0 END
+) AS VariableBasicSalary,
+
+
+SUM(
+    CASE WHEN MstEmployee.PayrollTypeId = 3 THEN MstEmployee.PayrollRate ELSE 0 END
+) + 
+SUM(
+    CASE WHEN MstEmployee.PayrollTypeId = 1 THEN
+        TrnPayrollLine.TotalSalaryAmount
+        - TrnPayrollLine.TotalLegalHolidayWorkingAmount
+        - TrnPayrollLine.TotalSpecialHolidayWorkingAmount
+        - TrnPayrollLine.TotalRegularRestdayAmount
+        - TrnPayrollLine.TotalLegalHolidayRestdayAmount
+        - TrnPayrollLine.TotalSpecialHolidayRestdayAmount
+        - TrnPayrollLine.TotalRegularOvertimeAmount
+        - TrnPayrollLine.TotalLegalHolidayOvertimeAmount
+        - TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
+        - TrnPayrollLine.TotalRegularNightAmount
+        - TrnPayrollLine.TotalLegalHolidayNightAmount
+        - TrnPayrollLine.TotalSpecialHolidayNightAmount
+        - TrnPayrollLine.TotalRegularNightOvertimeAmount
+        - TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount
+        - TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount
+    ELSE 0 END
+) AS Salary,
+
+
+    SUM(TrnPayrollLine.TotalSalaryAmount) AS TotalSalaryAmount , 
+
+
+
+	SUM(
+        [TotalRegularOvertimeAmount]
+        + [TotalLegalHolidayOvertimeAmount]
+        + [TotalSpecialHolidayOvertimeAmount]
+        + [TotalRegularNightOvertimeAmount]
+        + [TotalLegalHolidayNightOvertimeAmount]
+        + [TotalSpecialHolidayNightOvertimeAmount]
+    ) AS TotalOvertimeAmount,
+
+	SUM(
+        [TotalLegalHolidayWorkingAmount]
+        + [TotalSpecialHolidayWorkingAmount]
+        + [TotalRegularRestdayAmount]
+        + [TotalLegalHolidayRestdayAmount]
+        + [TotalSpecialHolidayRestdayAmount]
+        + [TotalRegularOvertimeAmount]
+        + [TotalLegalHolidayOvertimeAmount]
+        + [TotalSpecialHolidayOvertimeAmount]
+        + [TotalRegularNightAmount]
+        + [TotalLegalHolidayNightAmount]
+        + [TotalSpecialHolidayNightAmount]
+        + [TotalRegularNightOvertimeAmount]
+        + [TotalLegalHolidayNightOvertimeAmount]
+        + [TotalSpecialHolidayNightOvertimeAmount]
+    ) AS OtherSalary,
+
+	SUM(TrnPayrollLine.TotalTardyAmount) AS TotalTardyAmount,
+	SUM(TrnPayrollLine.TotalAbsentAmount) AS TotalAbsentAmount,
+	SUM(TrnPayrollLine.TotalNetSalaryAmount) AS TotalNetSalaryAmount,
+	SUM(TrnPayrollLine.TotalOtherIncomeTaxable) AS TotalOtherIncomeTaxable,
+	SUM(TrnPayrollLine.TotalOtherIncomeNonTaxable) AS TotalOtherIncomeNonTaxable,
+	SUM(TrnPayrollLine.GrossIncome) AS GrossIncome,
+	SUM(TrnPayrollLine.GrossIncomeWithNonTaxable) AS GrossIncomeWithNonTaxable,
+	SUM(TrnPayrollLine.SSSContribution) AS SSSContribution,
+	SUM(TrnPayrollLine.PHICContribution) AS PHICContribution,
+	SUM(TrnPayrollLine.HDMFContribution) AS HDMFContribution,
+	SUM(TrnPayrollLine.Tax) AS Tax, 
+	SUM(TrnPayrollLine.TotalOtherDeduction) AS TotalOtherDeduction,
+	SUM(TrnPayrollLine.NetIncome) AS NetIncome
+
+
+FROM TrnPayrollLine
+INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id
+INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id
+INNER JOIN MstPeriod ON TrnPayroll.PeriodId = MstPeriod.Id
+INNER JOIN MstPayrollGroup ON TrnPayroll.PayrollGroupId = MstPayrollGroup.Id
+INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
+
+WHERE TrnPayroll.IsLocked = 1
+  AND (@ParamMonthId = 0 OR TrnPayroll.MonthId = @ParamMonthId)
+  AND (@ParamPeriod = 0 OR TrnPayroll.PeriodId = @ParamPeriod)
+  AND (@ParamPayrollGroupId = 0 OR TrnPayroll.PayrollGroupId = @ParamPayrollGroupId)
+  AND (@ParamCompanyId = 0 OR MstEmployee.CompanyId = @ParamCompanyId)
+
+GROUP BY 
+    TrnPayroll.PeriodId,
+    TrnPayroll.MonthId,
+    TrnPayrollLine.EmployeeId,
+    MstEmployee.FullName,
+    MstEmployee.CompanyId,
+    MstCompany.Company
+
+ORDER BY MstEmployee.FullName ASC;</value>
+  </data>
+  <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iUGVyaW9kSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJDb21wYW55IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlllYXIiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRW1wbG95ZWVJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IkZ1bGxOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9Ik1vbnRoSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJNb250aE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRml4QmFzaWNTYWxhcnkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlZhcmlhYmxlQmFzaWNTYWxhcnkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlNhbGFyeSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxTYWxhcnlBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsT3ZlcnRpbWVBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ik90aGVyU2FsYXJ5IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFRhcmR5QW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbEFic2VudEFtb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxOZXRTYWxhcnlBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvdGFsT3RoZXJJbmNvbWVUYXhhYmxlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbE90aGVySW5jb21lTm9uVGF4YWJsZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iR3Jvc3NJbmNvbWUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ikdyb3NzSW5jb21lV2l0aE5vblRheGFibGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlNTU0NvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhJQ0NvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSERNRkNvbnRyaWJ1dGlvbiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVGF4IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbE90aGVyRGVkdWN0aW9uIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJOZXRJbmNvbWUiIFR5cGU9IkRlY2ltYWwiIC8+PC9WaWV3PjwvRGF0YVNldD4=</value>
+  </data>
+</root>

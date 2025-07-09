@@ -25,11 +25,16 @@ function CmdPreview()
     }
 
     if ($selectedReportId == 4) {
-        window.open(window.location.origin + "/RptPayroll/RepPayrollWithHrs?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val(), '_blank').focus();
+        window.open(window.location.origin + "/RptPayroll/RepPayrollWithHrs?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 5) {
         window.open(window.location.origin + "/RptPayroll/RepPayrollWithDepartments?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramDepartmentId=" + $("#DepartmentId").val(), '_blank').focus();
+    }
+
+    if ($selectedReportId == 6) {
+        window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() +
+            "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramPeriod=" + $("#Period").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 8) {

@@ -1,0 +1,34 @@
+﻿@page
+@model RepMonthlyPayroll
+@using whris.UI.Reports
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Monthly Payroll w/ Hours";
+    Layout = null;
+}
+<style>
+    #DocumentViewer
+    {
+        height: 100vh;
+    }
+</style>
+
+<html>
+    <head>
+    <title>Monthly Payroll w/ Hours</title>
+        <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+        <script src="~/js/thirdparty.bundle.js"></script>
+        <script src="~/js/viewer.part.bundle.js"></script>
+    </head>
+    <body>
+    @Html.DevExpress().WebDocumentViewer("DocumentViewer").Bind(Model.MonthlyPayroll)
+    </body>
+    <script>
+    </script>
+</html>
+
+
