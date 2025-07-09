@@ -1072,7 +1072,16 @@ namespace whris.Application.Library
 
                     var timeOut1 = line?.TimeOut1 ?? DefaultDate;
                     var timeIn2 = line?.TimeIn2 ?? DefaultDate;
-                    
+
+                    if (timeOut1 == DefaultDate && timeIn2 != DefaultDate) 
+                    {
+                        timeOut1 = timeIn2.AddHours(-1);
+                    }
+
+                    if (timeIn2 == DefaultDate && timeOut1 != DefaultDate)
+                    {
+                        timeIn2 = timeOut1.AddHours(1);
+                    }
 
                     if (timeOut2 > shiftTimeOut2) 
                     {
@@ -1088,9 +1097,26 @@ namespace whris.Application.Library
                     //}
 
                     var firstHalfInHours = (decimal)(timeOut1 - timeIn1).TotalHours;
-                    var secondHalfInHours = (decimal)(timeOut2 - timeIn2).TotalHours;
+                    var secondHalfInHours = (decimal)(timeOut2 - timeIn2).TotalHours;                    
 
                     actualNumberOfHours = firstHalfInHours + secondHalfInHours;
+
+                    var shiftCodeSetup = _context.MstShiftCodes
+                            .FirstOrDefault(x => x.Id == shiftCodeId);
+                    var isStraight = shiftCodeSetup?.Remarks?.ToUpper()?.Contains("STRAIGHT") ?? false;
+
+                    if (timeOut1 == DefaultDate && timeIn2 == DefaultDate && isStraight)
+                    {
+                        actualNumberOfHours = (decimal)(timeOut2 - timeIn1).TotalHours;
+                    }
+
+                    if (timeOut1 == DefaultDate && timeIn2 == DefaultDate && !isStraight)
+                    {
+                        var halfDayHours = shiftNumberOfHours / 2;
+                        var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                        actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                    }
+
                     numberOfHours = shiftNumberOfHours - (actualNumberOfHours - deductHours);
                 }
                 else 
@@ -1433,6 +1459,16 @@ namespace whris.Application.Library
                         var timeOut1 = line?.TimeOut1 ?? DefaultDate;
                         var timeIn2 = line?.TimeIn2 ?? DefaultDate;
 
+                        if (timeOut1 == DefaultDate && timeIn2 != DefaultDate)
+                        {
+                            timeOut1 = timeIn2.AddHours(-1);
+                        }
+
+                        if (timeIn2 == DefaultDate && timeOut1 != DefaultDate)
+                        {
+                            timeIn2 = timeOut1.AddHours(1);
+                        }
+
                         if (timeOut2 > shiftTimeOut2)
                         {
                             timeOut2 = shiftTimeOut2;
@@ -1450,6 +1486,24 @@ namespace whris.Application.Library
                         var secondHalfInHours = (decimal)(timeOut2 - timeIn2).TotalHours;
 
                         var actualNumberOfHours = firstHalfInHours + secondHalfInHours;
+
+                        var shiftCodeSetup = _context.MstShiftCodes
+                            .FirstOrDefault(x => x.Id == shiftCodeId);
+                        var isStraight = shiftCodeSetup?.Remarks?.ToUpper()?.Contains("STRAIGHT") ?? false;
+
+                        if (timeOut1 == DefaultDate && timeIn2 == DefaultDate && isStraight) 
+                        {
+                            actualNumberOfHours = (decimal)(timeOut2 - timeIn1).TotalHours;
+                            result = shiftNumberOfHours - actualNumberOfHours;
+                        }
+
+                        if (timeOut1 == DefaultDate && timeIn2 == DefaultDate && !isStraight)
+                        {
+                            var halfDayHours = shiftNumberOfHours / 2;
+                            var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                            actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                        }
+
                         result = shiftNumberOfHours - (actualNumberOfHours - deductHours);
 
                         if (line != null && line.Absent)
@@ -1870,13 +1924,13 @@ namespace whris.Application.Library
                 switch (line.DayTypeId)
                 {
                     case 2:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 2.6m : 1); //* (line.DayMultiplier + 0.6m);
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 2.6m : 1.25m); //* (line.DayMultiplier + 0.6m);
                         break;
                     case 3:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.69m : 1); //* (line.DayMultiplier * 1.3m);
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.69m : 1.25m); //* (line.DayMultiplier * 1.3m);
                         break;
                     default:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.25m : 1); //* line.DayMultiplier;
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.25m : 1.25m); //* line.DayMultiplier;
                         break;
                 }
             }
@@ -1888,13 +1942,13 @@ namespace whris.Application.Library
                 switch (line.DayTypeId)
                 {
                     case 2:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 3.38m : 1); //* (line.DayMultiplier + 0.6m);
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 3.38m : 1.69m); //* (line.DayMultiplier + 0.6m);
                         break;
                     case 3:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.95m : 1); //* (line.DayMultiplier * 1.3m);
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.95m : 1.69m); //* (line.DayMultiplier * 1.3m);
                         break;
                     default:
-                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.69m : 1); //* line.DayMultiplier;
+                        amount = line.OvertimeHours * line.RatePerOvertimeHour * (isEligibleForHolidayPay ? 1.69m : 1.69m); //* line.DayMultiplier;
                         break;
                 }
             }
@@ -2692,6 +2746,16 @@ namespace whris.Application.Library
                                             {
                                                 continue;
                                             }
+                                        }
+
+                                        if (isFlexBreak && log.LogType == "O")
+                                        {
+                                            dline = dtrLines.FirstOrDefault(x => x.EmployeeId == log.EmployeeId && DateOnly.FromDateTime(x.Date) == log.Date);
+                                            if(dline is not null) dline.TimeOut2 = DateTime.Parse($"{log.Date} {string.Format("{0:hh:mm tt}", log.Time)}");
+
+                                            isWorkDayCompleted = true;
+
+                                            continue;
                                         }
 
                                         var employeeShiftCodeDaysSetup = new EmployeeShiftCodeDay();

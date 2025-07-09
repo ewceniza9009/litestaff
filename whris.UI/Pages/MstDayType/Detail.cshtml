@@ -171,6 +171,7 @@
             columns.Bound(x => x.IsDeleted).Hidden();
         })
         .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Sortable()
         .Navigatable()
         .Selectable(x => x.Mode(GridSelectionMode.Single))
         .Pageable()

@@ -5,30 +5,27 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @Html.AntiForgeryToken()
 @{
-    ViewData["Title"] = "Monthly Payroll w/ Hours";
+    ViewData["Title"] = "Monthly Payroll Worksheet";
     Layout = null;
 }
 <style>
-    #DocumentViewer
-    {
+    #DocumentViewer {
         height: 100vh;
     }
 </style>
 
 <html>
-    <head>
-    <title>Monthly Payroll w/ Hours</title>
-        <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
-        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+<head>
+    <title>Monthly Payroll Worksheet</title>
+    <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+    <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
 
-        <script src="~/js/thirdparty.bundle.js"></script>
-        <script src="~/js/viewer.part.bundle.js"></script>
-    </head>
-    <body>
+    <script src="~/js/thirdparty.bundle.js"></script>
+    <script src="~/js/viewer.part.bundle.js"></script>
+</head>
+<body>
     @Html.DevExpress().WebDocumentViewer("DocumentViewer").Bind(Model.MonthlyPayroll)
-    </body>
-    <script>
-    </script>
+</body>
+<script>
+</script>
 </html>
-
-

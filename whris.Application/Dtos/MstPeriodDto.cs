@@ -14,7 +14,5 @@ namespace whris.Application.Dtos
 
         [StringLength(50)]
         public string Period { get; set; } = null!;
-
-      
     }
 }

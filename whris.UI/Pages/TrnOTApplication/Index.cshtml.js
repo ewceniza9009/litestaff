@@ -494,6 +494,7 @@ function ComputeEmployeeOTAmount() {
     var grid = $("#TrnOTApplicationLines").getKendoGrid();
     var rowData = grid.dataItem(grid.select());
 
+    rowData.set("OvertimeLimitHours", rowData.OvertimeHours);
     rowData.set("OvertimeAmount", rowData.OvertimeRate * rowData.OvertimeHours);
 }
 

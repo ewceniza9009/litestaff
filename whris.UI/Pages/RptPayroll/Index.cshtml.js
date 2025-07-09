@@ -1,6 +1,4 @@
-﻿//For Dtr Report
-
-$selectedReportId = 0;
+﻿$selectedReportId = 0;
 
 $("#DateStart").val(new Date().toLocaleDateString());
 $("#DateEnd").val(new Date().toLocaleDateString());
@@ -24,8 +22,57 @@ function CmdPreview()
         window.open(window.location.origin + "/RptPayroll/RepPayslipContinues?paramId=" + $("#PayrollId").val() + "&paramEmployeeId=" + $("#EmployeeId").val() + "&paramEmploymentType=" + $("#EmploymentType").val(), '_blank').focus();
     }
 
+    if ($selectedReportId == 3.1) {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        const payrollId = $("#PayrollId").val();
+        const employmentType = $("#EmploymentType").val();
+        const companyId = $("#CompanyId").val();
+        const branchId = $("#BranchId").val();
+
+        const formData = new FormData();
+        formData.append("ParamPayrollId", payrollId);
+        formData.append("ParamEmploymentType", employmentType);
+        formData.append("ParamCompanyId", companyId);
+        formData.append("ParamBranchId", branchId);
+
+        fetch('/RptPayroll/Index?handler=ExportToExcel', {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': token
+            },
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const disposition = response.headers.get('content-disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    return response.blob();
+                }
+                return null;
+            })
+            .then(blob => {
+                if (!blob) return;                             
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'PayrollWorksheetWIncomeDeductionBreakdown.xlsx';                 
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
     if ($selectedReportId == 4) {
-        window.open(window.location.origin + "/RptPayroll/RepPayrollWithHrs?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val(), '_blank').focus();
+        window.open(window.location.origin + "/RptPayroll/RepPayrollWithHrs?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 5) {
@@ -33,8 +80,7 @@ function CmdPreview()
     }
 
     if ($selectedReportId == 6) {
-        window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramId=" + $("#PayrollId").val() + "&paramEmploymentType=" + $("#EmploymentType").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() +
-            "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramPeriod=" + $("#Period").val(), '_blank').focus();
+        window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramEmploymentType=" + $("#EmploymentType").val() + "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() + "&paramPeriod=" + $("#Period").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 8) {

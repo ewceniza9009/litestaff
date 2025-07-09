@@ -28,6 +28,7 @@ namespace whris.Application.CQRS.TrnOTApplication.Commands
                     OvertimeHours = 8,
                     OvertimeRate =  0,
                     OvertimeAmount = 0,
+                    OvertimeLimitHours = 8,
                     Remarks = "NA",
                     IsDeleted = false,
                 };

@@ -386,13 +386,17 @@ namespace whris.UI.Services
 
                     if (bioId > 0) 
                     {
+                        var limitOvertimeHours = decimal.Parse(row["LimitOT"]?.ToString() ?? "0") == 0m ?
+                            decimal.Parse(row["OT"]?.ToString() ?? "0") :
+                            decimal.Parse(row["LimitOT"]?.ToString() ?? "0");
+
                         overtimeImports.Add(new TmpImportOvertime
                         {
                             EmployeeId = Lookup.GetEmployeeIdByBioId(row["BiometricId"]?.ToString() ?? ""),
                             Date = DateTime.Parse(row["Date"]?.ToString() ?? new DateTime(1990, 09, 15).ToString()),
                             OvertimeHours = decimal.Parse(row["OT"]?.ToString() ?? "0"),
                             OvertimeNightHours = decimal.Parse(row["NightOT"]?.ToString() ?? "0"),
-                            OvertimeLimitHours = decimal.Parse(row["LimitOT"]?.ToString() ?? "0"),
+                            OvertimeLimitHours = limitOvertimeHours,
                             Remarks = row["Remarks"]?.ToString() ?? "NA"
                         });
                     }                    

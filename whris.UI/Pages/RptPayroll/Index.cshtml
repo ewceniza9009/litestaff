@@ -138,14 +138,13 @@
                                     bind-to="@Model.ComboboxDatasources.DepartmentCmbDs">
 
                     </kendo-combobox>
-                </div>
-
-            </div> 
+                </div>                
+            </div>
 
             <div class="form-group row" style="margin-top: 10px">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Group: </label>
                 <div class="col-md-10">
-                    <kendo-combobox name="PayrollGroup" style="width: 300px"
+                    <kendo-combobox name="PayrollGroupId" style="width: 300px"
                                     datatextfield="PayrollGroup"
                                     datavaluefield="Id"
                                     min-length="3"
@@ -164,6 +163,7 @@
                     <kendo-combobox name="MonthId" style="width: 300px"
                                     datatextfield="Month"
                                     datavaluefield="Id"
+                                    value="@Model.DefaultMonth"
                                     min-length="3"
                                     height="520"
                                     filter="FilterType.Contains"
@@ -180,7 +180,7 @@
                     <kendo-combobox name="Period" style="width: 300px"
                                     datatextfield="Period"
                                     datavaluefield="Id"
-                                    value="8"
+                                    value="@Model.DefaultPeriod"
                                     min-length="3"
                                     height="520"
                                     filter="FilterType.Contains"
@@ -190,7 +190,6 @@
                 </div>
             </div>
 
-            
         </div>
     </div>
 </div>
