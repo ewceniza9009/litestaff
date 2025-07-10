@@ -42,6 +42,16 @@ namespace whris.Application.Library
             return groupId;
         }
 
+        public static async Task<int> GetPayrollGroupIdAsync(string Code)
+        {
+            var sql = "SELECT PayrollGroupId FROM dbo.MstEmployee WHERE dbo.Encode(Id) = @Code";
+
+            using (var connection = new SqlConnection(Config.ConnectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<int>(sql, new { Code });
+            }
+        }
+
         public static string Encode(string input)
         {
             using (var connection = new SqlConnection(Config.ConnectionString))

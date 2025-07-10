@@ -64,6 +64,49 @@ namespace whris.Application.Mobile.RepPayroll
             return result;
         }
 
+        public async Task<IEnumerable<DTRSlipRecord>> ResultAsync()
+        {
+            var sql = @"SELECT TrnDTRLine.DTRId, 
+                    TrnDTR.DTRNumber, 
+                    FORMAT(TrnDTR.DateStart, 'MM/dd/yyyy') AS DateStart, 
+                    FORMAT(TrnDTR.DateEnd, 'MM/dd/yyyy') AS DateEnd, 
+                    TrnDTR.Remarks, 
+                    MstDepartment.Department, 
+                    MstPosition.Position, 
+                    TrnDTRLine.EmployeeId, 
+                    MstEmployee.FullName, 
+                    FORMAT(TrnDTRLine.Date, 'MM/dd/yyyy') AS Date, 
+                    FORMAT(TrnDTRLine.TimeIn1, 'hh:mm tt') AS TimeIn1, 
+                    FORMAT(TrnDTRLine.TimeOut1, 'hh:mm tt') AS TimeOut1, 
+                    FORMAT(TrnDTRLine.TimeIn2, 'hh:mm tt') AS TimeIn2, 
+                    FORMAT(TrnDTRLine.TimeOut2, 'hh:mm tt') AS TimeOut2, 
+                    TrnDTRLine.OfficialBusiness, 
+                    TrnDTRLine.OnLeave, 
+                    TrnDTRLine.Absent, 
+                    TrnDTRLine.RegularHours, 
+                    TrnDTRLine.NightHours, 
+                    TrnDTRLine.OvertimeHours, 
+                    TrnDTRLine.OvertimeNightHours, 
+                    TrnDTRLine.GrossTotalHours, 
+                    TrnDTRLine.TardyLateHours, 
+                    TrnDTRLine.TardyUndertimeHours, 
+                    TrnDTRLine.NetTotalHours, 
+                    TrnDTRLine.DayTypeId, 
+                    MstDayType.DayType, 
+                    TrnDTRLine.RestDay
+            FROM ((((TrnDTRLine INNER JOIN MstEmployee ON TrnDTRLine.EmployeeId = MstEmployee.Id) 
+                INNER JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id) 
+                INNER JOIN MstDayType ON TrnDTRLine.DayTypeId = MstDayType.Id) 
+                INNER JOIN MstPosition ON MstEmployee.PositionId = MstPosition.Id) 
+                INNER JOIN MstDepartment ON MstEmployee.DepartmentId = MstDepartment.Id
+            WHERE (TrnDTR.Id = @DTRId) AND dbo.Encode(TrnDTRLine.EmployeeId) = @MobileCode";
+
+            using (var connection = new SqlConnection(Config.ConnectionString))
+            {
+                return await connection.QueryAsync<DTRSlipRecord>(sql, new { DTRId, MobileCode });
+            }
+        }
+
         public class DTRSlipRecord
         {
             public int DTRId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Kendo.Mvc.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using whris.Application.Dtos;
 using whris.Application.Library;
 using whris.Application.Queries.TrnPayrollOtherDeduction;
@@ -25,6 +26,15 @@ namespace whris.Application.Common
 
             // Execute the database logic that was passed in using the new, safe context.
             return databaseOperation(context);
+        }
+
+        private static async Task<TResult> ExecuteWithContextAsync<TResult>(Func<HRISContext, Task<TResult>> databaseOperation)
+        {
+            // The 'using' declaration works seamlessly with async.
+            using var context = new HRISContext();
+
+            // Await the async database logic that was passed in.
+            return await databaseOperation(context);
         }
 
         public static JsonResult GetDepartmentList()
@@ -502,13 +512,13 @@ namespace whris.Application.Common
                 .ToList()));
         }
 
-        public static List<TrnPayrollDto> GetPayrollNumbers2(string Code)
+        public static async Task<List<TrnPayrollDto>> GetPayrollNumbers2Async(string Code)
         {
-            return ExecuteWithContext(context =>
+            return await ExecuteWithContextAsync(async context =>
             {
-                var payrollGroupId = MobileUtils.GetPayrollGroupId(Code);
+                var payrollGroupId = await MobileUtils.GetPayrollGroupIdAsync(Code);
 
-                return context.TrnPayrolls
+                return await context.TrnPayrolls
                     .Where(x => x.IsLocked && x.IsApproved && x.PayrollGroupId == payrollGroupId)
                     .OrderByDescending(x => x.PayrollNumber)
                     .Select(x => new TrnPayrollDto()
@@ -516,7 +526,7 @@ namespace whris.Application.Common
                         Id = x.Id,
                         PayrollNumber = x.Remarks ?? "NA"
                     })
-                    .ToList();
+                    .ToListAsync(); // Use ToListAsync for the database query
             });
         }
 
@@ -535,6 +545,28 @@ namespace whris.Application.Common
                         Dtrnumber = x.Dtrnumber + " - " + x.Remarks
                     })
                     .ToList();
+
+                return new JsonResult(data);
+            });
+        }
+
+        public static async Task<JsonResult> GetDTRs2Async(string Code)
+        {
+            // Assumes an async version of your helper method now exists
+            return await ExecuteWithContextAsync(async context =>
+            {
+                // Assumes an async version of this utility now exists
+                var payrollGroupId = await MobileUtils.GetPayrollGroupIdAsync(Code);
+
+                var data = await context.TrnDtrs
+                    .Where(x => x.IsLocked && x.IsApproved && x.PayrollGroupId == payrollGroupId)
+                    .OrderByDescending(x => x.Dtrnumber)
+                    .Select(x => new TrnDtr()
+                    {
+                        Id = x.Id,
+                        Dtrnumber = x.Dtrnumber + " - " + x.Remarks
+                    })
+                    .ToListAsync(); // Use ToListAsync for the database query
 
                 return new JsonResult(data);
             });
