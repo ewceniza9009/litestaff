@@ -44,6 +44,7 @@ namespace whris.Application.CQRS.TrnLoan.Queries
                         OtherDeduction = x.OtherDeduction.OtherDeduction,
                         Remarks = x.Remarks,
                         Balance = x.Balance,
+                        IsPaid = x.IsPaid,
                         IsLocked = x.IsLocked,
                     })
                     .ToDataSourceResultAsync(request.Request);
