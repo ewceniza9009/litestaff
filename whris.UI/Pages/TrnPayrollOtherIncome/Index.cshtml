@@ -184,6 +184,18 @@
         actions.Add().Text("Yes").Action("onConfirmSave").Primary(true);
     }))
 
+@(Html.Kendo().Dialog()
+    .Name("confirmDeleteDialog")
+    .Title("WHRIS")
+    .Content("<p>Are you sure you want to delete?<p>")
+    .Width(400)
+    .Modal(true)
+    .Actions(actions =>
+    {
+        actions.Add().Text("No").Action("onCancelSave");
+        actions.Add().Text("Yes").Action("CmdDelete").Primary(true);
+    }))
+
 @section Scripts {
     <script src="~/Pages/TrnPayrollOtherIncome/Index.cshtml.js"></script>
 }

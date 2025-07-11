@@ -177,6 +177,10 @@ function CmdNextPage() {
     turnPage();
 }
 
+function CmdDeleteModal(e) {
+    $("#confirmDeleteDialog").data("kendoDialog").open();
+}
+
 function CmdDelete()
 {
     var token = $('input[name="__RequestVerificationToken"]', $("#frmDetail")).val();
