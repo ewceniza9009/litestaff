@@ -674,8 +674,8 @@ function calculateSalary()
 
     $("#NewNightHourlyRate").val(String(nightHourlyRate));
 
-    $("#NewOvertimeHourlyRate").val(String(hourlyRate * 1.25));
-    $("#NewOvertimeNightHourlyRate").val(String(nightHourlyRate * 2));
+    $("#NewOvertimeHourlyRate").val(String(hourlyRate));
+    $("#NewOvertimeNightHourlyRate").val(String(nightHourlyRate));
 
     $("#NewTardyHourlyRate").val(hourlyRate); 
 }
