@@ -8,6 +8,7 @@ using whris.Application.CQRS.TrnChangeShiftCode.Commands;
 using whris.Application.CQRS.TrnChangeShiftCode.Queries;
 using whris.Application.Dtos;
 using whris.UI.Authorization;
+using whris.UI.Services;
 using whris.UI.Services.Datasources;
 
 namespace whris.UI.Pages.TrnChangeShiftCode
@@ -16,13 +17,15 @@ namespace whris.UI.Pages.TrnChangeShiftCode
     [Secure("TrnChangeShift")]
     public class DetailModel : PageModel
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _environment; 
 
         public TrnChangeShiftCodeDetailDto ChangeShiftCodeDetail { get; set; } = new TrnChangeShiftCodeDetailDto();
         public TrnDtrComboboxDatasources ComboboxDatasources = TrnDtrComboboxDatasources.Instance;
 
-        public DetailModel(IMediator mediator)
+        public DetailModel(IWebHostEnvironment environment, IMediator mediator)
         {
+            _environment = environment;
             _mediator = mediator;
         }
 
@@ -52,6 +55,49 @@ namespace whris.UI.Pages.TrnChangeShiftCode
             };
 
             ChangeShiftCodeDetail = await _mediator.Send(addCS);
+        }
+
+        public async Task<IActionResult> OnPostImportShiftCode()
+        {
+            IFormFile? file = Request.Form.Files[0];
+            var strId = Request?.Form["Id"][0]?.ToString();
+
+            var tmpShiftCodeImports = new List<TmpImportShiftCode>();
+
+            if (file is not null && file.Length > 0)
+            {
+                var filePath = Path.Combine(_environment.WebRootPath, "Uploads", file.FileName);
+                var extension = Path.GetExtension(filePath)?.ToLower();
+                string[] validFileTypes = { ".xls", ".xlsx", ".csv", ".txt" };
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                if (validFileTypes.Contains(extension))
+                {
+                    tmpShiftCodeImports = FileUtil.ProcessShiftCodeImports(filePath, extension);
+                }
+                else
+                {
+                    return new BadRequestObjectResult("File format is incorrect");
+                }
+            }
+            else
+            {
+                return new BadRequestObjectResult("No file was uploaded.");
+            }
+
+            var imports = new ImportShiftCode()
+            {
+                Id = int.Parse(strId ?? "0"),
+                TmpImportShiftCodes = tmpShiftCodeImports
+            };
+
+            _ = await _mediator.Send(imports);
+
+            return new JsonResult("Ok");
         }
 
         public async Task<IActionResult> OnPostDelete(int id)

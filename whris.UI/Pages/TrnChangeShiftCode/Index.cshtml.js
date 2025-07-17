@@ -162,6 +162,44 @@ function CmdNextPage() {
     turnPage();
 }
 
+function CmdImportShiftCode() {
+    if ($("#Id").val() > 0) {
+        var headers = {};
+
+        headers["RequestVerificationToken"] = $('input[name="__RequestVerificationToken"]', $("#frmDetail")).val();
+
+        var fileInput = $('#file')[0];
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        formData.append("Id", $("#Id").val());
+
+        $.ajax({
+            async: true,
+            headers: headers,
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            url: "/TrnChangeShiftCode/Detail?handler=ImportShiftCode",
+            success: function (result) {
+                $("#processDetailModal").modal("hide");
+
+                GetPostMessage($("#Otnumber").val());
+
+                loadPartialView($("#Id").val())
+            },
+            error: function (xhr, status, error) {
+                GetWarningMessage("Error occured, It's either server is unresponsive or there was no file uploaded.");
+            }
+        });
+    }
+    else {
+        GetWarningMessage("Please save the record first.");
+    }
+}
+
 function CmdQuickEncode()
 {
     loadPartialViewEncode();

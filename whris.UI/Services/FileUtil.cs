@@ -333,6 +333,68 @@ namespace whris.UI.Services
                 ?.ToList() ?? new List<TmpDtrLogs>();
         }
 
+        public static List<TmpImportShiftCode> ProcessShiftCodeImports(string filePath, string? extension)
+        {
+            List<TmpImportShiftCode> tmpShiftCodeImports;
+            var dataTable = new DataTable();
+            var extentionType = "Type1";
+
+            if (extension == ".csv" || extension == ".txt")
+            {
+                dataTable = ConvertToDataTable(filePath);
+            }
+
+            if (extension == ".xls" || extension == ".xlsx")
+            {
+                extentionType = "Type2";
+
+                dataTable = ConvertExcelToDataTable(filePath);
+            }
+
+            tmpShiftCodeImports = GetShiftCodeImports(extentionType, dataTable ?? new DataTable());
+            return tmpShiftCodeImports;
+        }
+
+        private static List<TmpImportShiftCode> GetShiftCodeImports(string extensionType, DataTable dataTable)
+        {
+            var ShiftCodeImports = new List<TmpImportShiftCode>();
+
+            //if (extensionType == "Type2")
+            //{
+            //    var columnName = dataTable.Rows[0].ItemArray;
+
+            //    for (int i = 0; i < dataTable.Columns.Count; i++)
+            //    {
+            //        dataTable.Columns[i].ColumnName = columnName[i]?.ToString();
+            //    }
+
+            //    dataTable.Rows.Remove(dataTable.Rows[0]);
+            //}
+
+            var isDataTableHasRows = dataTable.AsEnumerable()
+                .Any();
+
+            if (isDataTableHasRows)
+            {
+                var table = dataTable.AsEnumerable()
+                        .CopyToDataTable();
+
+                foreach (DataRow row in table.Rows)
+                {
+                    ShiftCodeImports.Add(new TmpImportShiftCode
+                    {
+                        EmployeeId = Lookup.GetEmployeeIdByBioId(row["BiometricId"]?.ToString() ?? ""),
+                        Date = DateTime.Parse(row["Date"]?.ToString() ?? new DateTime(1990, 09, 15).ToString()),
+                        //ShiftCodeId = int.Parse(row["ShiftCode"]?.ToString() ?? "0"),
+                        ShiftCode = row["ShiftCode"]?.ToString() ?? "NA",
+                        Remarks = row["Remarks"]?.ToString() ?? "NA"
+                    });
+                }
+            }
+
+            return ShiftCodeImports;
+        }
+
         public static List<TmpImportOvertime> ProcessOvertimeImports(string filePath, string? extension)
         {
             List<TmpImportOvertime> tmpOvertimeImports;
