@@ -35,7 +35,7 @@ namespace whris.Application.Mobile.RepPayroll
 	            TrnPayrollLine.TotalSalaryAmount, 
 	            TrnPayrollLine.TotalTardyAmount, 
 	            TrnPayrollLine.TotalAbsentAmount, 
-	            TrnPayrollLine.TotalNetSalaryAmount, 
+	            TrnPayrollLine.TotalNetSalaryAmount,
 	            TrnPayrollLine.TotalOtherIncomeTaxable, 
 	            TrnPayrollLine.GrossIncome, 
 	            TrnPayrollLine.TotalOtherIncomeNonTaxable, 
@@ -63,12 +63,12 @@ namespace whris.Application.Mobile.RepPayroll
 	            TrnPayroll.PreparedBy,
 	            [TotalRegularWorkingHours]+[TotalLegalHolidayWorkingHours]+[TotalSpecialHolidayWorkingHours] - [TotalTardyLateHours] - [TotalTardyUndertimeHours] AS TotalWorkingHours,
                 MstEmployee.LeaveBalance,
-				MstEmployee.LoanBalance
+				MstEmployee.LoanBalance,
             FROM ((TrnPayrollLine INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
 	            INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id) 
 	            INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
             WHERE TrnPayroll.IsLocked=1 AND TrnPayrollLine.PayrollId={PayrollId} AND TrnPayroll.PayrollGroupId={groupId} AND dbo.Encode(TrnPayrollLine.EmployeeId)={MobileCode};
-            ";
+             ";
 
             using (var connection = new SqlConnection(Config.ConnectionString))
             {
@@ -96,7 +96,15 @@ namespace whris.Application.Mobile.RepPayroll
                 TrnPayrollLine.TotalSalaryAmount, 
                 TrnPayrollLine.TotalTardyAmount, 
                 TrnPayrollLine.TotalAbsentAmount, 
-                TrnPayrollLine.TotalNetSalaryAmount, 
+                TrnPayrollLine.TotalNetSalaryAmount,
+                CAST(
+    DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 
+    AS DECIMAL(18, 2)
+) AS ComputedRegularRestdayAmount,
+                TrnPayrollLine.TotalLegalHolidayWorkingAmount,
+				TrnPayrollLine.TotalSpecialHolidayWorkingAmount,
+				TrnPayrollLine.TotalRegularNightAmount,
+				TrnPayrollLine.TotalRegularOvertimeAmount,
                 TrnPayrollLine.TotalOtherIncomeTaxable, 
                 TrnPayrollLine.GrossIncome, 
                 TrnPayrollLine.TotalOtherIncomeNonTaxable, 
@@ -128,7 +136,15 @@ namespace whris.Application.Mobile.RepPayroll
             FROM ((TrnPayrollLine INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
                 INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id) 
                 INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
-            WHERE TrnPayroll.IsLocked=1 
+ LEFT JOIN (
+                        SELECT 
+                            EmployeeId,
+                            AVG(RatePerHour) AS AvgRatePerHour
+                        FROM TrnDTRLine
+                        WHERE RestDay = 1
+                        GROUP BY EmployeeId
+                    ) AS DTRSummary ON DTRSummary.EmployeeId = TrnPayrollLine.EmployeeId
+WHERE TrnPayroll.IsLocked=1 
               AND TrnPayrollLine.PayrollId = @PayrollId 
               AND TrnPayroll.PayrollGroupId = @GroupId 
               AND dbo.Encode(TrnPayrollLine.EmployeeId) = @MobileCode;";
@@ -158,6 +174,13 @@ namespace whris.Application.Mobile.RepPayroll
                 public decimal TotalTardyAmount {get; set;}
                 public decimal TotalAbsentAmount {get; set;}
                 public decimal TotalNetSalaryAmount {get; set;}
+
+                public decimal TotalLegalHolidayWorkingAmount { get; set; } 
+                public decimal TotalSpecialHolidayWorkingAmount { get; set; }
+                public decimal TotalRegularNightAmount { get; set; }
+                public decimal TotalRegularOvertimeAmount { get; set; }
+                public decimal ComputedRegularRestdayAmount { get; set; }
+
                 public decimal TotalOtherIncomeTaxable {get; set;}
                 public decimal GrossIncome {get; set;}
                 public decimal TotalOtherIncomeNonTaxable {get; set;}
