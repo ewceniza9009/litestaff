@@ -93,14 +93,21 @@ namespace whris.Application.Mobile.RepPayroll
                 MstEmployee.FullName, 
                 [TotalSalaryAmount]-[TotalLegalHolidayWorkingAmount]-[TotalSpecialHolidayWorkingAmount]-[TotalRegularRestdayAmount]-[TotalLegalHolidayRestdayAmount]-[TotalSpecialHolidayRestdayAmount]-[TotalRegularOvertimeAmount]-[TotalLegalHolidayOvertimeAmount]-[TotalSpecialHolidayOvertimeAmount]-[TotalRegularNightAmount]-[TotalLegalHolidayNightAmount]-[TotalSpecialHolidayNightAmount]-[TotalRegularNightOvertimeAmount]-[TotalLegalHolidayNightOvertimeAmount]-[TotalSpecialHolidayNightOvertimeAmount] AS BasicSalary, 
                 [TotalLegalHolidayWorkingAmount]+[TotalSpecialHolidayWorkingAmount]+[TotalRegularRestdayAmount]+[TotalLegalHolidayRestdayAmount]+[TotalSpecialHolidayRestdayAmount]+[TotalRegularOvertimeAmount]+[TotalLegalHolidayOvertimeAmount]+[TotalSpecialHolidayOvertimeAmount]+[TotalRegularNightAmount]+[TotalLegalHolidayNightAmount]+[TotalSpecialHolidayNightAmount]+[TotalRegularNightOvertimeAmount]+[TotalLegalHolidayNightOvertimeAmount]+[TotalSpecialHolidayNightOvertimeAmount] AS OtherSalary, 
+                
+                TotalLegalHolidayWorkingHours,
+                TotalSpecialHolidayWorkingHours,
+                TotalRegularNightHours, 
+                TotalRegularRestdayHours,   
+                TotalRegularOvertimeHours, 
+
                 TrnPayrollLine.TotalSalaryAmount, 
                 TrnPayrollLine.TotalTardyAmount, 
                 TrnPayrollLine.TotalAbsentAmount, 
                 TrnPayrollLine.TotalNetSalaryAmount,
                 CAST(
-    DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 
-    AS DECIMAL(18, 2)
-) AS ComputedRegularRestdayAmount,
+                DTRSummary.AvgRatePerHour * ISNULL([TotalRegularRestdayHours], 0) * 0.3 
+                    AS DECIMAL(18, 2)
+                ) AS ComputedRegularRestdayAmount,
                 TrnPayrollLine.TotalLegalHolidayWorkingAmount,
 				TrnPayrollLine.TotalSpecialHolidayWorkingAmount,
 				TrnPayrollLine.TotalRegularNightAmount,
@@ -128,15 +135,41 @@ namespace whris.Application.Mobile.RepPayroll
                         ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
                     ) +
                     '</table>') as OtherDeductionBreakdown,
+
+					(
+			    + STUFF(
+                   (
+                       SELECT + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2'))                           
+                       FROM
+                       (
+                           SELECT MstEmployeeLoan.Id,
+                                  MstEmployeeLoan.EmployeeId,
+                                  MstEmployeeLoan.OtherDeductionId,
+                                  MstOtherDeduction.OtherDeduction,
+                                  MstEmployeeLoan.Balance
+                           FROM MstEmployeeLoan
+                               INNER JOIN MstOtherDeduction
+                                   ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
+                       ) LoanSub
+                       WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+                        ) 
+                            ) AS LoanBalances,
+
+
                     TrnPayrollLine.NetIncome, 
                     TrnPayroll.PreparedBy,
                     [TotalRegularWorkingHours]+[TotalLegalHolidayWorkingHours]+[TotalSpecialHolidayWorkingHours] - [TotalTardyLateHours] - [TotalTardyUndertimeHours] AS TotalWorkingHours,
                     MstEmployee.LeaveBalance,
 		            MstEmployee.LoanBalance
-            FROM ((TrnPayrollLine INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
+                    FROM ((TrnPayrollLine INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
                 INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id) 
                 INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
- LEFT JOIN (
+                LEFT JOIN (
                         SELECT 
                             EmployeeId,
                             AVG(RatePerHour) AS AvgRatePerHour
@@ -144,10 +177,10 @@ namespace whris.Application.Mobile.RepPayroll
                         WHERE RestDay = 1
                         GROUP BY EmployeeId
                     ) AS DTRSummary ON DTRSummary.EmployeeId = TrnPayrollLine.EmployeeId
-WHERE TrnPayroll.IsLocked=1 
-              AND TrnPayrollLine.PayrollId = @PayrollId 
-              AND TrnPayroll.PayrollGroupId = @GroupId 
-              AND dbo.Encode(TrnPayrollLine.EmployeeId) = @MobileCode;";
+                WHERE TrnPayroll.IsLocked=1 
+                    AND TrnPayrollLine.PayrollId = @PayrollId 
+                    AND TrnPayroll.PayrollGroupId = @GroupId 
+                    AND dbo.Encode(TrnPayrollLine.EmployeeId) = @MobileCode;";
 
             using (var connection = new SqlConnection(Config.ConnectionString))
             {
@@ -174,13 +207,12 @@ WHERE TrnPayroll.IsLocked=1
                 public decimal TotalTardyAmount {get; set;}
                 public decimal TotalAbsentAmount {get; set;}
                 public decimal TotalNetSalaryAmount {get; set;}
-
                 public decimal TotalLegalHolidayWorkingAmount { get; set; } 
                 public decimal TotalSpecialHolidayWorkingAmount { get; set; }
                 public decimal TotalRegularNightAmount { get; set; }
                 public decimal TotalRegularOvertimeAmount { get; set; }
                 public decimal ComputedRegularRestdayAmount { get; set; }
-
+                public decimal LoanBalances { get; set; }
                 public decimal TotalOtherIncomeTaxable {get; set;}
                 public decimal GrossIncome {get; set;}
                 public decimal TotalOtherIncomeNonTaxable {get; set;}
@@ -195,6 +227,11 @@ WHERE TrnPayroll.IsLocked=1
 	            public decimal NetIncome {get; set;} 
 	            public int PreparedBy {get; set;}
 	            public decimal TotalWorkingHours { get; set; }
+                public decimal TotalLegalHolidayWorkingHours { get; set; }
+                public decimal TotalSpecialHolidayWorkingHours { get; set; }
+                public decimal TotalRegularNightHours { get; set; }
+                public decimal TotalRegularRestdayHours { get; set; }
+                public decimal TotalRegularOvertimeHours { get; set; }
         }
     }
 }
