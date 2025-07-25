@@ -3291,6 +3291,25 @@ namespace whris.Application.Library
                                                     }
                                                 }
                                             }
+
+                                            if (isFlexBreak)
+                                            {
+                                                var nextSwipeLog = fLogs?.Where(x => x.EmployeeId == dline.EmployeeId && DateTime.Parse($"{x.Date} {x.Time}") > logDateTime)
+                                                    .OrderBy(x => DateTime.Parse($"{x.Date} {x.Time}"))
+                                                    .FirstOrDefault();
+
+                                                if (nextSwipeLog is not null)
+                                                {
+                                                    var nextSwipeLogDateTime = DateTime.Parse($"{nextSwipeLog.Date} {nextSwipeLog.Time}");
+                                                    var gapInHours = (nextSwipeLogDateTime - logDateTime).TotalHours;
+
+                                                    if (gapInHours > 20 && nextSwipeLog.LogType == "I")
+                                                    {
+                                                        isWorkDayCompleted = true;
+                                                        continue;
+                                                    }
+                                                }
+                                            }
                                         }
                                         else if (logType == "O" || logType == "0")
                                         {
