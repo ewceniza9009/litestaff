@@ -90,7 +90,7 @@ namespace whris.Application.Mobile.RepPayroll
     TrnPayroll.PayrollDate, 
     TrnPayroll.Remarks, 
     MstCompany.Company, 
-    TrnPayrollLine.EmployeeId, 
+    TrnPayrollLine.EmployeeId,  
     MstEmployee.FullName, 
     TrnPayrollLine.TotalSalaryAmount 
         - TrnPayrollLine.TotalLegalHolidayWorkingAmount
@@ -128,7 +128,6 @@ namespace whris.Application.Mobile.RepPayroll
     TrnPayrollLine.TotalRegularNightHours, 
     TrnPayrollLine.TotalRegularRestdayHours,   
     TrnPayrollLine.TotalRegularOvertimeHours, 
-
     TrnPayrollLine.TotalSalaryAmount, 
     TrnPayrollLine.TotalTardyAmount, 
     TrnPayrollLine.TotalAbsentAmount, 
@@ -140,7 +139,6 @@ namespace whris.Application.Mobile.RepPayroll
     TrnPayrollLine.TotalSpecialHolidayWorkingAmount,
     TrnPayrollLine.TotalRegularNightAmount,
     TrnPayrollLine.TotalRegularOvertimeAmount,
-
     TrnPayrollLine.TotalOtherIncomeTaxable, 
     TrnPayrollLine.GrossIncome, 
     TrnPayrollLine.TotalOtherIncomeNonTaxable, 
@@ -180,7 +178,32 @@ namespace whris.Application.Mobile.RepPayroll
     ) + '</table>'
 ) AS LeaveBalanceBreakdown,
 
-
+('<table>'
+        + STUFF(
+                   (
+                       SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherIncome
+                              + '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">'
+                              + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
+                       FROM
+                       (
+                           SELECT TrnPayrollOtherIncomeLine.PayrollOtherIncomeId,
+                                  TrnPayrollOtherIncomeLine.EmployeeId,
+                                  TrnPayrollOtherIncomeLine.OtherIncomeId,
+                                  dbo.MstOtherIncome.OtherIncome,
+                                  TrnPayrollOtherIncomeLine.Amount
+                           FROM TrnPayrollOtherIncomeLine
+                               INNER JOIN MstOtherIncome
+                                   ON TrnPayrollOtherIncomeLine.OtherIncomeId = dbo.MstOtherIncome.Id
+                       ) AS PayslipOtherIncomeNonTaxableSub
+                       WHERE PayslipOtherIncomeNonTaxableSub.PayrollOtherIncomeId = dbo.TrnPayroll.PayrollOtherIncomeId
+                             AND PayslipOtherIncomeNonTaxableSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+               ) + '</table>'
+  ) AS OtherIncomeNonTaxableBreakdown,
 
     ('<table>' +
         STUFF(
@@ -206,32 +229,50 @@ namespace whris.Application.Mobile.RepPayroll
         ) + '</table>'
     ) AS OtherDeductionBreakdown,
 
-    STUFF(
-        (
-            SELECT CONVERT(NVARCHAR, FORMAT(ROUND(LoanSub.Balance, 2), 'N2'))                           
-            FROM (
-                SELECT 
-                    MstEmployeeLoan.Id,
-                    MstEmployeeLoan.EmployeeId,
-                    MstEmployeeLoan.OtherDeductionId,
-                    MstOtherDeduction.OtherDeduction,
-                    MstEmployeeLoan.Balance
-                FROM MstEmployeeLoan
-                INNER JOIN MstOtherDeduction
-                    ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
-            ) LoanSub
-            WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
-            FOR XML PATH(''), ROOT('root'), TYPE
-        ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
-    ) AS LoanBalances,
+	('<table>'
+	 + STUFF(
+                   (
+                       SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction
+                              + '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">'
+                              + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) + '</td></tr>'
+                       FROM
+                       (
+                           SELECT MstEmployeeLoan.Id,
+                                  MstEmployeeLoan.EmployeeId,
+                                  MstEmployeeLoan.OtherDeductionId,
+                                  MstOtherDeduction.OtherDeduction,
+                                  MstEmployeeLoan.Balance
+                           FROM MstEmployeeLoan
+                               INNER JOIN MstOtherDeduction
+                                   ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
+                       ) LoanSub
+                       WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       FOR XML PATH(''), ROOT('root'), TYPE
+                   ).value('.', 'NVARCHAR(MAX)'),
+                   1,
+                   0,
+                   ''
+               ) + '</table>'
+       ) AS LoanBalancesBreakdown,
+
+     (
+    SELECT 
+        SUM(LoanSub.Balance)
+    FROM (
+        SELECT 
+            MstEmployeeLoan.EmployeeId,
+            MstEmployeeLoan.Balance
+        FROM MstEmployeeLoan
+        ) AS LoanSub
+        WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+        ) AS LoanBalances,
 
     TrnPayrollLine.NetIncome, 
     TrnPayroll.PreparedBy,
     TrnPayrollLine.TotalRegularWorkingHours + TrnPayrollLine.TotalLegalHolidayWorkingHours + TrnPayrollLine.TotalSpecialHolidayWorkingHours 
         - TrnPayrollLine.TotalTardyLateHours - TrnPayrollLine.TotalTardyUndertimeHours AS TotalWorkingHours,
 
-    MstEmployee.LeaveBalance,
-    MstEmployee.LoanBalance
+    MstEmployee.LeaveBalance
 
 FROM TrnPayrollLine 
 INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id
@@ -261,7 +302,7 @@ GROUP BY
     TrnPayroll.Remarks,
     MstCompany.Company,
     TrnPayrollLine.EmployeeId,
-
+	TrnPayroll.PayrollOtherIncomeId,
     MstEmployee.FullName,
     TrnPayrollLine.TotalSalaryAmount,
     TrnPayrollLine.TotalLegalHolidayWorkingAmount,
@@ -301,9 +342,7 @@ GROUP BY
     TrnPayrollLine.TotalRegularWorkingHours,
     TrnPayrollLine.TotalTardyLateHours,
     TrnPayrollLine.TotalTardyUndertimeHours,
-	
-    MstEmployee.LeaveBalance,
-    MstEmployee.LoanBalance
+    MstEmployee.LeaveBalance
 ";
 
             using (var connection = new SqlConnection(Config.ConnectionString))
@@ -357,6 +396,8 @@ GROUP BY
                 public decimal TotalRegularRestdayHours { get; set; }
                 public decimal TotalRegularOvertimeHours { get; set; }
                 public string? LeaveBalanceBreakdown { get; set; }
+                public string? OtherIncomeNonTaxableBreakdown { get; set; }
+                public string? LoanBalancesBreakdown { get; set; }
         }
     }
 }
