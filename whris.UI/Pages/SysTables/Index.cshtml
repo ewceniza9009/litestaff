@@ -107,7 +107,7 @@
                                 .HtmlAttributes(new { onclick = "CmdAddPayrollGroup(); return false;" }))
                                 .Columns(columns =>
                                 {
-                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollGroup").IconClass("k-icon k-i-x"))
+                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollGroup").IconClass("k-icon k-i-x")).HtmlAttributes(new { @class = "k-disabled" })
                                     .Width(110);
                                     columns.Bound(column => column.Id).Hidden();
                                     columns.Bound(x => x.PayrollGroup)
@@ -141,7 +141,7 @@
                                 .HtmlAttributes(new { onclick = "CmdAddPayrollType(); return false;" }))
                                 .Columns(columns =>
                                 {
-                                    columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollType").IconClass("k-icon k-i-x"))
+                                                            columns.Command(command => command.Custom("Delete").Click("CmdDeletePayrollType").IconClass("k-icon k-i-x")).HtmlAttributes(new { @class = "k-disabled" })
                                     .Width(110);
                                     columns.Bound(column => column.Id).Hidden();
                                     columns.Bound(x => x.PayrollType)
