@@ -182,7 +182,7 @@ namespace whris.Application.Library
             if (line.TimeIn1 is null &&
                 line.TimeOut1 is null &&
                 line.TimeIn2 is null &&
-                line.TimeIn2 is null &&
+                line.TimeOut2 is null &&
                 !line.OfficialBusiness &&
                 !line.OnLeave &&
                 !line.RestDay &&
@@ -195,7 +195,7 @@ namespace whris.Application.Library
             if (line.TimeIn1 is null && 
                 line.TimeOut1 is null && 
                 line.TimeIn2 is null && 
-                line.TimeIn2 is null && 
+                line.TimeOut2 is null && 
                 !line.OfficialBusiness &&
                 line.OnLeave && 
                 !line.RestDay && 
@@ -234,7 +234,7 @@ namespace whris.Application.Library
             if (line.TimeIn1 is null &&
                 line.TimeOut1 is null &&
                 line.TimeIn2 is null &&
-                line.TimeIn2 is null &&
+                line.TimeOut2 is null &&
                 !line.OfficialBusiness &&
                 !line.OnLeave &&
                 !line.RestDay &&
@@ -296,14 +296,18 @@ namespace whris.Application.Library
                 {
                     if (line.TimeIn1 == null && line.TimeOut1 == null) 
                     {
-                        line.HalfdayAbsent = true;
-                        return shiftCodeDay.NumberOfHours / 2;
+                        //line.HalfdayAbsent = true;
+                        //return shiftCodeDay.NumberOfHours / 2;
+                        line.HalfdayAbsent = false;
+                        return 0;
                     }
 
                     if (line.TimeIn2 == null && line.TimeOut2 == null)
                     {
-                        line.HalfdayAbsent = true;
-                        return shiftCodeDay.NumberOfHours / 2;
+                        //line.HalfdayAbsent = true;
+                        //return shiftCodeDay.NumberOfHours / 2;
+                        line.HalfdayAbsent = false;
+                        return 0;
                     }
 
                     return shiftCodeDay.NumberOfHours;
@@ -1453,21 +1457,22 @@ namespace whris.Application.Library
                             return 0m;
                         }
 
-                        var timeIn1 = shiftTimeIn1;
+                        //var timeIn1 = shiftTimeIn1;
+                        var timeIn1 = line?.TimeIn1 ?? DefaultDate;
                         var timeOut2 = line?.TimeOut2 ?? DefaultDate;
 
                         var timeOut1 = line?.TimeOut1 ?? DefaultDate;
                         var timeIn2 = line?.TimeIn2 ?? DefaultDate;
+                        
+                        //if (timeOut1 == DefaultDate && timeIn2 != DefaultDate) //comment this out if approved
+                        //{
+                        //    timeOut1 = timeIn2.AddHours(-1);
+                        //}
 
-                        if (timeOut1 == DefaultDate && timeIn2 != DefaultDate)
-                        {
-                            timeOut1 = timeIn2.AddHours(-1);
-                        }
-
-                        if (timeIn2 == DefaultDate && timeOut1 != DefaultDate)
-                        {
-                            timeIn2 = timeOut1.AddHours(1);
-                        }
+                        //if (timeIn2 == DefaultDate && timeOut1 != DefaultDate) //comment this out if approved
+                        //{
+                        //    timeIn2 = timeOut1.AddHours(1);
+                        //}
 
                         if (timeOut2 > shiftTimeOut2)
                         {
@@ -1498,6 +1503,35 @@ namespace whris.Application.Library
                         }
 
                         if (timeOut1 == DefaultDate && timeIn2 == DefaultDate && !isStraight)
+                        {
+                            var halfDayHours = shiftNumberOfHours / 2;
+                            var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                            actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                        }
+
+                        //Added Logic for only missing TimeOut1
+                        if (timeIn1 == DefaultDate && !isStraight)
+                        {
+                            var halfDayHours = shiftNumberOfHours / 2;
+                            var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                            actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                        }
+
+                        if (timeOut1 == DefaultDate && !isStraight)
+                        {
+                            var halfDayHours = shiftNumberOfHours / 2;
+                            var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                            actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                        }
+
+                        if (timeIn2 == DefaultDate && !isStraight)
+                        {
+                            var halfDayHours = shiftNumberOfHours / 2;
+                            var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
+                            actualNumberOfHours = halfDayHours < halfDayActualHours ? halfDayHours : halfDayActualHours;
+                        }
+
+                        if (timeOut2 == DefaultDate && !isStraight)
                         {
                             var halfDayHours = shiftNumberOfHours / 2;
                             var halfDayActualHours = (decimal)(shiftTimeOut2 - timeIn1).TotalHours;
@@ -1760,16 +1794,23 @@ namespace whris.Application.Library
                         }
                     }
                 }
-            }           
+            }
 
             if (payrollTypeId == 3)
             {
                 var dayTypeId = dayTypeDay?.DayTypeId ?? 1;
 
-                if (dayTypeId > 1) 
+                if (dayTypeId > 1)
                 {
-                    multiplier--;
-                }                
+                    if (dayTypeId == 3 && (line?.RestDay ?? false))
+                    {
+                        // Do nothing, multiplier stays the same
+                    }
+                    else
+                    {
+                        multiplier--;
+                    }
+                }
             }
 
             return multiplier;
@@ -2084,11 +2125,11 @@ namespace whris.Application.Library
                 ?.FirstOrDefault(x => x.Id == line.EmployeeId)
                 ?.PayrollTypeId ?? 0;
 
-            if (payrollTypeId == 3 && dayTypeId > 1)
-            {
-                dmRest--;
-                dmNormal--;
-            }
+            //if (payrollTypeId == 3 && dayTypeId > 1)
+            //{
+            //    dmRest--;
+            //    dmNormal--;
+            //}
 
             if (line is not null)
             {
@@ -3669,7 +3710,7 @@ namespace whris.Application.Library
 
                                 var shiftTimeOut2 = DateTime.Parse($"{dateOnTimeOut2.ToString("MM/dd/yyyy")} {tOut2}");
 
-                                if (line is not null) line.TimeOut2 = shiftTimeOut2;
+                                //if (line is not null) line.TimeOut2 = shiftTimeOut2;
                             }
                         }
 
