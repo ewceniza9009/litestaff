@@ -417,7 +417,13 @@
                     columns.Bound(x => x.GrossIncome).Title("Gross Income").Filterable(false).Width(150);
                     columns.Bound(x => x.TotalOtherIncomeNonTaxable).Title("Gross Income (Non-Taxable").Filterable(false).Width(150);
                     columns.Command(command => command.Custom("OIN").Click("CmdExpandOtherIncomeNonTax")).Width(70);
-                    columns.Bound(x => x.GrossIncomeWithNonTaxable).Title("Total Income").Filterable(false).Width(150);
+                    columns.Bound(x => x.GrossIncomeWithNonTaxable).Title("Total Income").Filterable(false).Width(150).ClientTemplate(
+                    "# if (GrossIncomeWithNonTaxable < 0) { #" +
+                    "<span style='color:red;'>#= kendo.toString(GrossIncomeWithNonTaxable, 'n2') #</span>" +
+                    "# } else { #" +
+                    "<span>#= kendo.toString(GrossIncomeWithNonTaxable, 'n2') #</span>" +
+                    "# } #"
+                    );
 
                     columns.Group(y => y.Title("Mandatory Deduction")
                     .Columns(z =>
@@ -431,7 +437,17 @@
                     columns.Bound(x => x.Tax).Title("Withholding Tax").Filterable(false).Width(100);
                     columns.Bound(x => x.TotalOtherDeduction).Title("Other Deduction").Filterable(false).Width(100);
                     columns.Command(command => command.Custom("OD").Click("CmdExpandOtherDeduction")).Width(65);
-                    columns.Bound(x => x.NetIncome).Title("Net Income").Filterable(false).Width(100);
+                    columns.Bound(x => x.NetIncome)
+                    .Title("Net Income")
+                    .Filterable(false)
+                    .Width(100)
+                    .ClientTemplate(
+                    "# if (NetIncome < 0) { #" +
+                    "<span style='color:red;'>#= kendo.toString(NetIncome, 'n2') #</span>" +
+                    "# } else { #" +
+                    "<span>#= kendo.toString(NetIncome, 'n2') #</span>" +
+                    "# } #"
+                    );
 
                     columns.Group(y => y.Title("Employer Contribution")
                     .Columns(z =>
