@@ -39,6 +39,7 @@
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter4 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter5 = new DevExpress.DataAccess.Sql.QueryParameter();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepPayrollLoanDeductionCrossTab));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrCrossTab1 = new DevExpress.XtraReports.UI.XRCrossTab();
@@ -70,7 +71,10 @@
             this.ParamDateStart = new DevExpress.XtraReports.Parameters.Parameter();
             this.ParamDateEnd = new DevExpress.XtraReports.Parameters.Parameter();
             this.ParamPayrollNumber = new DevExpress.XtraReports.Parameters.Parameter();
+            this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
+            this.CompanyId = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.xrCrossTab1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -260,11 +264,15 @@
             queryParameter4.Name = "ParamPayrollNumber";
             queryParameter4.Type = typeof(global::DevExpress.DataAccess.Expression);
             queryParameter4.Value = new DevExpress.DataAccess.Expression("?ParamPayrollNumber", typeof(string));
+            queryParameter5.Name = "CompanyId";
+            queryParameter5.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter5.Value = new DevExpress.DataAccess.Expression("?CompanyId", typeof(int));
             customSqlQuery1.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
             queryParameter1,
             queryParameter2,
             queryParameter3,
-            queryParameter4});
+            queryParameter4,
+            queryParameter5});
             customSqlQuery1.Sql = resources.GetString("customSqlQuery1.Sql");
             this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
             customSqlQuery1});
@@ -273,10 +281,11 @@
             // TopMargin
             // 
             this.TopMargin.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrRichText1,
             this.xrLabel2,
             this.xrLabel1,
             this.xrLabel3});
-            this.TopMargin.HeightF = 86.45834F;
+            this.TopMargin.HeightF = 156F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -380,6 +389,22 @@
             // 
             this.ParamPayrollNumber.Name = "ParamPayrollNumber";
             // 
+            // xrRichText1
+            // 
+            this.xrRichText1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Rtf", "[Company]")});
+            this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(9.999998F, 132.0417F);
+            this.xrRichText1.Name = "xrRichText1";
+            this.xrRichText1.SerializableRtfString = resources.GetString("xrRichText1.SerializableRtfString");
+            this.xrRichText1.SizeF = new System.Drawing.SizeF(862.5F, 23.95834F);
+            // 
+            // CompanyId
+            // 
+            this.CompanyId.Description = "CompanyId";
+            this.CompanyId.Name = "CompanyId";
+            this.CompanyId.Type = typeof(int);
+            this.CompanyId.ValueInfo = "0";
+            // 
             // RepPayrollLoanDeductionCrossTab
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -388,8 +413,10 @@
             this.BottomMargin});
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.sqlDataSource1});
+            this.DataMember = "Query";
+            this.DataSource = this.sqlDataSource1;
             this.Landscape = true;
-            this.Margins = new DevExpress.Drawing.DXMargins(15F, 6F, 86.45834F, 100F);
+            this.Margins = new DevExpress.Drawing.DXMargins(15F, 6F, 156F, 100F);
             this.PageHeight = 927;
             this.PageWidth = 1500;
             this.PaperKind = System.Drawing.Printing.PaperKind.LegalExtra;
@@ -397,7 +424,8 @@
             this.ParamPayrollId,
             this.ParamDateStart,
             this.ParamDateEnd,
-            this.ParamPayrollNumber});
+            this.ParamPayrollNumber,
+            this.CompanyId});
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.crossTabGeneralStyle1,
             this.crossTabHeaderStyle1,
@@ -405,6 +433,7 @@
             this.crossTabTotalStyle1});
             this.Version = "22.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrCrossTab1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -441,5 +470,7 @@
         private DevExpress.DataAccess.Sql.SqlDataSource sqlDataSource1;
         private DevExpress.XtraReports.UI.XRLabel xrLabel2;
         private DevExpress.XtraReports.Parameters.Parameter ParamPayrollNumber;
+        private DevExpress.XtraReports.UI.XRRichText xrRichText1;
+        private DevExpress.XtraReports.Parameters.Parameter CompanyId;
     }
 }

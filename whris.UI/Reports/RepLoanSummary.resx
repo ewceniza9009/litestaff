@@ -142,12 +142,14 @@ SELECT
     MstEmployeeLoan.NumberOfMonths,
     MstEmployeeLoan.TotalPayment,
     MstEmployeeLoan.Balance,
-    MstEmployeeLoan.IsPaid
+    MstEmployeeLoan.IsPaid,
+    MstCompany.Company AS EmployeeCompany
 FROM
     ((MstEmployeeLoan
     INNER JOIN MstEmployee ON MstEmployeeLoan.EmployeeId = MstEmployee.Id)
     INNER JOIN MstOtherDeduction ON MstEmployeeLoan.OtherDeductionId = MstOtherDeduction.Id)
     INNER JOIN MstPayrollGroup ON MstEmployee.PayrollGroupId = MstPayrollGroup.Id
+    INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
 WHERE
     MstEmployeeLoan.DateStart BETWEEN @ParamDateStart AND @ParamDateEnd
     AND (@EmployeeId = 0 OR MstEmployeeLoan.EmployeeId = @EmployeeId)
@@ -155,6 +157,6 @@ WHERE
     AND (@IsPaid IS NULL OR MstEmployeeLoan.IsPaid = @IsPaid)</value>
   </data>
   <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
-    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iRGF0ZVN0YXJ0IiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iTG9hbk51bWJlciIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxHcm91cCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJGdWxsTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJPdGhlckRlZHVjdGlvbiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJMb2FuQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJNb250aGx5QW1vcnRpemF0aW9uIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJOdW1iZXJPZk1vbnRocyIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlRvdGFsUGF5bWVudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmFsYW5jZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSXNQYWlkIiBUeXBlPSJCb29sZWFuIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iRGF0ZVN0YXJ0IiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iTG9hbk51bWJlciIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlBheXJvbGxHcm91cCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJGdWxsTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJPdGhlckRlZHVjdGlvbiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJMb2FuQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJNb250aGx5QW1vcnRpemF0aW9uIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJOdW1iZXJPZk1vbnRocyIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IlRvdGFsUGF5bWVudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmFsYW5jZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSXNQYWlkIiBUeXBlPSJCb29sZWFuIiAvPjxGaWVsZCBOYW1lPSJFbXBsb3llZUNvbXBhbnkiIFR5cGU9IlN0cmluZyIgLz48L1ZpZXc+PC9EYXRhU2V0Pg==</value>
   </data>
 </root>

@@ -31,13 +31,13 @@ function CmdPreview()
 
     if ($selectedReportId == 2.1) {
         window.open(window.location.origin + "/RptLoans/RepLoanCrossTab?paramDateStart=" + $("#DateStart").val() +
-            "&paramDateEnd=" + $("#DateEnd").val(), '_blank').focus();
+            "&paramDateEnd=" + $("#DateEnd").val() + "&CompanyId=" + $("#CompanyId").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 2.2) {
         window.open(window.location.origin + "/RptLoans/RepPayrollLoanDeductionCrossTab?paramPayrollId=" + $("#PayrollId").val() + 
             "&paramDateStart=" + $("#DateStart").val() +
-            "&paramDateEnd=" + $("#DateEnd").val(), '_blank').focus();
+            "&paramDateEnd=" + $("#DateEnd").val() + "&CompanyId=" + $("#CompanyId").val(), '_blank').focus();
     }
 
     if ($selectedReportId == 4) {

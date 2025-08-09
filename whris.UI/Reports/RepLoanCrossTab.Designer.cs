@@ -37,6 +37,7 @@
             DevExpress.DataAccess.Sql.CustomSqlQuery customSqlQuery1 = new DevExpress.DataAccess.Sql.CustomSqlQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter1 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepLoanCrossTab));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrCrossTab1 = new DevExpress.XtraReports.UI.XRCrossTab();
@@ -67,7 +68,10 @@
             this.crossTabTotalStyle1 = new DevExpress.XtraReports.UI.XRControlStyle();
             this.ParamDateStart = new DevExpress.XtraReports.Parameters.Parameter();
             this.ParamDateEnd = new DevExpress.XtraReports.Parameters.Parameter();
+            this.CompanyId = new DevExpress.XtraReports.Parameters.Parameter();
+            this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
             ((System.ComponentModel.ISupportInitialize)(this.xrCrossTab1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -251,9 +255,13 @@
             queryParameter2.Name = "ParamDateEnd";
             queryParameter2.Type = typeof(global::DevExpress.DataAccess.Expression);
             queryParameter2.Value = new DevExpress.DataAccess.Expression("?ParamDateEnd", typeof(System.DateTime));
+            queryParameter3.Name = "CompanyId";
+            queryParameter3.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter3.Value = new DevExpress.DataAccess.Expression("?CompanyId", typeof(int));
             customSqlQuery1.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
             queryParameter1,
-            queryParameter2});
+            queryParameter2,
+            queryParameter3});
             customSqlQuery1.Sql = resources.GetString("customSqlQuery1.Sql");
             this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
             customSqlQuery1});
@@ -262,8 +270,10 @@
             // TopMargin
             // 
             this.TopMargin.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrRichText1,
             this.xrLabel3,
             this.xrLabel1});
+            this.TopMargin.HeightF = 122.9167F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -360,6 +370,23 @@
             this.ParamDateEnd.Type = typeof(global::System.DateTime);
             this.ParamDateEnd.ValueInfo = "1753-01-01";
             // 
+            // CompanyId
+            // 
+            this.CompanyId.Description = "CompanyId";
+            this.CompanyId.Name = "CompanyId";
+            this.CompanyId.Type = typeof(int);
+            this.CompanyId.ValueInfo = "0";
+            // 
+            // xrRichText1
+            // 
+            this.xrRichText1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Tag", "[Company]"),
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Rtf", "[Company]")});
+            this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(9.999998F, 91.66666F);
+            this.xrRichText1.Name = "xrRichText1";
+            this.xrRichText1.SerializableRtfString = resources.GetString("xrRichText1.SerializableRtfString");
+            this.xrRichText1.SizeF = new System.Drawing.SizeF(610.4166F, 31.25F);
+            // 
             // RepLoanCrossTab
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -368,14 +395,17 @@
             this.BottomMargin});
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.sqlDataSource1});
+            this.DataMember = "Query";
+            this.DataSource = this.sqlDataSource1;
             this.Landscape = true;
-            this.Margins = new DevExpress.Drawing.DXMargins(15F, 6F, 100F, 100F);
+            this.Margins = new DevExpress.Drawing.DXMargins(15F, 6F, 122.9167F, 100F);
             this.PageHeight = 927;
             this.PageWidth = 1500;
             this.PaperKind = System.Drawing.Printing.PaperKind.LegalExtra;
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.ParamDateStart,
-            this.ParamDateEnd});
+            this.ParamDateEnd,
+            this.CompanyId});
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.crossTabGeneralStyle1,
             this.crossTabHeaderStyle1,
@@ -383,6 +413,7 @@
             this.crossTabTotalStyle1});
             this.Version = "22.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrCrossTab1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -418,5 +449,7 @@
         private DevExpress.XtraReports.Parameters.Parameter ParamDateStart;
         private DevExpress.XtraReports.Parameters.Parameter ParamDateEnd;
         private DevExpress.XtraReports.UI.XRLabel xrLabel3;
+        private DevExpress.XtraReports.UI.XRRichText xrRichText1;
+        private DevExpress.XtraReports.Parameters.Parameter CompanyId;
     }
 }

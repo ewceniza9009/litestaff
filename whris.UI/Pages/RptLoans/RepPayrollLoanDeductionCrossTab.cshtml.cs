@@ -11,7 +11,7 @@ namespace whris.UI.Pages.RptLoans
     public class RepPayrollLoanDeductionCrossTabModel : PageModel
     {
         public Reports.RepPayrollLoanDeductionCrossTab? PayrollLoanDeductionCrossTab = null;
-        public void OnGet(int paramPayrollId, DateTime paramDateStart, DateTime paramDateEnd)
+        public void OnGet(int paramPayrollId, DateTime paramDateStart, DateTime paramDateEnd, int companyId)
         {
             var payrollNumber = Lookup.GetPayrollNoById(paramPayrollId);
             PayrollLoanDeductionCrossTab = new Reports.RepPayrollLoanDeductionCrossTab();
@@ -27,6 +27,9 @@ namespace whris.UI.Pages.RptLoans
 
             PayrollLoanDeductionCrossTab.Parameters["ParamDateEnd"].Value = paramDateEnd;
             PayrollLoanDeductionCrossTab.Parameters["ParamDateEnd"].Visible = false;
+
+            PayrollLoanDeductionCrossTab.Parameters["CompanyId"].Value = companyId;
+            PayrollLoanDeductionCrossTab.Parameters["CompanyId"].Visible = false;
         }
     }
 }

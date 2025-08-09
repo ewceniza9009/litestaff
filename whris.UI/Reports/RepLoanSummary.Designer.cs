@@ -67,6 +67,7 @@
             this.IsPaid = new DevExpress.XtraReports.Parameters.Parameter();
             this.EmployeeId = new DevExpress.XtraReports.Parameters.Parameter();
             this.CompanyId = new DevExpress.XtraReports.Parameters.Parameter();
+            this.xrLabel19 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // TopMargin
@@ -246,6 +247,7 @@
             // BottomMargin
             // 
             this.BottomMargin.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabel19,
             this.pageInfo2,
             this.pageInfo1});
             this.BottomMargin.HeightF = 74.78447F;
@@ -478,6 +480,21 @@
             this.CompanyId.Type = typeof(int);
             this.CompanyId.ValueInfo = "0";
             // 
+            // xrLabel19
+            // 
+            this.xrLabel19.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[EmployeeCompany]")});
+            this.xrLabel19.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.xrLabel19.LocationFloat = new DevExpress.Utils.PointFloat(420.2084F, 27.70834F);
+            this.xrLabel19.Multiline = true;
+            this.xrLabel19.Name = "xrLabel19";
+            this.xrLabel19.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel19.SizeF = new System.Drawing.SizeF(229.7916F, 24.07611F);
+            this.xrLabel19.StylePriority.UseFont = false;
+            this.xrLabel19.Text = "xrLabel15";
+            this.xrLabel19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrLabel19.TextFormatString = "{0:N2}";
+            // 
             // RepLoanSummary
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -541,5 +558,6 @@
         private DevExpress.XtraReports.Parameters.Parameter IsPaid;
         private DevExpress.XtraReports.Parameters.Parameter EmployeeId;
         private DevExpress.XtraReports.Parameters.Parameter CompanyId;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel19;
     }
 }
