@@ -1808,7 +1808,7 @@ namespace whris.Application.Library
                     }
                     else
                     {
-                        multiplier--;
+                        //multiplier--;
                     }
                 }
             }
@@ -2125,11 +2125,11 @@ namespace whris.Application.Library
                 ?.FirstOrDefault(x => x.Id == line.EmployeeId)
                 ?.PayrollTypeId ?? 0;
 
-            if (payrollTypeId == 3 && dayTypeId > 1 && !restDay)
-            {
-                dmRest--;
-                dmNormal--;
-            }
+            //if (payrollTypeId == 3 && dayTypeId > 1 && !restDay)
+            //{
+            //    dmRest--;
+            //    dmNormal--;
+            //}
 
             if (line is not null)
             {
@@ -3635,7 +3635,7 @@ namespace whris.Application.Library
 
             foreach (var line in dtrLines)
             {
-                if (line.TimeIn1 != null && line.ShiftCodeId != line.TimeIn1ShiftCodeId)
+                if (line.TimeIn1 != null && line.ShiftCodeId != line.TimeIn1ShiftCodeId && line.TimeIn1ShiftCodeId != 0)
                 {
                     line.ShiftCodeId = line.TimeIn1ShiftCodeId;
                 }
