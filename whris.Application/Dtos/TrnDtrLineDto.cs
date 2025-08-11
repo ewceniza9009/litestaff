@@ -207,5 +207,7 @@ namespace whris.Application.Dtos
         public bool NoTimeOut2 = false;
 
         public bool Is2SwipesOnly = false;
+
+        public int TimeIn1ShiftCodeId { get; set; }
     }
 }

@@ -2125,11 +2125,11 @@ namespace whris.Application.Library
                 ?.FirstOrDefault(x => x.Id == line.EmployeeId)
                 ?.PayrollTypeId ?? 0;
 
-            if (payrollTypeId == 3 && dayTypeId > 1 && !restDay)
-            {
-                dmRest--;
-                dmNormal--;
-            }
+            //if (payrollTypeId == 3 && dayTypeId > 1)
+            //{
+            //    dmRest--;
+            //    dmNormal--;
+            //}
 
             if (line is not null)
             {
@@ -2810,11 +2810,6 @@ namespace whris.Application.Library
                                             var employeeShiftCodeDays = employeeShiftCodeDaysSetup.Result(isLongShift ? log.LogType : null);
 
                                             dline.ShiftCodeId = shiftCodeId = QuickChangeShiftv2(_context, employeeShiftCodeDays, employeeShiftCodes, dline.EmployeeId, dline.Date, changeShiftId, dline.ShiftCodeId);
-
-                                            if (log.LogType == "I")
-                                            {
-                                                dline.TimeIn1ShiftCodeId = dline.ShiftCodeId;
-                                            }
 
                                             if (shiftCodeId == 0)
                                             {
@@ -3631,14 +3626,6 @@ namespace whris.Application.Library
             foreach (var line in dtrLinesWithNoShiftCodeIds) 
             {
                 line.ShiftCodeId = defaultShiftCode?.Id ?? 0;
-            }
-
-            foreach (var line in dtrLines)
-            {
-                if (line.TimeIn1 != null && line.ShiftCodeId != line.TimeIn1ShiftCodeId)
-                {
-                    line.ShiftCodeId = line.TimeIn1ShiftCodeId;
-                }
             }
 
             //if (employeesInLog != null) 
