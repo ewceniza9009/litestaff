@@ -146,9 +146,10 @@ namespace whris.UI.Services
         public static DataTable ConvertExcelToDataTable(string filePath)
         {
             var dataTable = new DataTable();
+            DataRow? record = null;
 
             try
-            {
+            {                
                 using (var package = new ExcelPackage(new FileInfo(filePath)))
                 {
                     var workbook = package.Workbook;
@@ -184,6 +185,8 @@ namespace whris.UI.Services
                         var row = worksheet.Cells[rowNum, 1, rowNum, worksheet.Dimension.End.Column];
                         var newRow = dataTable.NewRow();
 
+                        record = newRow;
+
                         for (int colNum = 1; colNum <= worksheet.Dimension.End.Column; colNum++)
                         {
                             newRow[colNum - 1] = row[rowNum, colNum].Text; // Populate DataRow with cell values
@@ -195,6 +198,8 @@ namespace whris.UI.Services
             }
             catch (Exception ex)
             {
+                var errorRecord = record;
+
                 Console.WriteLine(ex.ToString());
                 return null; // Return null in case of error
             }
