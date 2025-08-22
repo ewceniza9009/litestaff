@@ -244,6 +244,8 @@
                    ''
                ) + '&lt;/table&gt;'
        ) AS OtherDeductionBreakdown,
+
+
        ('&lt;table&gt;'
 	 + STUFF(
                    (
@@ -262,6 +264,7 @@
                                    ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
                        ) LoanSub
                        WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+                         AND LoanSub.Balance &lt;&gt; 0
                        FOR XML PATH(''), ROOT('root'), TYPE
                    ).value('.', 'NVARCHAR(MAX)'),
                    1,
@@ -269,6 +272,9 @@
                    ''
                ) + '&lt;/table&gt;'
        ) AS LoanBalances,
+
+
+	   
        TrnPayrollLine.NetIncome,
        TrnPayroll.PreparedBy
 
