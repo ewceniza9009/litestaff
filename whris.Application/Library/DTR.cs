@@ -372,10 +372,10 @@ namespace whris.Application.Library
 
                         if (line != null && (line.TimeIn1 is null && line.TimeOut1 is null && line.TimeIn2 is null && line.TimeOut2 is null) && dayTypeId > 1)
                         {
-                            return 0;
+                                return 0;
+                            }
                         }
-                    }
-
+                    
                     if (true) //if (payrollTypeId == 1) //For now lets just comment this
                     {
 						if (dayTypeDay is not null)
@@ -2207,6 +2207,20 @@ namespace whris.Application.Library
                             if (amount < 0) 
                             {
                                 amount = 0;
+                            }
+
+                            if (line!.OnLeave) 
+                            {
+                                var trnDtr = _context.TrnDtrs.FirstOrDefault(x => x.Id == line.Dtrid);
+                                var witnPay = _context.TrnLeaveApplicationLines
+                                    .FirstOrDefault(x => x.EmployeeId == line.EmployeeId
+                                        && x.LeaveApplicationId == trnDtr!.LeaveApplicationId)
+                                    ?.WithPay;
+
+                                if (witnPay ?? false) 
+                                {
+                                    amount = line.RegularAmount;
+                                }
                             }
                         }
                         else 
