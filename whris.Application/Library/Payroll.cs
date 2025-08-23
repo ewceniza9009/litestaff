@@ -1154,7 +1154,15 @@ namespace whris.Application.Library
 
                             special = line.Sum(x => x.RegularAmount) * 0.3m;
                             specialNet = line.Sum(x => x.RegularAmount) * 0.3m;
-                        }                        
+                        }
+
+                        if (line.Key.PayrollTypeId == 1 && line.Key.DayTypeId > 1 && line.Sum(x => x.NetAmount) > 0) 
+                        {
+                            var totalSpecAmount = line.Where(x => x.NetAmount != x.RegularAmount).Sum(x => x.RegularAmount);
+
+                            special = totalSpecAmount * 0.3m;
+                            specialNet = totalSpecAmount * 0.3m;
+                        }
 
                         //var legalHours = line.Sum(x => x.RegularHours);
                         //var specialHours = line.Sum(x => x.RegularHours);

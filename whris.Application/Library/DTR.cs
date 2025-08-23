@@ -2220,6 +2220,7 @@ namespace whris.Application.Library
                                 if (witnPay ?? false) 
                                 {
                                     amount = line.RegularAmount;
+                                    line.RegularHours = 0;
                                 }
                             }
                         }
