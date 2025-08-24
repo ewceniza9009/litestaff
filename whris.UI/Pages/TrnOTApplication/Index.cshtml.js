@@ -502,6 +502,13 @@ function ComputeEmployeeOTAmount() {
     rowData.set("OvertimeAmount", rowData.OvertimeRate * rowData.OvertimeHours);
 }
 
+function ComputeEmployeeOTRate() {
+    var grid = $("#TrnOTApplicationLines").getKendoGrid();
+    var rowData = grid.dataItem(grid.select());
+
+    rowData.set("OvertimeRate", rowData.OvertimeAmount / rowData.OvertimeHours);
+}
+
 function onNavigate(e) {
     let grid = e.sender;
     let isNotEditable = e.element[0].cellIndex == 4 || e.element[0].cellIndex == 5 ;

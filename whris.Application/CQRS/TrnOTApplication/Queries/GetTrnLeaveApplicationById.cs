@@ -31,8 +31,8 @@ namespace whris.Application.CQRS.TrnOTApplication.Queries
 
                 foreach (var line in result.TrnOverTimeLines) 
                 {
-                    line.OvertimeRate = Lookup.GetEmployeeOvertimeRateById(line.EmployeeId);
-                    line.OvertimeAmount = line.OvertimeHours * line.OvertimeRate;
+                    line.OvertimeRate = line.OvertimeRate == 0 ? Lookup.GetEmployeeOvertimeRateById(line.EmployeeId) : line.OvertimeRate;
+                    line.OvertimeAmount = line.OvertimeAmount == 0 ? line.OvertimeHours * line.OvertimeRate : line.OvertimeAmount;
                 }
 
                 return result;

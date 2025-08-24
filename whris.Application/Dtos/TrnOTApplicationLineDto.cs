@@ -23,9 +23,11 @@ namespace whris.Application.Dtos
         public decimal OvertimeHours { get; set; }
 
         [Column(TypeName = "decimal(18, 5)")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N2}")]
         public decimal OvertimeRate { get; set; }
 
         [Column(TypeName = "decimal(18, 5)")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N2}")]
         public decimal OvertimeAmount { get; set; }
 
         [Column(TypeName = "decimal(18, 5)")]

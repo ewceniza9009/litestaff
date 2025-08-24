@@ -304,13 +304,13 @@
                 .Filterable(false)
                 .Width(130)
                 .Format("{0:N2}")
-                .HtmlAttributes(new { @style = "text-align: end; pointer-events: none" });
+                .HtmlAttributes(new { @style = "text-align: end;" });
             columns.Bound(x => x.OvertimeAmount)
                 .Title("OT Amount")
                 .Filterable(false)
                 .Width(130)
                 .Format("{0:N2}")
-                .HtmlAttributes(new { @style = "text-align: end; pointer-events: none" });
+                .HtmlAttributes(new { @style = "text-align: end;", onchange = "ComputeEmployeeOTRate()" });
             columns.Bound(x => x.OvertimeNightHours).Title("Night OT").Filterable(false).Width(130).HtmlAttributes(new { @style = "text-align: end;" });
             columns.Bound(x => x.OvertimeLimitHours).Title("Limit OT").Filterable(false).Width(130).HtmlAttributes(new { @style = "text-align: end;" });
             columns.Bound(x => x.Remarks).Title("Remarks").Width(500);
