@@ -106,7 +106,8 @@ namespace whris.UI.Pages.TrnPayrollOtherIncome
             return new JsonResult(new { Id = poiId });
         }
 
-        public async Task<IActionResult> OnPostOI13Month(int poiId, int payrollGroupId, int otherIncomeId, int? employeeId, int? startPayNo, int? endPayNo, decimal noOfPayroll) 
+        //public async Task<IActionResult> OnPostOI13Month(int poiId, int payrollGroupId, int otherIncomeId, int? employeeId, int? startPayNo, int? endPayNo, decimal noOfPayroll) 
+        public async Task<IActionResult> OnPostOI13Month(int poiId, int payrollGroupId, int otherIncomeId, int? employeeId, int? startPayNo, int? endPayNo)
         {
             var addPoiLines = new AddPayrollOtherIncomesBy13Month()
             {
@@ -116,7 +117,7 @@ namespace whris.UI.Pages.TrnPayrollOtherIncome
                 EmployeeId = employeeId,
                 StartPayNo = startPayNo,
                 EndPayNo = endPayNo,
-                NoOfPayroll = noOfPayroll,
+                //NoOfPayroll = noOfPayroll,
             };
 
             var statusCode = await _mediator.Send(addPoiLines);

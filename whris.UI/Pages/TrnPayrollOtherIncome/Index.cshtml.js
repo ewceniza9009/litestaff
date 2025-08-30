@@ -375,7 +375,7 @@ function CmdPayrollOtherIncomeGenerate13Month()
                 "employeeId": $("#OI13EmployeeId").val(),
                 "startPayNo": $("#OI13StartPayNo").val(),
                 "endPayNo": $("#OI13EndPayNo").val(),
-                "noOfPayroll": $("#NoOfPayroll").val(),
+                //"noOfPayroll": $("#NoOfPayroll").val(),
             },
             success: function (data) {
                 $("#oi13MonthDetailModal").modal("hide");

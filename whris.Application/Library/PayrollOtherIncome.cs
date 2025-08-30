@@ -51,7 +51,7 @@ namespace whris.Application.Library
                     payrollOtherIncome.PayrollGroupId = command?.PayrollGroupId ?? 0;
                     payrollOtherIncome.StartPayNo = command?.StartPayNo ?? 0;
                     payrollOtherIncome.EndPayNo = command?.EndPayNo ?? 0;
-                    payrollOtherIncome.NoOfPayroll = (command?.NoOfPayroll ?? 1) == 0 ? 1 : (command?.NoOfPayroll ?? 1);
+                   // payrollOtherIncome.NoOfPayroll = (command?.NoOfPayroll ?? 1) == 0 ? 1 : (command?.NoOfPayroll ?? 1);
                     payrollOtherIncome.EmployeeId = empId;
 
                     var payrollOtherIncomeEmployeeId = empId;

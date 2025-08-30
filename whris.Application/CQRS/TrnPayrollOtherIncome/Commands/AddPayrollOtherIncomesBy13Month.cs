@@ -13,7 +13,7 @@ namespace whris.Application.CQRS.TrnPayrollOtherIncome.Commands
         public int? EmployeeId { get; set; }
         public int? StartPayNo { get; set; }
         public int? EndPayNo { get; set; }
-        public decimal? NoOfPayroll { get; set; }
+       // public decimal? NoOfPayroll { get; set; }
 
         public class AddPayrollOtherIncomeLinesHandler : IRequestHandler<AddPayrollOtherIncomesBy13Month, int>
         {
