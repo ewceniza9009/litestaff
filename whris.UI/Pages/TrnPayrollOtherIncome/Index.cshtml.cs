@@ -17,6 +17,7 @@ namespace whris.UI.Pages.TrnPayrollOtherIncome
         private IMediator _mediator;
 
         public List<MstPayrollGroup> allPayrollGroups = new List<MstPayrollGroup>();
+        public int PayrollGroupId { get; set; } = 51;
 
         public IndexModel(IMediator mediator)
         {
@@ -25,6 +26,7 @@ namespace whris.UI.Pages.TrnPayrollOtherIncome
 
         public async Task<IActionResult> OnGet()
         {
+            GlobalComboboxSrc.PayrollGroupId = PayrollGroupId;
             allPayrollGroups = TrnDtrComboboxDatasources.Instance.PayrollGroupCmbDs;
 
             return await Task.Run(() => Page());
@@ -37,6 +39,8 @@ namespace whris.UI.Pages.TrnPayrollOtherIncome
                 Request = request,
                 PayrollGroupId = payrollGroupId
             };
+
+            GlobalComboboxSrc.PayrollGroupId = payrollGroupId;
 
             return new JsonResult(await _mediator.Send(allPods));
         }

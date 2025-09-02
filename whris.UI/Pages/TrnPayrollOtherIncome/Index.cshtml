@@ -35,8 +35,11 @@
             .SelectedIndex(0)
             .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
             .BindTo(Model.allPayrollGroups)
-            .Events(e => { e.Change("onPayrollGroupChange"); })
-            .Value("51"))
+            .Events(e => { 
+                
+                e.Change("onPayrollGroupChange"); 
+            })
+            .Value(Model.PayrollGroupId.ToString()))
         @(Html.Kendo().Button()
             .Name("clearPayrollGroup")
             .ThemeColor(ThemeColor.Light)
