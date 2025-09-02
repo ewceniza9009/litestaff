@@ -1,5 +1,6 @@
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using whris.Application.Common;
 using whris.Application.Dtos;
@@ -26,8 +27,21 @@ namespace whris.UI.Pages.PrintSlip
         public int EmployeeId = 0;
         public int EmploymentType = 0;
 
-        public void OnGet(string key)
+        public IActionResult OnGet(string key)
         {
+            //1. Validate token from cookie
+            var token = Request.Cookies["SaintSeiya"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return Redirect("/LogToPrintSlip");
+            }
+
+            var validatedEmployeeId = TokenService.ValidateToken(token);
+            if (validatedEmployeeId == null)
+            {
+                return Redirect("/LogToPrintSlip");
+            }
+
             var mobileCode = EncryptionHelper.Decrypt(key);
             var employeeId = MobileUtils.GetEmployeeByMobileCode(mobileCode);
             var employeeType = Lookup.GetEmploymentTypeByEmployeeId(employeeId);
@@ -39,9 +53,12 @@ namespace whris.UI.Pages.PrintSlip
             EmploymentType = employeeType;
 
             Reports = new List<ReportList>
-            {
-                new ReportList(){ Value = "2.1", Text = "Payslip (Continues)" },               
-            };
+    {
+        new ReportList(){ Value = "2.1", Text = "Payslip (Continues)" },
+    };
+
+            return Page();
         }
+
     }
 }
