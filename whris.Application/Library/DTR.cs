@@ -2480,12 +2480,36 @@ namespace whris.Application.Library
             //_context.Database.ExecuteSqlRaw($"DELETE FROM TrnDTRLine WHERE DTRId={command.DTRId} AND EmployeeId IN({string.Join(", ", getEmployeeList.Select(x => x.Id))})");
             //_context.SaveChanges();
 
-            // SAFE DELETE OPERATION
-            _context.TrnDtrlines
-                .Where(line => line.Dtrid == command.DTRId && employeeIds.Contains(line.EmployeeId))
-                .ExecuteDelete(); // Use ExecuteDelete() for sync or ExecuteDeleteAsync() for async
+            //// SAFE DELETE OPERATION
+            //_context.TrnDtrlines
+            //    .Where(line => line.Dtrid == command.DTRId && employeeIds.Contains(line.EmployeeId))
+            //    .ExecuteDelete(); // Use ExecuteDelete() for sync or ExecuteDeleteAsync() for async
+
+            if (command.EmployeeId != null)
+            {
+                // Single employee
+                _context.TrnDtrlines
+                    .Where(line => line.Dtrid == command.DTRId
+                                && line.EmployeeId == command.EmployeeId
+                                && line.Date >= command.DateStart
+                                && line.Date <= command.DateEnd)
+                    .ExecuteDelete();
+            }
+            else
+            {
+                // Multiple employees
+                _context.TrnDtrlines
+                    .Where(line => line.Dtrid == command.DTRId
+                                && employeeIds.Contains(line.EmployeeId)
+                                && line.Date >= command.DateStart
+                                && line.Date <= command.DateEnd)
+                    .ExecuteDelete();
+            }
 
             var batchProcessor = new DtrBatchProcessor(getEmployeeList, command.DateStart, command.DateEnd, command.ChangeShiftId, _context);
+
+            
+
 
             foreach (var employee in getEmployeeList)
             {
