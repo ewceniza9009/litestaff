@@ -376,3 +376,4 @@ FodyWeavers.xsd
 /whris.UI/wwwroot/localStorage/conversations.db-wal
 /whris.UI/IMPORTANT_BACKUPS/ChatToDB_Old.cshtml.cs
 /whris.UI/IMPORTANT_BACKUPS/GeminiService_Old.cs
+/sync.ffs_db
