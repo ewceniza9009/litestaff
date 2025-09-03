@@ -16,7 +16,8 @@ namespace whris.Application.Queries.TrnPayrollOtherIncome
         {
             var result = new List<Get13Month>();
             string sql = $@"SELECT 
-    TrnPayroll.IsLocked, 
+    TrnPayroll.IsLocked,
+    MstEmployee.IsLocked AS IsActive,
     MstEmployee.PayrollGroupId, 
     TrnPayrollLine.EmployeeId, 
     MstEmployee.PayrollTypeId, 
@@ -25,8 +26,7 @@ namespace whris.Application.Queries.TrnPayrollOtherIncome
     SUM(ISNULL(TotalTardyAmount,0)) AS TotalTardyAmount,
     SUM(TotalRegularWorkingAmount) AS TotalWorkingAmount,
 
-    (SUM(TotalRegularWorkingAmount) - SUM(TotalTardyAmount)) 
-        / 12.0 AS VariableSalary,
+    (SUM(TotalRegularWorkingAmount) - SUM(TotalTardyAmount)) / 12.0 AS VariableSalary,
 
     ((MstEmployee.PayrollRate * COUNT(DISTINCT TrnPayroll.Id)) 
       - (SUM(ISNULL(TotalAbsentAmount,0)) + SUM(ISNULL(TotalTardyAmount,0)))
@@ -40,20 +40,18 @@ INNER JOIN TrnPayroll
 INNER JOIN MstEmployee 
     ON TrnPayrollLine.EmployeeId = MstEmployee.Id
 WHERE (@EmployeeId IS NULL OR @EmployeeId = 0 OR MstEmployee.Id = @EmployeeId)
+  AND MstEmployee.PayrollGroupId = @PayrollGroupId 
+  AND TrnPayroll.IsLocked = 1
+  AND MstEmployee.IsLocked = 1
+  AND TrnPayroll.Id BETWEEN @StartPayNo AND @EndPayNo
 
 GROUP BY 
-    TrnPayroll.IsLocked,  
+    TrnPayroll.IsLocked, 
+    MstEmployee.IsLocked,
     MstEmployee.PayrollGroupId, 
     TrnPayrollLine.EmployeeId, 
     MstEmployee.PayrollTypeId, 
-    MstEmployee.PayrollRate,
-    IIF(TrnPayroll.Id >= @StartPayNo AND TrnPayroll.Id <= @EndPayNo, 1, 0)
-
-HAVING 
-    TrnPayroll.IsLocked = 1 
-    AND (@EmployeeId IS NULL OR @EmployeeId = 0 OR TrnPayrollLine.EmployeeId = @EmployeeId)
-    AND MstEmployee.PayrollGroupId = @PayrollGroupId 
-    AND IIF(TrnPayroll.Id >= @StartPayNo AND TrnPayroll.Id <= @EndPayNo, 1, 0) = 1;";
+    MstEmployee.PayrollRate;";
 
             //*** For CTL ***
             //string sql = $@"SELECT TrnPayroll.IsLocked, 

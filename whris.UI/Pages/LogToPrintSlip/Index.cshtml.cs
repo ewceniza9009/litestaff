@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using whris.Application.Library;
 using whris.UI.Services;
 
+
 namespace whris.UI.Pages.LogToPrintSlip
 {
     public class IndexModel : PageModel
@@ -22,10 +23,25 @@ namespace whris.UI.Pages.LogToPrintSlip
 
                 if (employeeId > 0)
                 {
-                    var key = EncryptionHelper.Encrypt(MobileCode);
+                    //var key = EncryptionHelper.Encrypt(MobileCode);
 
+                    //var redirectUrl = $"/PrintSlip?key={key}";
+                    //return Redirect(redirectUrl);
+                    var token = TokenService.GenerateToken(employeeId);
+                    var key = EncryptionHelper.Encrypt(MobileCode);
                     var redirectUrl = $"/PrintSlip?key={key}";
+
+                    Response.Cookies.Append("SaintSeiya", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTimeOffset.Now.AddMinutes(5)
+                    });
+
                     return Redirect(redirectUrl);
+
+
                 }
             }
 

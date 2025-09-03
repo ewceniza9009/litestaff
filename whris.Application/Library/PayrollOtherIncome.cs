@@ -77,7 +77,12 @@ namespace whris.Application.Library
 
                     payrollOtherIncomeLine.Amount = payrollOtherIncome13MonthAmount;
 
-                    await ctx.TrnPayrollOtherIncomeLines.AddAsync(payrollOtherIncomeLine);
+                    if (payrollOtherIncomeLine.Amount != 0)
+                    {
+                        await ctx.TrnPayrollOtherIncomeLines.AddAsync(payrollOtherIncomeLine);
+                    }
+
+                    
                 }
 
                 await ctx.SaveChangesAsync();

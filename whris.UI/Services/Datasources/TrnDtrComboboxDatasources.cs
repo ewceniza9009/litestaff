@@ -4,6 +4,11 @@ using whris.Data.Models;
 
 namespace whris.UI.Services.Datasources
 {
+    public class GlobalComboboxSrc 
+    {
+        public static int PayrollGroupId = 51;
+    }
+
     public class TrnDtrComboboxDatasources
     {
         public List<MstPayrollGroup> PayrollGroupCmbDs => (List<MstPayrollGroup>)(Common.GetPayrollGroups()?.Value ?? new List<MstPayrollGroup>());
@@ -19,7 +24,16 @@ namespace whris.UI.Services.Datasources
         public List<MstOtherDeduction> DeductionLoanCmbDs => (List<MstOtherDeduction>)(Common.GetDeductionLoans()?.Value ?? new List<MstOtherDeduction>());
         public List<MstShiftCode> ShiftCodeCmbDs => (List<MstShiftCode>)(Common.GetShiftCodes()?.Value ?? new List<MstShiftCode>());
         public List<MstOtherIncome> OtherIncomeCmbDs => (List<MstOtherIncome>)(Common.GetIncomes()?.Value ?? new List<MstOtherIncome>());
-        public List<TrnPayrollDto> PayrollNoWithRemarksCmbDs => (List<TrnPayrollDto>)(Common.GetPayrollNumbersWithRemarks()?.Value ?? new List<TrnPayrollDto>());
+        public List<TrnPayrollDto> PayrollNoWithRemarksCmbDs 
+        {
+            get
+            {
+                var src = Common.GetPayrollNumbersWithRemarks(GlobalComboboxSrc.PayrollGroupId)?.Value;
+
+                return (List<TrnPayrollDto>)( src ?? new List<TrnPayrollDto>());
+            }
+        }
+
         public List<LoanNo> LoanNumbers => new List<LoanNo> 
         {
             new LoanNo(0),

@@ -499,10 +499,10 @@ namespace whris.Application.Common
             });
         }
 
-        public static JsonResult GetPayrollNumbersWithRemarks()
+        public static JsonResult GetPayrollNumbersWithRemarks(int payrollGroupId)
         {
             return ExecuteWithContext(context => new JsonResult(context.TrnPayrolls
-                .Where(x => x.IsLocked)
+                .Where(x => x.IsLocked && x.PayrollGroupId == payrollGroupId)
                 .OrderByDescending(x => x.PayrollNumber)
                 .Select(x => new TrnPayrollDto()
                 {
