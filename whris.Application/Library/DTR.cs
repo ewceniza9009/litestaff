@@ -17,7 +17,7 @@ namespace whris.Application.Library
         private readonly Dictionary<int, int> _fallbackEmployeeShiftsLookup;
         private readonly Dictionary<int, int> _employeeBranchLookup;
         private readonly Dictionary<(DateTime Date, int BranchId), int> _dayTypeLookup;
-
+ 
         // The constructor does ALL the database work one time.
         public DtrBatchProcessor(List<GetEmployees.Employee> employees, DateTime startDate, DateTime endDate, int? changeShiftId, HRISContext context)
         {
@@ -3777,10 +3777,11 @@ namespace whris.Application.Library
                                 line.Absent = ComputeAbsent(line, _context);
                                 line.HalfdayAbsent = false;
                             }
-
+                          
                             var isEligibleForHolidayPay = true;
                             var isEmpProjectBased = employees.FirstOrDefault(x => x.Id == empId)?.EmploymentType ?? 0;
-
+                            var payrollTypeId = employees.FirstOrDefault(x => x.Id == line.EmployeeId)?.PayrollTypeId ?? 0;
+              
                             if (isEmpProjectBased == 3)
                             {
                                 isEligibleForHolidayPay = false;
@@ -3821,10 +3822,15 @@ namespace whris.Application.Library
                                 {
                                     isAbsentOnDateAfter = false;
                                 }
-
+                              
                                 if (isAbsentOnDateBefore || isAbsentOnDateAfter)
                                 {
                                     isEligibleForHolidayPay = false;
+                                }
+
+                                if (whris.Application.Common.Common.GlobalSettings.EnableHolidayPay == true && line.DayTypeId == 2 && payrollTypeId == 1 && dateBefore == dateAfter)
+                                {
+                                    isEligibleForHolidayPay = true;
                                 }
                             }
 

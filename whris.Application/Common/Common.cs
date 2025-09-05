@@ -610,5 +610,9 @@ namespace whris.Application.Common
                     .ToList();
             });
         }
+        public static class GlobalSettings
+        {
+            public static bool EnableHolidayPay { get; set; }
+        }
     }
 }
