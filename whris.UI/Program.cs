@@ -17,6 +17,7 @@ using whris.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Common.GlobalSettings.EnableHolidayPay = builder.Configuration.GetValue<bool>("PayrollSettings:EnableHolidayPay");
 // Add Data Protection with persistent keys
 var keyDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Keys");
 Directory.CreateDirectory(keyDir); // Ensures the folder exists

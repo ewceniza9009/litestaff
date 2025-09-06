@@ -83,11 +83,11 @@ function CmdPreview()
         window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramEmploymentType=" + $("#EmploymentType").val() + "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() + "&paramPeriod=" + $("#Period").val(), '_blank').focus();
     }
 
-    if ($selectedReportId == 8) {
+    if ($selectedReportId == 9) {
         window.open(window.location.origin + "/RptPayroll/RepPayrollOtherDeduction?paramId=" + $("#PayrollId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val(), '_blank').focus();
     }
 
-    if ($selectedReportId == 9) {
+    if ($selectedReportId == 10) {
         window.open(window.location.origin + "/RptPayroll/RepPayrollOtherIncome?paramId=" + $("#PayrollId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val(), '_blank').focus();
     }
 }
