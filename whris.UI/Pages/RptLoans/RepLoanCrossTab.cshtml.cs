@@ -13,11 +13,11 @@ namespace whris.UI.Pages.RptLoans
         {
             LoanCrossTab = new Reports.RepLoanCrossTab();
 
-            LoanCrossTab.Parameters["ParamDateStart"].Value = paramDateStart;
-            LoanCrossTab.Parameters["ParamDateStart"].Visible = false;
+            LoanCrossTab.Parameters["ParamDateStart"].Value = paramDateStart;           
             LoanCrossTab.Parameters["CompanyId"].Value = companyId;
-
             LoanCrossTab.Parameters["ParamDateEnd"].Value = paramDateEnd;
+
+            LoanCrossTab.Parameters["ParamDateStart"].Visible = false;
             LoanCrossTab.Parameters["ParamDateEnd"].Visible = false;
             LoanCrossTab.Parameters["CompanyId"].Visible = false;
         }
