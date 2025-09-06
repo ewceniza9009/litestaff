@@ -90,6 +90,10 @@ function CmdPreview()
     if ($selectedReportId == 10) {
         window.open(window.location.origin + "/RptPayroll/RepPayrollOtherIncome?paramId=" + $("#PayrollId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val(), '_blank').focus();
     }
+
+    if ($selectedReportId == 12) {
+        window.open(window.location.origin + "/RptPayroll/Rep13thMonthPay?paramStartPayNo=" + $("#PayrollId").val() + "&ParamEndPayNo=" + $("#EndPayNo").val() + "&ParamEmployeeId=" + $("#EmployeeId").val() + "&ParamPayrollGroupId=" + $("#PayrollGroupId").val(), '_blank').focus();
+    }
 }
 
 function ListBoxChange(e)
