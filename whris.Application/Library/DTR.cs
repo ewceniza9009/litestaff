@@ -1173,7 +1173,17 @@ namespace whris.Application.Library
 
                             if ((line.TimeOut2 ?? DefaultDate) > shiftTimeOut2)
                             {
-                                actualNumberOfHours = (decimal)(shiftTimeOut2 - shiftTimeIn1).TotalHours;
+                                DateTime dtrTimeOut2 = line.TimeOut2?.Date ?? DefaultDate;
+                                DateTime dtrShiftTimeOut2 = shiftTimeOut2.Date;
+                                if(dtrTimeOut2 == dtrShiftTimeOut2)
+                                {
+                                    var timeOut2 = line?.TimeOut2 ?? DefaultDate;
+                                    actualNumberOfHours = (decimal)(timeOut2 - shiftTimeIn1).TotalHours;
+                                }
+                                else
+                                {
+                                    actualNumberOfHours = (decimal)(shiftTimeOut2 - shiftTimeIn1).TotalHours;
+                                }
                             }
 
                             if (actualNumberOfHours < 0)
