@@ -34,6 +34,9 @@
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter4 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter5 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter6 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter7 = new DevExpress.DataAccess.Sql.QueryParameter();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Rep13thMonthPay));
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary2 = new DevExpress.XtraReports.UI.XRSummary();
@@ -42,6 +45,9 @@
             this.xrLabel8 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel7 = new DevExpress.XtraReports.UI.XRLabel();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
+            this.xrLabel14 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel11 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel12 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
@@ -58,6 +64,9 @@
             this.xrLabel10 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel5 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
+            this.ParamCompanyId = new DevExpress.XtraReports.Parameters.Parameter();
+            this.ParamBranchId = new DevExpress.XtraReports.Parameters.Parameter();
+            this.ParamDepartmentId = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -131,11 +140,51 @@
             // TopMargin
             // 
             this.TopMargin.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabel14,
+            this.xrLabel13,
+            this.xrLabel11,
             this.xrLabel12,
             this.xrLabel1});
+            this.TopMargin.HeightF = 154.0619F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // xrLabel14
+            // 
+            this.xrLabel14.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "\'Department \' + [Department]")});
+            this.xrLabel14.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
+            this.xrLabel14.LocationFloat = new DevExpress.Utils.PointFloat(0F, 121.875F);
+            this.xrLabel14.Multiline = true;
+            this.xrLabel14.Name = "xrLabel14";
+            this.xrLabel14.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel14.SizeF = new System.Drawing.SizeF(650F, 23F);
+            this.xrLabel14.StylePriority.UseFont = false;
+            // 
+            // xrLabel13
+            // 
+            this.xrLabel13.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "\'Branch \' + [Branch]")});
+            this.xrLabel13.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(7.947286E-06F, 98.87503F);
+            this.xrLabel13.Multiline = true;
+            this.xrLabel13.Name = "xrLabel13";
+            this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel13.SizeF = new System.Drawing.SizeF(650F, 23F);
+            this.xrLabel13.StylePriority.UseFont = false;
+            // 
+            // xrLabel11
+            // 
+            this.xrLabel11.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "\'Company \' + [Company]")});
+            this.xrLabel11.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
+            this.xrLabel11.LocationFloat = new DevExpress.Utils.PointFloat(7.947286E-06F, 75.87503F);
+            this.xrLabel11.Multiline = true;
+            this.xrLabel11.Name = "xrLabel11";
+            this.xrLabel11.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel11.SizeF = new System.Drawing.SizeF(650F, 23F);
+            this.xrLabel11.StylePriority.UseFont = false;
             // 
             // xrLabel12
             // 
@@ -188,11 +237,23 @@
             queryParameter4.Name = "ParamPayrollGroupId";
             queryParameter4.Type = typeof(global::DevExpress.DataAccess.Expression);
             queryParameter4.Value = new DevExpress.DataAccess.Expression("?ParamPayrollGroupId", typeof(int));
+            queryParameter5.Name = "ParamCompanyId";
+            queryParameter5.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter5.Value = new DevExpress.DataAccess.Expression("?ParamCompanyId", typeof(int));
+            queryParameter6.Name = "ParamBranchId";
+            queryParameter6.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter6.Value = new DevExpress.DataAccess.Expression("?ParamBranchId", typeof(int));
+            queryParameter7.Name = "ParamDepartmentId";
+            queryParameter7.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter7.Value = new DevExpress.DataAccess.Expression("?ParamDepartmentId", typeof(int));
             customSqlQuery1.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
             queryParameter1,
             queryParameter2,
             queryParameter3,
-            queryParameter4});
+            queryParameter4,
+            queryParameter5,
+            queryParameter6,
+            queryParameter7});
             customSqlQuery1.Sql = resources.GetString("customSqlQuery1.Sql");
             this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
             customSqlQuery1});
@@ -276,7 +337,7 @@
             this.xrLabel10,
             this.xrLabel5,
             this.xrLabel3});
-            this.GroupFooter1.HeightF = 138.6882F;
+            this.GroupFooter1.HeightF = 87.29674F;
             this.GroupFooter1.Name = "GroupFooter1";
             // 
             // xrLabel9
@@ -357,6 +418,24 @@
             this.xrLabel3.Text = "TOTAL:";
             this.xrLabel3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
             // 
+            // ParamCompanyId
+            // 
+            this.ParamCompanyId.Name = "ParamCompanyId";
+            this.ParamCompanyId.Type = typeof(int);
+            this.ParamCompanyId.ValueInfo = "0";
+            // 
+            // ParamBranchId
+            // 
+            this.ParamBranchId.Name = "ParamBranchId";
+            this.ParamBranchId.Type = typeof(int);
+            this.ParamBranchId.ValueInfo = "0";
+            // 
+            // ParamDepartmentId
+            // 
+            this.ParamDepartmentId.Name = "ParamDepartmentId";
+            this.ParamDepartmentId.Type = typeof(int);
+            this.ParamDepartmentId.ValueInfo = "0";
+            // 
             // Rep13thMonthPay
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -370,12 +449,15 @@
             this.DataMember = "Query";
             this.DataSource = this.sqlDataSource1;
             this.Font = new DevExpress.Drawing.DXFont("Arial", 9F);
-            this.Margins = new DevExpress.Drawing.DXMargins(73F, 72F, 100F, 182.2917F);
+            this.Margins = new DevExpress.Drawing.DXMargins(20F, 6F, 154.0619F, 182.2917F);
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.ParamStartPayNo,
             this.ParamEndPayNo,
             this.ParamEmployeeId,
-            this.ParamPayrollGroupId});
+            this.ParamPayrollGroupId,
+            this.ParamCompanyId,
+            this.ParamBranchId,
+            this.ParamDepartmentId});
             this.Version = "22.2";
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
@@ -404,5 +486,11 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel5;
         private DevExpress.XtraReports.UI.XRLabel xrLabel9;
         private DevExpress.XtraReports.UI.XRLabel xrLabel10;
+        private DevExpress.XtraReports.Parameters.Parameter ParamCompanyId;
+        private DevExpress.XtraReports.Parameters.Parameter ParamBranchId;
+        private DevExpress.XtraReports.Parameters.Parameter ParamDepartmentId;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel14;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel13;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel11;
     }
 }

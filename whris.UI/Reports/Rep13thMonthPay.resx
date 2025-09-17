@@ -122,6 +122,9 @@
 --DECLARE @ParamEndPayNo INT = 76;
 --DECLARE @ParamEmployeeId INT = 0;
 --DECLARE @ParamPayrollGroupId INT = 51;
+--DECLARE @ParamCompanyId INT = 42;
+--DECLARE @ParamBranchId INT = 42;
+--DECLARE @ParamDepartmentId INT = 0;
 
 SELECT 
     TrnPayroll.Id AS PayrollId,
@@ -132,27 +135,38 @@ SELECT
     MstEmployee.FullName, 
     MstEmployee.PayrollTypeId, 
     MstEmployee.PayrollRate,
+    MstCompany.Company,
+    MstBranch.Branch,
+    MstDepartment.Department,
     MstEmployee.Id,
     CAST(TrnPayrollLine.TotalRegularWorkingAmount AS DECIMAL(18,2)) AS TotalRegularWorkingAmount,
 
-   CAST(
-    CASE 
-        WHEN MstEmployee.PayrollTypeId = 1 
-            THEN (TotalRegularWorkingAmount - TotalTardyAmount)
-        WHEN MstEmployee.PayrollTypeId = 3 
-            THEN (MstEmployee.PayrollRate - (TotalAbsentAmount + TotalTardyAmount))
-        ELSE NULL
-    END 
-AS DECIMAL(18,2)) AS TotalWorkingAmount
-
+    CAST(
+        CASE 
+            WHEN MstEmployee.PayrollTypeId = 1 
+                THEN (TotalRegularWorkingAmount - TotalTardyAmount)
+            WHEN MstEmployee.PayrollTypeId = 3 
+                THEN (MstEmployee.PayrollRate - (TotalAbsentAmount + TotalTardyAmount))
+            ELSE NULL
+        END 
+    AS DECIMAL(18,2)) AS TotalWorkingAmount
 
 FROM TrnPayrollLine  
 INNER JOIN TrnPayroll 
     ON TrnPayrollLine.PayrollId = TrnPayroll.Id
 INNER JOIN MstEmployee 
     ON TrnPayrollLine.EmployeeId = MstEmployee.Id
+INNER JOIN MstCompany
+    ON MstEmployee.CompanyId = MstCompany.Id
+INNER JOIN MstDepartment
+    ON MstEmployee.DepartmentId = MstDepartment.Id
+INNER JOIN MstBranch
+    ON MstEmployee.BranchId = MstBranch.Id
 WHERE (@ParamEmployeeId IS NULL OR @ParamEmployeeId = 0 OR MstEmployee.Id = @ParamEmployeeId)
   AND MstEmployee.PayrollGroupId = @ParamPayrollGroupId 
+  AND (@ParamCompanyId IS NULL OR @ParamCompanyId = 0 OR MstEmployee.CompanyId = @ParamCompanyId)
+  AND (@ParamDepartmentId IS NULL OR @ParamDepartmentId = 0 OR MstEmployee.DepartmentId = @ParamDepartmentId)
+  AND (@ParamBranchId IS NULL OR @ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
   AND TrnPayroll.IsLocked = 1
   AND MstEmployee.IsLocked = 1
   AND TrnPayroll.Id BETWEEN @ParamStartPayNo AND @ParamEndPayNo
@@ -171,12 +185,27 @@ GROUP BY
     MstEmployee.FullName,
     MstEmployee.PayrollTypeId, 
     MstEmployee.PayrollRate,
-    mstemployee.id
+    mstemployee.id,
+    MstCompany.Company,
+    MstDepartment.Department,
+    MstBranch.Branch
+
+HAVING 
+    CAST(
+        CASE 
+            WHEN MstEmployee.PayrollTypeId = 1 
+                THEN (SUM(TrnPayrollLine.TotalRegularWorkingAmount) - SUM(TrnPayrollLine.TotalTardyAmount))
+            WHEN MstEmployee.PayrollTypeId = 3 
+                THEN (MstEmployee.PayrollRate - (SUM(TrnPayrollLine.TotalAbsentAmount) + SUM(TrnPayrollLine.TotalTardyAmount)))
+            ELSE NULL
+        END 
+    AS DECIMAL(18,2)) &lt;&gt; 0
+
 ORDER BY 
     MstEmployee.FullName,
-    TrnPayroll.Id</value>
+    TrnPayroll.Id;</value>
   </data>
   <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
-    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlJlcEFjY291bnRpbmciPjxGaWVsZCBOYW1lPSJQYXlyb2xsTnVtYmVyIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkFjY291bnRJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IkFjY291bnQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGViaXQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNyZWRpdCIgVHlwZT0iRGVjaW1hbCIgLz48L1ZpZXc+PFZpZXcgTmFtZT0iUXVlcnkiPjxGaWVsZCBOYW1lPSJQYXlyb2xsSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJSZW1hcmtzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklzTG9ja2VkIiBUeXBlPSJCb29sZWFuIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQm9vbGVhbiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbEdyb3VwSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJGdWxsTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsVHlwZUlkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbFJhdGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IklkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iVG90YWxSZWd1bGFyV29ya2luZ0Ftb3VudCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVG90YWxXb3JraW5nQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlJlcEFjY291bnRpbmciPjxGaWVsZCBOYW1lPSJQYXlyb2xsTnVtYmVyIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkFjY291bnRJZCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IkFjY291bnQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGViaXQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNyZWRpdCIgVHlwZT0iRGVjaW1hbCIgLz48L1ZpZXc+PFZpZXcgTmFtZT0iUXVlcnkiPjxGaWVsZCBOYW1lPSJQYXlyb2xsSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJSZW1hcmtzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklzTG9ja2VkIiBUeXBlPSJCb29sZWFuIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQm9vbGVhbiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbEdyb3VwSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJGdWxsTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsVHlwZUlkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbFJhdGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNvbXBhbnkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQnJhbmNoIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iSWQiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFJlZ3VsYXJXb3JraW5nQW1vdW50IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUb3RhbFdvcmtpbmdBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PC9WaWV3PjwvRGF0YVNldD4=</value>
   </data>
 </root>
