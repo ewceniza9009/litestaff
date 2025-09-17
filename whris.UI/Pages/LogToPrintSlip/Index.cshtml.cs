@@ -36,7 +36,7 @@ namespace whris.UI.Pages.LogToPrintSlip
                         HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.Now.AddMinutes(5)
+                        Expires = DateTimeOffset.Now.AddSeconds(20)
                     });
 
                     return Redirect(redirectUrl);
