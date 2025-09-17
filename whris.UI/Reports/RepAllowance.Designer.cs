@@ -44,6 +44,8 @@
             this.xrLabel7 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel27 = new DevExpress.XtraReports.UI.XRLabel();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
+            this.xrLabel12 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel19 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel10 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
@@ -66,8 +68,6 @@
             this.xrLabel15 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLine1 = new DevExpress.XtraReports.UI.XRLine();
             this.ParamCompanyId = new DevExpress.XtraReports.Parameters.Parameter();
-            this.xrLabel12 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel19 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -191,6 +191,30 @@
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // xrLabel12
+            // 
+            this.xrLabel12.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Company]")});
+            this.xrLabel12.Font = new DevExpress.Drawing.DXFont("arial", 9F);
+            this.xrLabel12.LocationFloat = new DevExpress.Utils.PointFloat(487.5F, 76.74998F);
+            this.xrLabel12.Multiline = true;
+            this.xrLabel12.Name = "xrLabel12";
+            this.xrLabel12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel12.SizeF = new System.Drawing.SizeF(162.5F, 23F);
+            this.xrLabel12.StylePriority.UseFont = false;
+            this.xrLabel12.Text = "xrLabel12";
+            // 
+            // xrLabel19
+            // 
+            this.xrLabel19.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.xrLabel19.LocationFloat = new DevExpress.Utils.PointFloat(415.6248F, 76.91659F);
+            this.xrLabel19.Multiline = true;
+            this.xrLabel19.Name = "xrLabel19";
+            this.xrLabel19.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel19.SizeF = new System.Drawing.SizeF(71.875F, 22.83337F);
+            this.xrLabel19.StylePriority.UseFont = false;
+            this.xrLabel19.Text = "Company:";
             // 
             // xrLabel10
             // 
@@ -458,30 +482,6 @@
             this.ParamCompanyId.Name = "ParamCompanyId";
             this.ParamCompanyId.Type = typeof(int);
             this.ParamCompanyId.ValueInfo = "0";
-            // 
-            // xrLabel12
-            // 
-            this.xrLabel12.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Company]")});
-            this.xrLabel12.Font = new DevExpress.Drawing.DXFont("arial", 9F);
-            this.xrLabel12.LocationFloat = new DevExpress.Utils.PointFloat(487.5F, 76.74998F);
-            this.xrLabel12.Multiline = true;
-            this.xrLabel12.Name = "xrLabel12";
-            this.xrLabel12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel12.SizeF = new System.Drawing.SizeF(162.5F, 23F);
-            this.xrLabel12.StylePriority.UseFont = false;
-            this.xrLabel12.Text = "xrLabel12";
-            // 
-            // xrLabel19
-            // 
-            this.xrLabel19.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel19.LocationFloat = new DevExpress.Utils.PointFloat(415.6248F, 76.91659F);
-            this.xrLabel19.Multiline = true;
-            this.xrLabel19.Name = "xrLabel19";
-            this.xrLabel19.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel19.SizeF = new System.Drawing.SizeF(71.875F, 22.83337F);
-            this.xrLabel19.StylePriority.UseFont = false;
-            this.xrLabel19.Text = "Company:";
             // 
             // RepAllowance
             // 

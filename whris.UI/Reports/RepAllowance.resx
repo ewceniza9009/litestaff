@@ -118,34 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="customSqlQuery1.Sql" xml:space="preserve">
-    <value>--SELECT TrnDTRLine.EmployeeId, 
---	MstEmployee.FullName, 
---	SUM(TrnDTRLine.GrossTotalHours) AS GrossTotalHours, 
---	SUM(TrnDTRLine.OvertimeHours) AS OvertimeHours, 
---	SUM(TrnDTRLine.TardyLateHours) AS TardyLateHours, 
---	SUM(TrnDTRLine.TardyUndertimeHours) AS TardyUndertimeHours, 
---	SUM(TrnDTRLine.NetTotalHours) AS NetTotalHours, 
---	ISNULL([Allowance],0) AS AllowanceRate, 
---	SUM(TrnDTRLine.NetTotalHours)*ISNULL([Allowance],0) AS AllowanceAmount,
---	IIf(@ParamBranchId = 0,'All', MstBranch.Branch) as Branch
---FROM TrnDTRLine LEFT JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id 
---	LEFT JOIN MstEmployee ON TrnDTRLine.EmployeeId = MstEmployee.Id
---	LEFT JOIN MstBranch ON MstEmployee.BranchId = MstBranch.Id
---WHERE TrnDTRLine.Date 
---	Between @ParamDateStart 
---	AND @ParamDateEnd 
---	AND (@ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
---GROUP BY TrnDTRLine.EmployeeId, 
---	MstEmployee.FullName, 
---	ISNULL([Allowance],0),
---	IIF(@ParamBranchId = 0,'All', MstBranch.Branch)
---ORDER BY MstEmployee.FullName;
-
---DECLARE @ParamDateStart DATE = '2024-02-11';
---DECLARE @ParamDateEnd DATE = '2024-02-25';
---DECLARE @ParamBranchId INT = 42
-
-SELECT 
+    <value>SELECT 
     EmployeeDtr.EmployeeId, 
     EmployeeDtr.BranchId,
     EmployeeDtr.CompanyId,
@@ -163,37 +136,40 @@ FROM (
         TrnDTRLine.EmployeeId, 
         MstEmployee.FullName, 
         MstEmployee.BranchId,
-	  MstEmployee.CompanyId, 
+        MstEmployee.CompanyId, 
         ISNULL(MstEmployee.Allowance, 0) AS AllowanceRate, 
         MstEmployee.BiometricIdNumber
     FROM TrnDTRLine 
+    LEFT JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id
     LEFT JOIN MstEmployee ON TrnDTRLine.EmployeeId = MstEmployee.Id
     WHERE TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+      AND TrnDTR.isApproved = 1   --filter applied here
     GROUP BY 
         TrnDTRLine.EmployeeId, 
         MstEmployee.FullName, 
         MstEmployee.BranchId,
-	  MstEmployee.CompanyId, 
+        MstEmployee.CompanyId, 
         ISNULL(MstEmployee.Allowance, 0), 
         MstEmployee.BiometricIdNumber
 ) EmployeeDtr 
-LEFT JOIN 
-(
+LEFT JOIN (
     SELECT 
         TrnDTRLine.EmployeeId, 
         COUNT(DISTINCT TrnDTRLine.Date) AS NoOfDaysTardy
     FROM TrnDTRLine
+    LEFT JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id
     WHERE 
         TrnDTRLine.TardyAmount &gt; 0 AND 
         TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+        AND TrnDTR.isApproved = 1  --filter applied here too
     GROUP BY TrnDTRLine.EmployeeId
 ) EmployeeTardyCount ON EmployeeDtr.EmployeeId = EmployeeTardyCount.EmployeeId
-LEFT JOIN 
-(
+LEFT JOIN (
     SELECT 
         TrnDTRLine.EmployeeId, 
         COUNT(DISTINCT TrnDTRLine.Date) AS NoOfDaysPresent
     FROM TrnDTRLine
+    LEFT JOIN TrnDTR ON TrnDTRLine.DTRId = TrnDTR.Id
     WHERE 
         (TrnDTRLine.Absent = 0 AND TrnDTRLine.HalfdayAbsent = 0) AND
         (ISNULL(TrnDTRLine.TimeIn1, 0) &lt;&gt; 0 OR 
@@ -201,6 +177,7 @@ LEFT JOIN
          ISNULL(TrnDTRLine.TimeIn2, 0) &lt;&gt; 0 OR 
          ISNULL(TrnDTRLine.TimeOut2, 0) &lt;&gt; 0) AND
         TrnDTRLine.Date BETWEEN @ParamDateStart AND @ParamDateEnd
+        AND TrnDTR.isApproved = 1  --filter applied here too
     GROUP BY TrnDTRLine.EmployeeId
 ) EmployeePresentCount ON EmployeeDtr.EmployeeId = EmployeePresentCount.EmployeeId
 LEFT JOIN dbo.MstBranch ON EmployeeDtr.BranchId = dbo.MstBranch.Id
