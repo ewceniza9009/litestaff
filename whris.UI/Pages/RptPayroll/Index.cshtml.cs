@@ -69,7 +69,7 @@ namespace whris.UI.Pages.RptPayroll
                 new ReportList(){ Value = "10", Text = "Other Income Detail Report" },
                 new ReportList(){ Value = "11", Text = "" },
                 new ReportList(){ Value = "12", Text = "13th Month Pay Report" },
-
+                new ReportList(){ Value = "13", Text = "13th Month Pay Report (Summary)" },
             };
         }
 

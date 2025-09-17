@@ -92,7 +92,11 @@ function CmdPreview()
     }
 
     if ($selectedReportId == 12) {
-        window.open(window.location.origin + "/RptPayroll/Rep13thMonthPay?paramStartPayNo=" + $("#PayrollId").val() + "&ParamEndPayNo=" + $("#EndPayNo").val() + "&ParamEmployeeId=" + $("#EmployeeId").val() + "&ParamPayrollGroupId=" + $("#PayrollGroupId").val(), '_blank').focus();
+        window.open(window.location.origin + "/RptPayroll/Rep13thMonthPay?paramStartPayNo=" + $("#PayrollId").val() + "&ParamEndPayNo=" + $("#EndPayNo").val() + "&ParamEmployeeId=" + $("#EmployeeId").val() + "&ParamPayrollGroupId=" + $("#PayrollGroupId").val() + "&ParamCompanyId=" + $("#CompanyId").val() + "&ParamBranchId=" + $("#BranchId").val() + "&ParamDepartmentId=" + $("#DepartmentId").val(), '_blank').focus();
+    }
+
+    if ($selectedReportId == 13) {
+        window.open(window.location.origin + "/RptPayroll/Rep13thMonthPaySummary?paramStartPayNo=" + $("#PayrollId").val() + "&ParamEndPayNo=" + $("#EndPayNo").val() + "&ParamEmployeeId=" + $("#EmployeeId").val() + "&ParamPayrollGroupId=" + $("#PayrollGroupId").val() + "&ParamCompanyId=" + $("#CompanyId").val() + "&ParamBranchId=" + $("#BranchId").val() + "&ParamDepartmentId=" + $("#DepartmentId").val(), '_blank').focus();
     }
 }
 
