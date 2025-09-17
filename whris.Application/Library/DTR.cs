@@ -2858,7 +2858,7 @@ namespace whris.Application.Library
 
                                             var employeeShiftCodeDays = employeeShiftCodeDaysSetup.Result(isLongShift ? log.LogType : null);
 
-                                            dline.ShiftCodeId = shiftCodeId = QuickChangeShiftv2(_context, employeeShiftCodeDays, employeeShiftCodes, dline.EmployeeId, dline.Date, changeShiftId, dline.ShiftCodeId);
+                                            dline.ShiftCodeId = shiftCodeId = QuickChangeShiftv2(_context, employeeShiftCodeDays, employeeShiftCodes, dline.EmployeeId, dline.Date, 0, dline.ShiftCodeId);
 
                                             if (log.LogType == "I")
                                             {
@@ -3579,7 +3579,7 @@ namespace whris.Application.Library
                                                     employeeShiftCodeDaysSetup.ParamLogTimeIn1 = nextLogDateTimeOfEmployee;
 
                                                     var employeeShiftCodeDays = employeeShiftCodeDaysSetup.Result();
-                                                    var newShiftCodeId = QuickChangeShiftv2(_context, employeeShiftCodeDays, employeeShiftCodes, dline.EmployeeId, dline.Date, changeShiftId, dline.ShiftCodeId);
+                                                    var newShiftCodeId = QuickChangeShiftv2(_context, employeeShiftCodeDays, employeeShiftCodes, dline.EmployeeId, dline.Date, 0, dline.ShiftCodeId);
 
                                                     if (shiftCodeId == 0)
                                                     {
