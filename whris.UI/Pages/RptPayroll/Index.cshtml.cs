@@ -48,7 +48,12 @@ namespace whris.UI.Pages.RptPayroll
         public List<MstMonth> MonthCmbDs => (List<MstMonth>)(Common.GetMonths()?.Value ?? new List<MstMonth>());        
         public List<MstPeriod> PeriodCmbDs => (List<MstPeriod>)(Common.GetPeriods()?.Value ?? new List<MstPeriod>());
         public int DefaultMonth { get; set; } = DateTime.Now.Month;
-        public int DefaultPeriod { get; set; } = DateTime.Now.Year;
+        public int DefaultPeriod { get; set; } =
+            ((List<MstPeriod>)Common.GetPeriods()?.Value ?? new List<MstPeriod>())
+            .FirstOrDefault(p => p.Period == DateTime.Now.Year.ToString())
+            ?.Id ?? 0;
+
+
 
         public void OnGet()
         {
