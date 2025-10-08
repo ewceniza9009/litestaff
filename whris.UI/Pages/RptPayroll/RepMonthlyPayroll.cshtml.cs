@@ -10,7 +10,7 @@ namespace whris.UI.Pages.RptPayroll
     {
         public Reports.RepMonthlyPayroll? MonthlyPayroll = null;
         //public void OnGet(int paramId, int? paramEmploymentType, int paramCompanyId, int paramBranchId, int paramMonthId)
-        public void OnGet(int paramEmploymentType, int paramPayrollGroupId, int paramCompanyId, int paramBranchId, int paramMonthId, int paramPeriod)
+        public void OnGet(int paramEmploymentType, int paramPayrollGroupId, int paramCompanyId, int paramBranchId, int paramMonthId, int paramPeriod, int paramDepartmentId, int paramEmployeeId)
         {
             MonthlyPayroll = new Reports.RepMonthlyPayroll();
 
@@ -31,6 +31,12 @@ namespace whris.UI.Pages.RptPayroll
 
             MonthlyPayroll.Parameters["ParamBranchId"].Value = paramBranchId;
             MonthlyPayroll.Parameters["ParamBranchId"].Visible = false;
+
+            MonthlyPayroll.Parameters["ParamDepartmentId"].Value = paramDepartmentId;
+            MonthlyPayroll.Parameters["ParamDepartmentId"].Visible = false;
+
+            MonthlyPayroll.Parameters["ParamEmployeeId"].Value = paramEmployeeId;
+            MonthlyPayroll.Parameters["ParamEmployeeId"].Visible = false;
 
 
         }
