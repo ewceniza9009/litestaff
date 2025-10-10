@@ -1044,7 +1044,7 @@ namespace whris.Application.Library
                 .Where(x => x.TaxCodeId == line.TaxCodeId)
                 ?.Max(x => (decimal?)x.Amount) ?? 0;
             decimal dblTaxPercentage = _dblTaxPercentage / 100;
-            decimal dblExcessAmount = dblTotalSalaryAmount - dblTaxAmountException;
+            decimal dblExcessAmount = (dblTotalSalaryAmount - line.Ssscontribution - line.Phiccontribution - line.Hdmfcontribution) - dblTaxAmountException;
             if(dblExcessAmount > 0)
             {
                 dblTax = dblExcessAmount * dblTaxPercentage;
