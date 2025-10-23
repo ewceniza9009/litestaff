@@ -2613,7 +2613,7 @@ namespace whris.Application.Library
                     var shiftTimeOut2OfWork = DefaultDate;
                     var aWeekIsLapsed = false;
 
-                    var fLogs = logs.Where(x => x.EmployeeId == empId); //&& (x.LogType == "I" || x.LogType == "O" ));
+                    var fLogs = logs.Where(x => x.EmployeeId == empId).OrderBy(x => x.Date).ThenBy(x => x.Time); //&& (x.LogType == "I" || x.LogType == "O" ));
                     var dlineIsJumped = false;
 
                     var dline = new TrnDtrLineDto();
