@@ -229,6 +229,29 @@ namespace whris.Application.Mobile.RepPayroll
         ) + '</table>'
     ) AS OtherDeductionBreakdown,
 
+     (
+    '<table>' +
+    STUFF(
+        (
+            SELECT 
+                '<tr><td style=""width: 135px; font-size: 12px;"">' + OTLabel + 
+                '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">' + 
+                CONVERT(NVARCHAR, FORMAT(Round(OTAmount, 2), 'N2')) + '</td></tr>'
+            FROM (
+                SELECT 'Regular OT' AS OTLabel, TrnPayrollLine.TotalRegularOvertimeAmount AS OTAmount
+                UNION ALL
+                SELECT 'Legal Holiday OT', TrnPayrollLine.TotalLegalHolidayOvertimeAmount
+                UNION ALL
+                SELECT 'Special Holiday OT', TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
+            ) AS OTSub
+            WHERE OTAmount > 0
+            FOR XML PATH(''), ROOT('root'), TYPE
+        ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
+    ) +
+    '</table>'
+) AS OtBreakdown,
+
+
 	('<table>'
 	 + STUFF(
                    (
@@ -398,6 +421,7 @@ GROUP BY
                 public string? LeaveBalanceBreakdown { get; set; }
                 public string? OtherIncomeNonTaxableBreakdown { get; set; }
                 public string? LoanBalancesBreakdown { get; set; }
+                public string? OtBreakdown { get; set; }
         }
     }
 }
