@@ -134,7 +134,7 @@ SELECT
     MstEmployee.PayrollGroupId, 
     MstEmployee.FullName, 
     MstEmployee.PayrollTypeId, 
-    MstEmployee.PayrollRate,
+    TrnPayrollline.PayrollRate,
     MstCompany.Company,
     MstBranch.Branch,
     MstDepartment.Department,
@@ -146,7 +146,7 @@ SELECT
             WHEN MstEmployee.PayrollTypeId = 1 
                 THEN (TotalRegularWorkingAmount - TotalTardyAmount)
             WHEN MstEmployee.PayrollTypeId = 3 
-                THEN (MstEmployee.PayrollRate - (TotalAbsentAmount + TotalTardyAmount))
+                THEN (TrnPayrollLine.PayrollRate - (TotalAbsentAmount + TotalTardyAmount))
             ELSE NULL
         END 
     AS DECIMAL(18,2)) AS TotalWorkingAmount
@@ -184,7 +184,7 @@ GROUP BY
     TrnPayrollLine.EmployeeId, 
     MstEmployee.FullName,
     MstEmployee.PayrollTypeId, 
-    MstEmployee.PayrollRate,
+    TrnPayrollLine.PayrollRate,
     mstemployee.id,
     MstCompany.Company,
     MstDepartment.Department,
@@ -196,7 +196,7 @@ HAVING
             WHEN MstEmployee.PayrollTypeId = 1 
                 THEN (SUM(TrnPayrollLine.TotalRegularWorkingAmount) - SUM(TrnPayrollLine.TotalTardyAmount))
             WHEN MstEmployee.PayrollTypeId = 3 
-                THEN (MstEmployee.PayrollRate - (SUM(TrnPayrollLine.TotalAbsentAmount) + SUM(TrnPayrollLine.TotalTardyAmount)))
+                THEN (TrnPayrollLine.PayrollRate - (SUM(TrnPayrollLine.TotalAbsentAmount) + SUM(TrnPayrollLine.TotalTardyAmount)))
             ELSE NULL
         END 
     AS DECIMAL(18,2)) &lt;&gt; 0

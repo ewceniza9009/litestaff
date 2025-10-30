@@ -138,7 +138,7 @@ SELECT
                 WHEN MstEmployee.PayrollTypeId = 1 
                     THEN (TrnPayrollLine.TotalRegularWorkingAmount - TrnPayrollLine.TotalTardyAmount)
                 WHEN MstEmployee.PayrollTypeId = 3 
-                    THEN (MstEmployee.PayrollRate - (TrnPayrollLine.TotalAbsentAmount + TrnPayrollLine.TotalTardyAmount))
+                    THEN (TrnPayrollLine.PayrollRate - (TrnPayrollLine.TotalAbsentAmount + TrnPayrollLine.TotalTardyAmount))
                 ELSE 0
             END
         ) AS DECIMAL(18,2)
@@ -174,7 +174,7 @@ HAVING
             WHEN MstEmployee.PayrollTypeId = 1 
                 THEN (TrnPayrollLine.TotalRegularWorkingAmount - TrnPayrollLine.TotalTardyAmount)
             WHEN MstEmployee.PayrollTypeId = 3 
-                THEN (MstEmployee.PayrollRate - (TrnPayrollLine.TotalAbsentAmount + TrnPayrollLine.TotalTardyAmount))
+                THEN (TrnPayrollLine.PayrollRate - (TrnPayrollLine.TotalAbsentAmount + TrnPayrollLine.TotalTardyAmount))
             ELSE 0
         END
     ) &lt;&gt; 0
