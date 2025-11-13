@@ -269,7 +269,7 @@ namespace whris.Application.Mobile.RepPayroll
                                INNER JOIN MstOtherDeduction
                                    ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
                        ) LoanSub
-                       WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
+                       WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId AND LoanSub.Balance <> 0 
                        FOR XML PATH(''), ROOT('root'), TYPE
                    ).value('.', 'NVARCHAR(MAX)'),
                    1,
