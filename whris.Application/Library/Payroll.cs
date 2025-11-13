@@ -1196,14 +1196,18 @@ namespace whris.Application.Library
                         var holidayHoursWithNoPayLegal = 0m;
                         var holidayHoursWithNoPaySpecial = 0m;
 
-                        if (line.Key.DayTypeId == 2)
+                        if (line.Key.PayrollTypeId > 1)
                         {
-                            holidayHoursWithNoPayLegal = line.Sum(x => x.RegularHours) - legalHours;
-                        }
 
-                        if (line.Key.DayTypeId == 3)
-                        {
-                            holidayHoursWithNoPaySpecial = line.Sum(x => x.RegularHours) - specialHours;
+                            if (line.Key.DayTypeId == 2)
+                            {
+                                holidayHoursWithNoPayLegal = line.Sum(x => x.RegularHours) - legalHours;
+                            }
+
+                            if (line.Key.DayTypeId == 3)
+                            {
+                                holidayHoursWithNoPaySpecial = line.Sum(x => x.RegularHours) - specialHours;
+                            }
                         }
 
                         var totalRegularWorkingHours = GetRegularWorkingHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.RegularHours)) + holidayHoursWithNoPayLegal + holidayHoursWithNoPaySpecial;
@@ -1253,14 +1257,38 @@ namespace whris.Application.Library
                                 line.Sum(x => x.OvertimeAmount) -
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));
+
+                        if (totalRegularRestdayAmount > 0) // Bro's Changes
+                        {
+                            var origTotalRegularRestDayAmount = totalRegularRestdayAmount;
+                            totalRegularRestdayAmount = regAmount * 0.30m;
+                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalRegularRestDayAmount - totalRegularRestdayAmount);
+                        }
+
                         var totalLegalHolidayRestdayAmount = GetLegalHolidayRestdayAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.TotalAmount) -
                                 line.Sum(x => x.OvertimeAmount) -
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));
+
+                        if (totalLegalHolidayRestdayAmount > 0) // Confirm this change with sir joel
+                        {                     
+                            var origTotalLegalRestDayAmount = totalLegalHolidayRestdayAmount;
+                            totalLegalHolidayRestdayAmount = regAmount * 1.6m;
+                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalLegalRestDayAmount - totalLegalHolidayRestdayAmount);
+                        }
+
                         var totalSpecialHolidayRestdayAmount = GetSpecialHolidayRestdayAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.TotalAmount) -
                                 line.Sum(x => x.OvertimeAmount) -
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));
+
+                        if (totalSpecialHolidayRestdayAmount > 0) // Confirm this change with sir joel
+                        {                          
+                            var origTotalSpecialRestDayAmount = totalSpecialHolidayRestdayAmount     ;
+                            totalSpecialHolidayRestdayAmount = regAmount * 0.50m;
+                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalSpecialRestDayAmount - totalSpecialHolidayRestdayAmount);
+                        }
+
                         var totalRegularOvertimeAmount = GetRegularOvertimeAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeAmount));
                         var totalLegalHolidayOvertimeAmount = GetLegalHolidayOvertimeAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeAmount));
                         var totalLegalHolidayOvertimeAmountDeduction = GetLegalHolidayOvertimeAmountDeduction(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeAmount));
