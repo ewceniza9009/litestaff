@@ -50,7 +50,7 @@ namespace whris.Application.Mobile.RepPayroll
                 STUFF(
                     (
                         SELECT 
-                            '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction + '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">' + CONVERT(NVARCHAR, FORMAT(Round(Amount, 2), 'N2')) + '</td></tr>'
+                            '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' + CONVERT(NVARCHAR, FORMAT(Round(Amount, 2), 'N2')) + '</td></tr>'
                         FROM (SELECT TrnPayrollOtherDeductionLine.PayrollOtherDeductionId, TrnPayrollOtherDeductionLine.EmployeeId, TrnPayrollOtherDeductionLine.OtherDeductionId, MstOtherDeduction.OtherDeduction, TrnPayrollOtherDeductionLine.EmployeeLoanId, TrnPayrollOtherDeductionLine.Amount
 			                FROM TrnPayrollOtherDeductionLine INNER JOIN MstOtherDeduction ON TrnPayrollOtherDeductionLine.OtherDeductionId = MstOtherDeduction.Id
 			            ) PayslipLengthwiseSub
@@ -162,7 +162,7 @@ namespace whris.Application.Mobile.RepPayroll
             SELECT 
                 '<tr><td style=""width: 135px; font-size: 12px;"">' 
                 + LeaveType + 
-                '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">' 
+                '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' 
                 + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) 
                 + '</td></tr>'
             FROM (
@@ -182,7 +182,7 @@ namespace whris.Application.Mobile.RepPayroll
         + STUFF(
                    (
                        SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherIncome
-                              + '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">'
+                              + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">'
                               + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
                        FROM
                        (
@@ -209,7 +209,7 @@ namespace whris.Application.Mobile.RepPayroll
         STUFF(
             (
                 SELECT 
-                    '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherDeduction + '</td><td style=""""width: 50px; text-align: right; font-size: 12px;"""">' + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
+                    '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherDeduction + '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">' + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
                 FROM (
                     SELECT 
                         TrnPayrollOtherDeductionLine.PayrollOtherDeductionId, 
@@ -235,7 +235,7 @@ namespace whris.Application.Mobile.RepPayroll
         (
             SELECT 
                 '<tr><td style=""width: 135px; font-size: 12px;"">' + OTLabel + 
-                '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">' + 
+                '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' + 
                 CONVERT(NVARCHAR, FORMAT(Round(OTAmount, 2), 'N2')) + '</td></tr>'
             FROM (
                 SELECT 'Regular OT' AS OTLabel, TrnPayrollLine.TotalRegularOvertimeAmount AS OTAmount
@@ -256,7 +256,7 @@ namespace whris.Application.Mobile.RepPayroll
 	 + STUFF(
                    (
                        SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction
-                              + '</td><td style=""width: 50px; text-align: right; font-size: 12px;"">'
+                              + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">'
                               + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) + '</td></tr>'
                        FROM
                        (
