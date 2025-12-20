@@ -199,12 +199,13 @@ namespace whris.UI.Pages.TrnPayroll
             return new JsonResult(new { Id = statusCode });
         }
 
-        public async Task<IActionResult> OnPostProcessTotals(int payrollId, int? employeeId)
+        public async Task<IActionResult> OnPostProcessTotals(int payrollId, int? employeeId, bool is13thMonth)
         {
             var editPayrollLines = new EditPayrollLinesByTotals()
             {
                 PayrollId = payrollId,
-                EmployeeId = employeeId
+                EmployeeId = employeeId,
+                Is13thMonth = is13thMonth
             };
 
             var statusCode = await _mediator.Send(editPayrollLines);

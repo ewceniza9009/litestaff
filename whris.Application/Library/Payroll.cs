@@ -1729,6 +1729,7 @@ namespace whris.Application.Library
             using (var ctx = new HRISContext())
             {
                 var payrollLines = ctx.TrnPayrollLines.Where(x => x.PayrollId == command.PayrollId);
+                var is13thMonth = command.Is13thMonth;
 
                 if (command.EmployeeId is not null)
                 {
@@ -1737,13 +1738,30 @@ namespace whris.Application.Library
 
                 foreach (var line in payrollLines)
                 {
-                    var grossIncome = line.TotalNetSalaryAmount + line.TotalOtherIncomeTaxable;
-                    var grossIncomeWithNonTaxable = grossIncome + line.TotalOtherIncomeNonTaxable;
-                    var mandatoryDeduction = line.Ssscontribution + line.Phiccontribution + line.Hdmfcontribution;
+                    decimal grossIncome;
+                    decimal grossIncomeWithNonTaxable;
+                    decimal mandatoryDeduction;
+               
+
+                    if (is13thMonth)
+                    {
+                        grossIncome = 0;
+                        grossIncomeWithNonTaxable = 0;
+                        mandatoryDeduction = 0;
+                        line.TotalNetSalaryAmount = 0;
+                        
+                    }
+                    else
+                    {
+                        grossIncome = line.TotalNetSalaryAmount + line.TotalOtherIncomeTaxable;
+                        grossIncomeWithNonTaxable = grossIncome + line.TotalOtherIncomeNonTaxable;
+                        mandatoryDeduction = line.Ssscontribution + line.Phiccontribution + line.Hdmfcontribution;
+                    }
 
                     line.GrossIncome = grossIncome;
                     line.GrossIncomeWithNonTaxable = grossIncomeWithNonTaxable;
                     line.NetIncome = grossIncomeWithNonTaxable - mandatoryDeduction - line.Tax - line.TotalOtherDeduction;
+                
                 }
 
                 await ctx.SaveChangesAsync();

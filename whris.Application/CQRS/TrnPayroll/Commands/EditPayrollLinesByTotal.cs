@@ -10,6 +10,7 @@ namespace whris.Application.CQRS.TrnPayroll.Commands
     {
         public int PayrollId { get; set; }
         public int? EmployeeId { get; set; }
+        public bool Is13thMonth { get; set; }
 
         public class EditPayrollLinesByTotalsHandler : IRequestHandler<EditPayrollLinesByTotals, int>
         {

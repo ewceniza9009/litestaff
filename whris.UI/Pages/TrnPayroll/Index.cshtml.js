@@ -679,7 +679,8 @@ function CmdProcessTotals() {
             data: {
                 __RequestVerificationToken: token,
                 "payrollId": $("#Id").val(),
-                "employeeId": $("#ProcessTotalsEmployeeId").val()
+                "employeeId": $("#ProcessTotalsEmployeeId").val(),
+                "is13thMonth": $("#is13thMonth").is(':checked'),
             },
             success: function (data) {
                 $("#processTotalsDetailModal").modal("hide");
