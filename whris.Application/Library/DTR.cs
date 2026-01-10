@@ -1016,7 +1016,7 @@ namespace whris.Application.Library
   
         public static decimal ComputeTardyUndertimeHours(TrnDtrline line, IEnumerable<MstShiftCodeDay> shiftCodeDays, HRISContext _context) 
         {
-            if (DateOnly.FromDateTime(line.Date) == DateOnly.Parse("05/03/2025"))
+            if (DateOnly.FromDateTime(line.Date) == DateOnly.Parse("12/31/2025"))
             {
 
             }
@@ -1122,6 +1122,10 @@ namespace whris.Application.Library
                     }
 
                     numberOfHours = shiftNumberOfHours - (actualNumberOfHours - deductHours);
+                    if(numberOfHours < 0)
+                    {
+                        numberOfHours = 0;
+                    }
                 }
                 else 
                 {
