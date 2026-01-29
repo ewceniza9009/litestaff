@@ -48,7 +48,7 @@ namespace whris.Application.Queries.TrnDtr
                 }
 
                 // Append ordering
-                sql += " ORDER BY e.FullName ASC";
+                sql += " ORDER BY e.FullName ASC, LogDateTime ASC";
 
                 // Execute the query with Dapper and return the results
                 return connection.Query<Record>(sql, parameters).ToList();
