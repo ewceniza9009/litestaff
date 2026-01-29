@@ -108,26 +108,22 @@ namespace whris.Application.Mobile.RepPayroll
         - TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount
         - TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount AS BasicSalary,
 
-    TrnPayrollLine.TotalLegalHolidayWorkingAmount
-        + TrnPayrollLine.TotalSpecialHolidayWorkingAmount
-        + TrnPayrollLine.TotalRegularRestdayAmount
-        + TrnPayrollLine.TotalLegalHolidayRestdayAmount
-        + TrnPayrollLine.TotalSpecialHolidayRestdayAmount
-        + TrnPayrollLine.TotalRegularOvertimeAmount
+         TrnPayrollLine.TotalRegularOvertimeAmount
         + TrnPayrollLine.TotalLegalHolidayOvertimeAmount
         + TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
-        + TrnPayrollLine.TotalRegularNightAmount
-        + TrnPayrollLine.TotalLegalHolidayNightAmount
-        + TrnPayrollLine.TotalSpecialHolidayNightAmount
         + TrnPayrollLine.TotalRegularNightOvertimeAmount
         + TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount
         + TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount AS OtherSalary,
 
     TrnPayrollLine.TotalLegalHolidayWorkingHours,
+    TrnPayrollLine.TotalLegalHolidayOvertimeHours,
+    TrnPayrollLine.TotalLegalHolidayOvertimeAmount,
     TrnPayrollLine.TotalSpecialHolidayWorkingHours,
+    TrnPayrollLine.TotalSpecialHolidayOvertimeHours,
+    TrnPayrollLine.TotalSpecialHolidayOvertimeAmount,
     TrnPayrollLine.TotalRegularNightHours, 
     TrnPayrollLine.TotalRegularRestdayHours,   
-    TrnPayrollLine.TotalRegularOvertimeHours, 
+    TrnPayrollLine.TotalRegularOvertimeHours,
     TrnPayrollLine.TotalSalaryAmount, 
     TrnPayrollLine.TotalTardyAmount, 
     TrnPayrollLine.TotalAbsentAmount, 
@@ -160,9 +156,9 @@ namespace whris.Application.Mobile.RepPayroll
     STUFF(
         (
             SELECT 
-                '<tr><td style=""width: 135px; font-size: 12px;"">' 
+                '<tr><td style=""""width: 135px; font-size: 12px;"""">' 
                 + LeaveType + 
-                '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' 
+                '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">' 
                 + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) 
                 + '</td></tr>'
             FROM (
@@ -181,8 +177,8 @@ namespace whris.Application.Mobile.RepPayroll
 ('<table>'
         + STUFF(
                    (
-                       SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherIncome
-                              + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">'
+                       SELECT '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherIncome
+                              + '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">'
                               + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
                        FROM
                        (
@@ -209,7 +205,7 @@ namespace whris.Application.Mobile.RepPayroll
         STUFF(
             (
                 SELECT 
-                    '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherDeduction + '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">' + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
+                    '<tr><td style=""""""""width: 135px; font-size: 12px;"""""""">' + OtherDeduction + '</td><td style=""""""""width: 70px; text-align: right; font-size: 12px;"""""""">' + CONVERT(NVARCHAR, FORMAT(ROUND(Amount, 2), 'N2')) + '</td></tr>'
                 FROM (
                     SELECT 
                         TrnPayrollOtherDeductionLine.PayrollOtherDeductionId, 
@@ -234,18 +230,48 @@ namespace whris.Application.Mobile.RepPayroll
     STUFF(
         (
             SELECT 
-                '<tr><td style=""width: 135px; font-size: 12px;"">' + OTLabel + 
-                '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' + 
-                CONVERT(NVARCHAR, FORMAT(Round(OTAmount, 2), 'N2')) + '</td></tr>'
+                '<tr>' +
+                    '<td style=""width:135px; font-size:12px;"">' + OTLabel + '</td>' +
+                    '<td style=""width:50px; text-align:right; font-size:12px;"">' +
+                        CONVERT(NVARCHAR, FORMAT(ROUND(OTHours, 2), 'N2')) +
+                    '</td>' +
+                    '<td style=""width:70px; text-align:right; font-size:12px;"">' +
+                        CONVERT(NVARCHAR, FORMAT(ROUND(OTAmount, 2), 'N2')) +
+                    '</td>' +
+                '</tr>'
             FROM (
-                SELECT 'Regular OT' AS OTLabel, TrnPayrollLine.TotalRegularOvertimeAmount AS OTAmount
+                SELECT 
+                    'Regular OT' AS OTLabel,
+                    TrnPayrollLine.TotalRegularOvertimeHours AS OTHours,
+                    TrnPayrollLine.TotalRegularOvertimeAmount AS OTAmount
                 UNION ALL
-                SELECT 'Legal Holiday OT', TrnPayrollLine.TotalLegalHolidayOvertimeAmount
+                SELECT 
+                    'Legal Holiday OT',
+                    TrnPayrollLine.TotalLegalHolidayOvertimeHours,
+                    TrnPayrollLine.TotalLegalHolidayOvertimeAmount
                 UNION ALL
-                SELECT 'Special Holiday OT', TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
+                SELECT 
+                    'Special Holiday OT',
+                    TrnPayrollLine.TotalSpecialHolidayOvertimeHours,
+                    TrnPayrollLine.TotalSpecialHolidayOvertimeAmount
+                UNION ALL
+                SELECT 
+                    'Regular Night OT',
+                    NULL,
+                    TrnPayrollLine.TotalRegularNightOvertimeAmount
+                UNION ALL
+                SELECT 
+                    'Legal Holiday Night OT',
+                    NULL,
+                    TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount
+                UNION ALL
+                SELECT 
+                    'Special Holiday Night OT',
+                    NULL,
+                    TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount
             ) AS OTSub
             WHERE OTAmount > 0
-            FOR XML PATH(''), ROOT('root'), TYPE
+            FOR XML PATH(''), TYPE
         ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
     ) +
     '</table>'
@@ -255,8 +281,8 @@ namespace whris.Application.Mobile.RepPayroll
 	('<table>'
 	 + STUFF(
                    (
-                       SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction
-                              + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">'
+                       SELECT '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherDeduction
+                              + '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">'
                               + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) + '</td></tr>'
                        FROM
                        (
@@ -343,7 +369,11 @@ GROUP BY
     TrnPayrollLine.TotalLegalHolidayNightOvertimeAmount,
     TrnPayrollLine.TotalSpecialHolidayNightOvertimeAmount,
     TrnPayrollLine.TotalLegalHolidayWorkingHours,
+    TrnPayrollLine.TotalLegalHolidayOvertimeHours,
+    TrnPayrollLine.TotalLegalHolidayOvertimeAmount,
     TrnPayrollLine.TotalSpecialHolidayWorkingHours,
+    TrnPayrollLine.TotalSpecialHolidayOvertimeHours,
+    TrnPayrollLine.TotalSpecialHolidayOvertimeAmount,
     TrnPayrollLine.TotalRegularNightHours,
     TrnPayrollLine.TotalRegularRestdayHours,
     TrnPayrollLine.TotalRegularOvertimeHours,
