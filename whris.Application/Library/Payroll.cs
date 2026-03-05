@@ -1258,11 +1258,14 @@ namespace whris.Application.Library
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));
 
+                        decimal regularRestdayAmount = 0;
                         if (totalRegularRestdayAmount > 0) // Bro's Changes
                         {
                             var origTotalRegularRestDayAmount = totalRegularRestdayAmount;
-                            totalRegularRestdayAmount = regAmount * 0.30m;
-                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalRegularRestDayAmount - totalRegularRestdayAmount);
+                            // Eggs Changes
+                            regularRestdayAmount = regAmount * 0.30m;
+                            //totalRegularRestdayAmount = regAmount * 0.30m;
+                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalRegularRestDayAmount - regularRestdayAmount);
                         }
 
                         var totalLegalHolidayRestdayAmount = GetLegalHolidayRestdayAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.TotalAmount) -
@@ -1342,7 +1345,7 @@ namespace whris.Application.Library
                         newPayrollLine.TotalTardyLateHours += totalTardyLateHours;
                         newPayrollLine.TotalTardyUndertimeHours += totalTardyUndertimeHours;
                         newPayrollLine.TotalRegularWorkingAmount += (totalSalaryAmount -
-                            totalRegularRestdayAmount -
+                            regularRestdayAmount -
                             totalLegalHolidayWorkingAmount -
                             totalSpecialHolidayWorkingAmount -
                             totalLegalHolidayRestdayAmount -
