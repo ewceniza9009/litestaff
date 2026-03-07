@@ -2765,7 +2765,12 @@ namespace whris.Application.Library
                                             continue;
                                         }
 
-                                        if (dline.TimeIn1 != null && (logDateTime == shiftTimeOut2Flex) && dline.TimeOut2 == null)
+                                        //if (dline.TimeIn1 != null && (logDateTime == shiftTimeOut2Flex) && dline.TimeOut2 == null)
+                                        //{
+                                        //    dline.TimeOut2 = logDateTime;
+                                        //    isWorkDayCompletedFlex = true;
+                                        //}
+                                        if (dline.TimeIn1 != null && dline.TimeOut2 == null)
                                         {
                                             dline.TimeOut2 = logDateTime;
                                             isWorkDayCompletedFlex = true;

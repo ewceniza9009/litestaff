@@ -1258,14 +1258,14 @@ namespace whris.Application.Library
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));
 
-                        decimal regularRestdayAmount = 0;
+                        decimal addRegularWorkingAmount = 0;
                         if (totalRegularRestdayAmount > 0) // Bro's Changes
                         {
                             var origTotalRegularRestDayAmount = totalRegularRestdayAmount;
                             // Eggs Changes
-                            regularRestdayAmount = regAmount * 0.30m;
-                            //totalRegularRestdayAmount = regAmount * 0.30m;
-                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalRegularRestDayAmount - regularRestdayAmount);
+                            totalRegularRestdayAmount = regAmount * 0.30m;
+                            addRegularWorkingAmount = origTotalRegularRestDayAmount;
+                            totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalRegularRestDayAmount - totalRegularRestdayAmount);
                         }
 
                         var totalLegalHolidayRestdayAmount = GetLegalHolidayRestdayAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.TotalAmount) -
@@ -1307,7 +1307,15 @@ namespace whris.Application.Library
                         var totalLegalHolidayNightOvertimeAmountDeduction = GetLegalHolidayNightOvertimeAmountDeduction(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightAmount));
                         var totalSpecialHolidayNightOvertimeAmount = GetSpecialHolidayNightOvertimeAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightAmount));
                         var totalSpecialHolidayNightOvertimeAmountDeduction = GetSpecialHolidayNightOvertimeAmountDeduction(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightAmount));
-                        var totalSalaryAmount = line.Sum(x => x.TotalAmount);
+                        decimal totalSalaryAmount = 0;
+                        if(line.Key.PayrollTypeId == 3)
+                        {
+                            totalSalaryAmount = line.Sum(x => x.TotalAmount) > 0 ? addRegularWorkingAmount == 0 ? line.Key.PayrollRate + addRegularWorkingAmount : addRegularWorkingAmount : 0;
+                        }
+                        else
+                        {
+                            totalSalaryAmount = line.Sum(x => x.TotalAmount);
+                        }
 
                         var holidayTotalLateHours = 0m;
                         var holidayTotalUnderTimeHours = 0m;
@@ -1345,7 +1353,7 @@ namespace whris.Application.Library
                         newPayrollLine.TotalTardyLateHours += totalTardyLateHours;
                         newPayrollLine.TotalTardyUndertimeHours += totalTardyUndertimeHours;
                         newPayrollLine.TotalRegularWorkingAmount += (totalSalaryAmount -
-                            regularRestdayAmount -
+                            totalRegularRestdayAmount -
                             totalLegalHolidayWorkingAmount -
                             totalSpecialHolidayWorkingAmount -
                             totalLegalHolidayRestdayAmount -
@@ -1492,6 +1500,12 @@ namespace whris.Application.Library
                                     newPayrollLine.TotalSalaryAmount = line.Key.PayrollRate;
                                     newPayrollLine.TotalAbsentAmount = 0;
                                     newPayrollLine.TotalNetSalaryAmount = line.Key.PayrollRate;
+                                }
+
+                                if (line.Key.PayrollTypeId == 3)
+                                {
+                                    newPayrollLine.TotalSalaryAmount = line.Key.PayrollRate + addRegularWorkingAmount;
+                                    newPayrollLine.TotalNetSalaryAmount = newPayrollLine.TotalSalaryAmount - (newPayrollLine.TotalTardyAmount + newPayrollLine.TotalAbsentAmount);
                                 }
                             }
 
