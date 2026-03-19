@@ -11,13 +11,13 @@ namespace whris.Application.Mobile
 
         public async Task<bool> ResultAsync()
         {
-            var sql = "SELECT Id FROM dbo.MstEmployee WHERE dbo.Encode(dbo.MstEmployee.Id) = @MobileCode";
+            var sql = "SELECT TOP 1 1 FROM dbo.MstEmployee WHERE dbo.Encode(Id) = @MobileCode";
 
             using (var connection = new SqlConnection(Config.ConnectionString))
             {
-                var result = await connection.QueryAsync<LoginRecord>(sql, new { MobileCode });
+                var result = await connection.QueryFirstOrDefaultAsync<int?>(sql, new { MobileCode });
 
-                return result.Any();
+                return result.HasValue;
             }
         }
 
