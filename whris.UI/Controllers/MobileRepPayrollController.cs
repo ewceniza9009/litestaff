@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using whris.Application.Common;
 using whris.Application.Mobile;
 using whris.Application.Mobile.RepPayroll;
@@ -54,6 +54,15 @@ namespace whris.UI.Controllers
                 MobileCode = Code
             };
             return Json(await dtrslip.ResultAsync());
+        }
+
+        public async Task<JsonResult> GetMemos(string Code)
+        {
+            var memo = new Memo()
+            {
+                MobileCode = Code
+            };
+            return Json(await memo.ResultAsync());
         }
 
 

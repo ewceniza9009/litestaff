@@ -5,7 +5,8 @@ namespace whris.UI.Services
 {
     public class External
     {
-        static IServiceProvider? services = null;
+        private static IServiceProvider? services = null;
+        private static readonly object _fileLock = new object();
 
         public static IServiceProvider? Services
         {
@@ -29,20 +30,25 @@ namespace whris.UI.Services
             }
         }
 
-        public static SysCurrentDto? CurrentUserSession =>  Current?.Session.GetObject<SysCurrentDto>(SessionHelper.SessionKey);
+        public static SysCurrentDto? CurrentUserSession => Current?.Session.GetObject<SysCurrentDto>(SessionHelper.SessionKey);
 
         public static void WriteSettings()
         {
-            if ((Current?.User?.Claims?.Count() ?? 0) > 0) 
+            if ((Current?.User?.Claims?.Count() ?? 0) > 0)
             {
                 var email = Current?.User?.Claims?.ToList()[1].Value ?? "noemail@noemail.com";
-                var settingsFile = JsonConvert.SerializeObject(CurrentUserSession);
 
                 if (!string.IsNullOrEmpty(email.Trim()))
                 {
-                    File.WriteAllText($@"{Path.GetTempPath()}\{email}.json", settingsFile);
+                    var settingsFile = JsonConvert.SerializeObject(CurrentUserSession);
+                    var filePath = Path.Combine(Path.GetTempPath(), $"{email}.json");
+
+                    lock (_fileLock)
+                    {
+                        File.WriteAllText(filePath, settingsFile);
+                    }
                 }
-            }           
+            }
         }
     }
 }
