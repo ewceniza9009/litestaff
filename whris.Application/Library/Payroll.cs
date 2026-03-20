@@ -1310,7 +1310,15 @@ namespace whris.Application.Library
                         decimal totalSalaryAmount = 0;
                         if(line.Key.PayrollTypeId == 3)
                         {
-                            totalSalaryAmount = line.Sum(x => x.TotalAmount) > 0 ? addRegularWorkingAmount == 0 ? line.Key.PayrollRate + addRegularWorkingAmount : addRegularWorkingAmount : 0;
+                            decimal amount = line.Sum(x => x.TotalAmount);
+                            if (line.Key.DayTypeId > 1)
+                            {
+                                totalSalaryAmount = 0;
+                            }
+                            else
+                            {
+                                totalSalaryAmount = amount > 0 ? addRegularWorkingAmount == 0 ? line.Key.PayrollRate + addRegularWorkingAmount : addRegularWorkingAmount : 0;
+                            }
                         }
                         else
                         {
@@ -1353,7 +1361,7 @@ namespace whris.Application.Library
                         newPayrollLine.TotalTardyLateHours += totalTardyLateHours;
                         newPayrollLine.TotalTardyUndertimeHours += totalTardyUndertimeHours;
                         newPayrollLine.TotalRegularWorkingAmount += (totalSalaryAmount -
-                            totalRegularRestdayAmount -
+                            //totalRegularRestdayAmount -
                             totalLegalHolidayWorkingAmount -
                             totalSpecialHolidayWorkingAmount -
                             totalLegalHolidayRestdayAmount -
@@ -1504,7 +1512,7 @@ namespace whris.Application.Library
 
                                 if (line.Key.PayrollTypeId == 3)
                                 {
-                                    newPayrollLine.TotalSalaryAmount = line.Key.PayrollRate + addRegularWorkingAmount;
+                                    newPayrollLine.TotalSalaryAmount = dblPayrollRate + (addRegularWorkingAmount - newPayrollLine.TotalRegularRestdayAmount);
                                     newPayrollLine.TotalNetSalaryAmount = newPayrollLine.TotalSalaryAmount - (newPayrollLine.TotalTardyAmount + newPayrollLine.TotalAbsentAmount);
                                 }
                             }

@@ -118,25 +118,34 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="customSqlQuery1.Sql" xml:space="preserve">
-    <value>SELECT TrnPayrollLine.PayrollId, 
-	TrnPayroll.PayrollNumber, 
-	TrnPayroll.PayrollDate, 
-	MstEmployee.ATMAccountNumber, 
-	MstEmployee.FullName, 
-	ROUND(TrnPayrollLine.NetIncome, 2) AS NetIncome1,	
-	IIF(@ParamBranchId = 0, 'All', ISNULL(dbo.MstBranch.Branch, 'All')) AS BranchName
-FROM ((TrnPayrollLine INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id) 
-	INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id) 
-	INNER JOIN MstPayrollGroup ON TrnPayroll.PayrollGroupId = MstPayrollGroup.Id
-	INNER JOIN MstBranch ON MstEmployee.BranchId = MstBranch.Id
-WHERE TrnPayrollLine.PayrollId = ISNULL(@ParamPayrollId,0) AND 
-	MstEmployee.ATMAccountNumber Is Not Null AND 
-	IsNull(Trim(MstEmployee.ATMAccountNumber), '') &lt;&gt; '' AND 
-	TrnPayrollLine.NetIncome &gt; 0 AND 
-	(@ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
-ORDER BY MstEmployee.FullName;</value>
+    <value>SELECT 
+    TrnPayrollLine.PayrollId, 
+    TrnPayroll.PayrollNumber, 
+    TrnPayroll.PayrollDate, 
+    MstEmployee.ATMAccountNumber, 
+    MstEmployee.FullName, 
+    MstBranch.Branch,
+    MstDepartment.Department,
+    MstPosition.Position,
+    ROUND(TrnPayrollLine.NetIncome, 2) AS NetIncome1,    
+    IIF(@ParamBranchId = 0, 'All', ISNULL(MstBranch.Branch, 'All')) AS BranchName
+FROM TrnPayrollLine 
+INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id
+INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id
+INNER JOIN MstPayrollGroup ON TrnPayroll.PayrollGroupId = MstPayrollGroup.Id
+INNER JOIN MstBranch ON MstEmployee.BranchId = MstBranch.Id
+INNER JOIN MstDepartment ON MstEmployee.DepartmentId = MstDepartment.Id
+INNER JOIN MstPosition ON MstEmployee.PositionId = MstPosition.Id
+WHERE 
+    TrnPayrollLine.PayrollId = ISNULL(@ParamPayrollId, 0) AND 
+    MstEmployee.ATMAccountNumber IS NOT NULL AND 
+    ISNULL(TRIM(MstEmployee.ATMAccountNumber), '') &lt;&gt; '' AND 
+    TrnPayrollLine.NetIncome &gt; 0 AND 
+    (@ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
+ORDER BY 
+    MstEmployee.FullName;</value>
   </data>
   <data name="sqlDataSource1.ResultSchemaSerializable" xml:space="preserve">
-    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iUGF5cm9sbElkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbE51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkFUTUFjY291bnROdW1iZXIiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTmV0SW5jb21lMSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQnJhbmNoTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
+    <value>PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlF1ZXJ5Ij48RmllbGQgTmFtZT0iUGF5cm9sbElkIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iUGF5cm9sbE51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQYXlyb2xsRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkFUTUFjY291bnROdW1iZXIiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQnJhbmNoIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUG9zaXRpb24iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTmV0SW5jb21lMSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQnJhbmNoTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjwvVmlldz48L0RhdGFTZXQ+</value>
   </data>
 </root>

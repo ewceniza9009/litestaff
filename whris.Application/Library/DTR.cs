@@ -299,18 +299,32 @@ namespace whris.Application.Library
                 {
                     if (line.TimeIn1 == null && line.TimeOut1 == null)
                     {
-                        //line.HalfdayAbsent = true;
-                        //return shiftCodeDay.NumberOfHours / 2;
-                        line.HalfdayAbsent = false;
-                        return 0;
+                      
+                        if (line.Employee.IsFlexBreak == false)
+                        {
+                            line.HalfdayAbsent = false;
+                            return 0;
+                        }
+                        else
+                        {
+                            line.HalfdayAbsent = true;
+                            return shiftCodeDay.NumberOfHours / 2;
+                        }
                     }
 
                     if (line.TimeIn2 == null && line.TimeOut2 == null)
                     {
-                        //line.HalfdayAbsent = true;
-                        //return shiftCodeDay.NumberOfHours / 2;
-                        line.HalfdayAbsent = false;
-                        return 0;
+                        
+                        if (line.Employee.IsFlexBreak == false)
+                        {
+                            line.HalfdayAbsent = false;
+                            return 0;
+                        }
+                        else
+                        {
+                            line.HalfdayAbsent = true;
+                            return shiftCodeDay.NumberOfHours / 2;
+                        }
                     }
 
                     return shiftCodeDay.NumberOfHours;
@@ -841,6 +855,13 @@ namespace whris.Application.Library
                 .ToString("HH:mm tt");
             var shiftTimeOut1 = DateTime.Parse($"{line.Date.ToString("MM/dd/yyyy")} {datTimeOut1}");
 
+            var datTimeOut2 = (shiftCodeDays
+                .FirstOrDefault(x => x.ShiftCodeId == line.ShiftCodeId &&
+                    x.Day.ToUpper() == line.Date.ToString("dddd").ToUpper())
+                ?.TimeOut2 ?? DateTime.Parse($"{DateTime.Now.Date.ToString("MM/dd/yyyy")} 12:00 AM"))
+                .ToString("HH:mm tt");
+            var shiftTimeOut2 = DateTime.Parse($"{line.Date.ToString("MM/dd/yyyy")} {datTimeOut2}");
+
             var numberOfGraceMinutes = shiftCodeDays
                 .FirstOrDefault(x => x.ShiftCodeId == line.ShiftCodeId &&
                     x.Day.ToUpper() == line.Date.ToString("dddd").ToUpper())
@@ -915,6 +936,14 @@ namespace whris.Application.Library
                     {
                         shiftTimeOut1 = shiftTimeOut1.AddMinutes((double)numberOfGraceMinutes);
                         numberOfHours = numberOfHours + (decimal)((line?.TimeIn1 ?? DefaultDate) - shiftTimeOut1).TotalHours;
+                    }
+                }
+                else
+                {
+                    if (line?.TimeIn1 is null && line?.TimeOut1 is null && line?.TimeIn2 is not null && line?.TimeOut2 is not null)
+                    {
+                        shiftTimeOut2 = shiftTimeOut2.AddMinutes((double)numberOfGraceMinutes);
+                        numberOfHours = numberOfHours + (decimal)(shiftTimeOut2 - (line?.TimeIn2 ?? DefaultDate)).TotalHours;
                     }
                 }
             }
@@ -1009,6 +1038,13 @@ namespace whris.Application.Library
                 if (isEmpFlex)
                 {
                     return 0;
+                }
+                else
+                {
+                    if(line?.Employee.IsFlexBreak == true)
+                    {
+                        return 0;
+                    }
                 }
 
                 return Math.Round(numberOfHours, 5);
@@ -1317,7 +1353,14 @@ namespace whris.Application.Library
 
             if (numberOfHours > 0)
             {
-                return Math.Round(numberOfHours, 5);
+                if (line?.Employee.IsFlexBreak == true)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return Math.Round(numberOfHours, 5);
+                }
             }
 
             return Math.Round(numberOfHours, 5);
@@ -2478,6 +2521,11 @@ namespace whris.Application.Library
                         && x.Date.Date == dtrDate.Date)
                     ?.ShiftCodeId ?? 0;
 
+            var employees = from d in _context.MstEmployees
+                            where d.Id == employeeId
+                            select d;
+            bool isFlexBreak = employees?.FirstOrDefault()?.IsFlexBreak ?? false;
+
             if (changeShiftCodeId > 0)
             {
                 return changeShiftCodeId;
@@ -2490,7 +2538,14 @@ namespace whris.Application.Library
 
             if (employeeShiftCodeDays is not null && employeeShiftCodeDays.Any())
             {
-                result = employeeShiftCodeDays?.OrderByDescending(x => x.Interval)?.FirstOrDefault()?.ShiftCodeId ?? result;
+                if (!isFlexBreak)
+                {
+                    result = employeeShiftCodeDays?.OrderByDescending(x => x.Interval)?.FirstOrDefault()?.ShiftCodeId ?? result;
+                }
+                else
+                {
+                    result = employeeShiftCodeDays?.OrderBy(x => x.Interval)?.FirstOrDefault()?.ShiftCodeId ?? result;
+                }
             }
 
             return result;
@@ -2836,6 +2891,14 @@ namespace whris.Application.Library
                                                         }
                                                         if (currentOut?.LogDateTime is DateTime dt1)
                                                         {
+                                                            if (isFlexBreak)
+                                                            {
+                                                                var currentIn = currentDayLogs.Where(a => a.LogType == "1").FirstOrDefault();
+                                                                if (currentIn?.LogDateTime is DateTime dt2)
+                                                                {
+                                                                    empDLine.TimeIn2 = currentIn.LogDateTime;
+                                                                }
+                                                            }
                                                             empDLine.TimeOut2 = currentOut.LogDateTime;
                                                         }
 
@@ -2848,6 +2911,52 @@ namespace whris.Application.Library
 
                                                             var employeeShiftCodeDays = employeeShiftCodeDaysSetup.Result(isLongShift ? log.LogType : null);
                                                             empDLine.ShiftCodeId = QuickChangeShiftv3(_context, employeeShiftCodeDays, employeeShiftCodes, empDLine.EmployeeId, empDLine.Date, 0, empDLine.ShiftCodeId);
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (isFlexBreak)
+                                                    {
+                                                        var empDLines = dtrLines
+                                                                    .Where(x => x.EmployeeId == empId
+                                                                        && DateOnly.FromDateTime(x.Date) == log.Date);
+                                                        foreach (var empDLine in empDLines)
+                                                        {
+                                                            var emp = employees.FirstOrDefault(a => a.Id == empId);
+                                                            if (emp == null) return;
+                                                            string biometricIdNumber = emp.BiometricIdNumber;
+
+                                                            DateTime startDate = log.Date.ToDateTime(TimeOnly.MinValue);
+
+                                                            DateTime endDate = startDate.AddDays(1);
+
+                                                            var currentDayLogs = _context.TrnLogs
+                                                                .Where(d => d.BiometricIdNumber == biometricIdNumber
+                                                                       && d.LogDateTime >= startDate
+                                                                       && d.LogDateTime <= endDate);
+
+                                                            var currentOut = currentDayLogs.Where(a => a.LogType == "O").FirstOrDefault();
+                                                            if (currentOut?.LogDateTime is DateTime dt1)
+                                                            {
+                                                                var currentIn = currentDayLogs.Where(a => a.LogType == "1").FirstOrDefault();
+                                                                    if (currentIn?.LogDateTime is DateTime dt2)
+                                                                    {
+                                                                        empDLine.TimeIn2 = currentIn.LogDateTime;
+                                                                    }
+                                                                empDLine.TimeOut2 = currentOut.LogDateTime;
+                                                            }
+
+                                                            var employeeShiftCodeDaysSetup = new EmployeeShiftCodeDay();
+                                                            if (employeeShiftCodes is not null && dline is not null)
+                                                            {
+                                                                employeeShiftCodeDaysSetup.ParamEmployeeId = empDLine.EmployeeId;
+                                                                employeeShiftCodeDaysSetup.ParamDay = empDLine.Date.ToString("dddd");
+                                                                employeeShiftCodeDaysSetup.ParamLogTimeIn1 = DateTime.Parse($"{log.Date:d} {string.Format("{0:hh:mm tt}", log.Time)}");
+
+                                                                var employeeShiftCodeDays = employeeShiftCodeDaysSetup.Result(isLongShift ? log.LogType : null);
+                                                                empDLine.ShiftCodeId = QuickChangeShiftv3(_context, employeeShiftCodeDays, employeeShiftCodes, empDLine.EmployeeId, empDLine.Date, 0, empDLine.ShiftCodeId);
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -4059,39 +4168,14 @@ namespace whris.Application.Library
 
                             if (line.HalfdayAbsent)
                             {
-                                if (line.TardyLateHours > line.TardyUndertimeHours)
+                                if(line.Employee.IsFlexBreak == false)
                                 {
-                                    var tardyLateHours = line.TardyLateHours;
-                                    line.TardyLateHours = 0;
-
-                                    if (line.TimeOut1 == null && line.TimeIn2 == null)
+                                    if (line.TardyLateHours > line.TardyUndertimeHours)
                                     {
-                                        line.TardyLateHours = tardyLateHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyLateHours;
-
-                                        if (tardyLateHours > ((line.RegularHours / 2) + 1))
-                                        {
-                                            line.TardyLateHours = tardyLateHours - 1;
-                                        }
-
-                                        line.TardyAmount = ComputeTardyAmount(line, _context);
-
-                                        //line.NetTotalHours++;
-                                        line.RegularHours = line.RegularHours / 2;
-                                        line.GrossTotalHours = line.NetTotalHours;
-                                        line.NetAmount = ComputeNetAmount(line);
-
+                                        var tardyLateHours = line.TardyLateHours;
                                         line.TardyLateHours = 0;
-                                        line.TardyAmount = 0;
 
-                                        if (line.NightHours > line.RegularHours)
-                                        {
-                                            line.NightHours = line.RegularHours;
-                                            line.NightAmount = ComputeNightAmount(line, isEligibleForHolidayPay);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (tardyLateHours > (line.RegularHours / 2))
+                                        if (line.TimeOut1 == null && line.TimeIn2 == null)
                                         {
                                             line.TardyLateHours = tardyLateHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyLateHours;
 
@@ -4109,46 +4193,45 @@ namespace whris.Application.Library
 
                                             line.TardyLateHours = 0;
                                             line.TardyAmount = 0;
+
+                                            if (line.NightHours > line.RegularHours)
+                                            {
+                                                line.NightHours = line.RegularHours;
+                                                line.NightAmount = ComputeNightAmount(line, isEligibleForHolidayPay);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (tardyLateHours > (line.RegularHours / 2))
+                                            {
+                                                line.TardyLateHours = tardyLateHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyLateHours;
+
+                                                if (tardyLateHours > ((line.RegularHours / 2) + 1))
+                                                {
+                                                    line.TardyLateHours = tardyLateHours - 1;
+                                                }
+
+                                                line.TardyAmount = ComputeTardyAmount(line, _context);
+
+                                                //line.NetTotalHours++;
+                                                line.RegularHours = line.RegularHours / 2;
+                                                line.GrossTotalHours = line.NetTotalHours;
+                                                line.NetAmount = ComputeNetAmount(line);
+
+                                                line.TardyLateHours = 0;
+                                                line.TardyAmount = 0;
+                                            }
                                         }
                                     }
-                                }
 
-                                if (line.TardyUndertimeHours > line.TardyLateHours)
-                                {
-                                    var tardyUndertimeHours = line.TardyUndertimeHours;
-                                    line.TardyUndertimeHours = 0;
-
-                                    if (line.TimeOut1 == null && line.TimeIn2 == null)
+                                    if (line.TardyUndertimeHours > line.TardyLateHours)
                                     {
-                                        line.TardyUndertimeHours = (line.RegularHours / 2);//tardyUndertimeHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyUndertimeHours;
-
-                                        if (tardyUndertimeHours > ((line.RegularHours / 2) + 1))
-                                        {
-                                            line.TardyUndertimeHours = tardyUndertimeHours - 1;
-                                        }
-
-                                        line.TardyAmount = ComputeTardyAmount(line, _context);
-
-                                        line.NetTotalHours = ComputeNetTotalHours(line);
-                                        //line.NetTotalHours++;
-                                        line.RegularHours = line.RegularHours / 2;
-                                        line.GrossTotalHours = line.NetTotalHours;
-                                        line.NetAmount = ComputeNetAmount(line);
-
+                                        var tardyUndertimeHours = line.TardyUndertimeHours;
                                         line.TardyUndertimeHours = 0;
-                                        line.TardyAmount = 0;
 
-                                        if (line.NightHours > line.RegularHours)
+                                        if (line.TimeOut1 == null && line.TimeIn2 == null)
                                         {
-                                            line.NightHours = line.RegularHours;
-                                            line.NightAmount = ComputeNightAmount(line, isEligibleForHolidayPay);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (tardyUndertimeHours > (line.RegularHours / 2))
-                                        {
-                                            line.TardyUndertimeHours = tardyUndertimeHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyUndertimeHours;
+                                            line.TardyUndertimeHours = (line.RegularHours / 2);//tardyUndertimeHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyUndertimeHours;
 
                                             if (tardyUndertimeHours > ((line.RegularHours / 2) + 1))
                                             {
@@ -4165,11 +4248,40 @@ namespace whris.Application.Library
 
                                             line.TardyUndertimeHours = 0;
                                             line.TardyAmount = 0;
+
+                                            if (line.NightHours > line.RegularHours)
+                                            {
+                                                line.NightHours = line.RegularHours;
+                                                line.NightAmount = ComputeNightAmount(line, isEligibleForHolidayPay);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (tardyUndertimeHours > (line.RegularHours / 2))
+                                            {
+                                                line.TardyUndertimeHours = tardyUndertimeHours > (line.RegularHours / 2) ? (line.RegularHours / 2) : tardyUndertimeHours;
+
+                                                if (tardyUndertimeHours > ((line.RegularHours / 2) + 1))
+                                                {
+                                                    line.TardyUndertimeHours = tardyUndertimeHours - 1;
+                                                }
+
+                                                line.TardyAmount = ComputeTardyAmount(line, _context);
+
+                                                line.NetTotalHours = ComputeNetTotalHours(line);
+                                                //line.NetTotalHours++;
+                                                line.RegularHours = line.RegularHours / 2;
+                                                line.GrossTotalHours = line.NetTotalHours;
+                                                line.NetAmount = ComputeNetAmount(line);
+
+                                                line.TardyUndertimeHours = 0;
+                                                line.TardyAmount = 0;
+                                            }
                                         }
                                     }
+                                    line.TardyAmount = ComputeTardyAmount(line, _context);
                                 }
 
-                                line.TardyAmount = ComputeTardyAmount(line, _context);
                                 line.TotalAmount = line.NetAmount;
                             }
                         }
