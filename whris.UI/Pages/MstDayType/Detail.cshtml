@@ -147,7 +147,7 @@
                 .Filterable(false)
                 .Hidden();
             columns.ForeignKey(column => column.BranchId, x => x.Read(b => b.Url("/MstDayType/Detail?handler=Branches")), "Id", "Branch")
-                .Width(150)
+                .Width(400)
                 .Title("Branches")
                 .Filterable(false)
                 .HtmlAttributes(new { onchange = "onBranchChange()" });

@@ -3688,17 +3688,21 @@ namespace whris.Application.Library
                                                 }
                                                 else
                                                 {
-                                                    if (logDateTime > shiftCodeDay?.TimeIn1)
+                                                    //Eggs Changes
+                                                    if (log.LogType == "O")
                                                     {
-                                                        if (dline.TimeOut2 is null)
+                                                        if (logDateTime > shiftCodeDay?.TimeIn1)
                                                         {
-                                                            dline.TimeOut2 = logDateTime;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (dline.TimeOut2 is not null && logDateTime > (dline.TimeOut2 ?? DefaultDate))
+                                                            if (dline.TimeOut2 is null)
                                                             {
                                                                 dline.TimeOut2 = logDateTime;
+                                                            }
+                                                            else
+                                                            {
+                                                                if (dline.TimeOut2 is not null && logDateTime > (dline.TimeOut2 ?? DefaultDate))
+                                                                {
+                                                                    dline.TimeOut2 = logDateTime;
+                                                                }
                                                             }
                                                         }
                                                     }
