@@ -17,7 +17,6 @@ using whris.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Common.GlobalSettings.EnableHolidayPay = builder.Configuration.GetValue<bool>("PayrollSettings:EnableHolidayPay");
 // Add Data Protection with persistent keys
 var keyDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "Keys");
 Directory.CreateDirectory(keyDir); // Ensures the folder exists
@@ -89,7 +88,10 @@ builder.Services.AddMvc(options =>
 
 Config.ConnectionString = connectionString;
 Config.IsCustomComputeOvertimeAmountOnRestDay = builder.Configuration.GetValue<bool>("IsCustomComputeOvertimeAmountOnRestDay");
+Config.IsEnableWTaxDeduction = builder.Configuration.GetValue<bool>("IsEnableWTaxDeduction");
 Config.GeminApiKey = builder.Configuration["Gemini:ApiKey"] ?? throw new ArgumentNullException("Gemini:ApiKey", "Gemini API Key is not configured.");
+
+Common.GlobalSettings.EnableHolidayPay = builder.Configuration.GetValue<bool>("PayrollSettings:EnableHolidayPay");
 
 var app = builder.Build();
 

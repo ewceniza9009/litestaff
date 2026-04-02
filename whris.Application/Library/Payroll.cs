@@ -1035,30 +1035,41 @@ namespace whris.Application.Library
 
         public static decimal ComputeTax(TrnPayrollLine line, HRISContext _context)
         {
-            //decimal dblTax = 0;
-            //decimal dblTotalSalaryAmount = line.TotalNetSalaryAmount;
-            //decimal _dblTaxPercentage = _context.MstTableWtaxSemiMonthlies
-            //    .Where(x => x.TaxCodeId == line.TaxCodeId)
-            //    ?.Max(x => (decimal?)x.Percentage) ?? 0;
-            //decimal dblTaxAmountException = _context.MstTableWtaxSemiMonthlies
-            //    .Where(x => x.TaxCodeId == line.TaxCodeId)
-            //    ?.Max(x => (decimal?)x.Amount) ?? 0;
-            //decimal dblTaxPercentage = _dblTaxPercentage / 100;
-            //decimal dblExcessAmount = (dblTotalSalaryAmount - line.Ssscontribution - line.Phiccontribution - line.Hdmfcontribution) - dblTaxAmountException;
-            //if(dblExcessAmount > 0)
-            //{
-            //    dblTax = dblExcessAmount * dblTaxPercentage;
-            //    return Math.Round(dblTax, 2);
-            //}
-            //else
-            //{
-            //    return Math.Round(dblTax, 2);
-            //}
-            var dblTotalSalaryAmount = Lookup.GetEmployeeBasic(line.EmployeeId);
-            var dblTax = _context.MstTableWtaxSemiMonthlies
-                .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount == dblTotalSalaryAmount)
-                ?.Max(x => (decimal?)x.Tax) ?? 0;
-            return Math.Round(dblTax, 2);
+            var enableTax = Config.IsEnableWTaxDeduction;
+
+            decimal dblTax = 0;
+            decimal dblTotalSalaryAmount = line.TotalNetSalaryAmount;
+
+            if (enableTax)
+            {
+                dblTotalSalaryAmount = Lookup.GetEmployeeBasic(line.EmployeeId);
+                dblTax = _context.MstTableWtaxSemiMonthlies
+                    .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount == dblTotalSalaryAmount)
+                    ?.Max(x => (decimal?)x.Tax) ?? 0;
+                return Math.Round(dblTax, 2);
+            }
+            
+            decimal _dblTaxPercentage = _context.MstTableWtaxSemiMonthlies
+                .Where(x => x.TaxCodeId == line.TaxCodeId)
+                ?.Max(x => (decimal?)x.Percentage) ?? 0;
+            decimal dblTaxAmountException = _context.MstTableWtaxSemiMonthlies
+                .Where(x => x.TaxCodeId == line.TaxCodeId)
+                ?.Max(x => (decimal?)x.Amount) ?? 0;
+            decimal dblTaxPercentage = _dblTaxPercentage / 100;
+            decimal dblExcessAmount = (dblTotalSalaryAmount - line.Ssscontribution - line.Phiccontribution - line.Hdmfcontribution) - dblTaxAmountException;
+            if(dblExcessAmount > 0)
+            {
+                dblTax = dblExcessAmount * dblTaxPercentage;
+                return Math.Round(dblTax, 2);
+            }
+            else
+            {
+                return Math.Round(dblTax, 2);
+            }
+            //var dblTotalSalaryAmount = Lookup.GetEmployeeBasic(line.EmployeeId);
+            //var dblTax = _context.MstTableWtaxSemiMonthlies
+            //    .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount == dblTotalSalaryAmount)
+            //    ?.Max(x => (decimal?)x.Tax) ?? 0;
         }
         #endregion
 
