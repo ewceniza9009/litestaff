@@ -2412,6 +2412,11 @@ namespace whris.Application.Library
 
             var rate = line.TotalAmount - line.TardyAmount;
 
+            if (line.OnLeave)
+            {
+                rate = rate * line.DayMultiplier;
+            }
+
             return Math.Round(rate, 5);
         }
 
@@ -3414,14 +3419,16 @@ namespace whris.Application.Library
                                                     }
                                                 }
                                             }
-
                                             if ((shiftCodeDay?.TimeIn1 ?? dline.Date) != dline.Date && (shiftCodeDay?.TimeOut1 ?? dline.Date) == dline.Date && shiftCodeDay?.TimeOut2 != dline.Date)
                                             {
                                                 if (logDateTime < shiftCodeDay?.TimeIn1 || (logDateTime >= shiftCodeDay?.TimeIn1 && logDateTime < shiftCodeDay?.TimeOut2))
                                                 {
                                                     if (dline.TimeIn1 is null)
                                                     {
-                                                        dline.TimeIn1 = logDateTime;
+                                                        if (log.LogType != "1")
+                                                        {
+                                                            dline.TimeIn1 = logDateTime;
+                                                        }
                                                     }
                                                     else
                                                     {
