@@ -3431,7 +3431,11 @@ namespace whris.Application.Library
                                                 {
                                                     if (dline.TimeIn1 is null)
                                                     {
-                                                        dline.TimeIn1 = logDateTime;
+                                                        // Eggs Changes 04/13/2026
+                                                        if (log.LogType != "1")
+                                                        {
+                                                            dline.TimeIn1 = logDateTime;
+                                                        }
                                                     }
                                                     else
                                                     {
