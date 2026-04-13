@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model DetailModel
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -355,16 +355,26 @@
                     </div>
                         <div style="width: 40%; margin-left: auto;">
                             @(Html.Kendo().AutoComplete()
-                                                        .Name("SearchEmployee") 
-                                                        .Filter("contains")
-                                                        .DataTextField("Text")
-                                                .HtmlAttributes(new { id = "SearchEmployee", placeholder = "Search Employee", style = "width: 95%;", onblur = "onSearchEmployee()", onchange = "onSearchEmployee()" })
-                                                        .DataSource(dataSource =>
-                                                        dataSource.Read("GetEmployees", "AutoComplete")                    
-                                                        .ServerFiltering(false)
-                                                        )
-                                                        .Separator(", ")
-                                                        )
+                                .Name("SearchEmployee") 
+                                .Filter("contains")
+                                .DataTextField("Text")
+                                .HtmlAttributes(new 
+                                { 
+                                    id = "SearchEmployee", 
+                                    placeholder = "Search Employee", 
+                                    style = "width: 95%;", 
+                                    onblur = "onSearchEmployee()", 
+                                    onchange = "onSearchEmployee()" 
+                                })
+                                .DataSource(dataSource => 
+                                    dataSource.Read(read => 
+                                        read.Action("GetEmployees", "AutoComplete", 
+                                            new { 
+                                                payrollGroupId = Model.DtrDetail.PayrollGroupId
+                                            }))                    
+                                    .ServerFiltering(false)
+                                )
+                            )
                         </div>                  
                 </div>
             </div>

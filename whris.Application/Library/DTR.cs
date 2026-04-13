@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
@@ -407,28 +407,22 @@ namespace whris.Application.Library
                             return 0;
                         }
 
-                        if (dayType == 2 || dayType == 3)
+                    if (line.DayTypeId > 1) // 2: Regular, 3: Special
+                    {
+                        if (isEligibleForHolidayPay)
                         {
-                            var before = _context.TrnDtrlines.Any(x => x.EmployeeId == line.EmployeeId &&
-                                x.Date.Date == dateBeforeHoliday.Date &&
-                                !x.Absent);
-
-                            var after = _context.TrnDtrlines.Any(x => x.EmployeeId == line.EmployeeId &&
-                               x.Date.Date == dateAfterHoliday.Date &&
-                               !x.Absent);
-
-                            var isTrue = before && after;
-
-                            if (isTrue)
+                            if (line != null && line.RestDay && line.TimeIn1 == null && line.TimeOut1 == null && line.TimeIn2 == null && line.TimeOut2 == null)
                             {
-                                if (line != null && line.RestDay && line.TimeIn1 == null && line.TimeOut1 == null && line.TimeIn2 == null && line.TimeOut2 == null)
-                                {
-                                    return 0;
-                                }
-
-                                return shiftCodeDay.NumberOfHours;
+                                return 0;
                             }
+
+                            return shiftCodeDay.NumberOfHours;
                         }
+                        else
+                        {
+                            return 0; // Ineligible for holiday pay (worked/not worked)
+                        }
+                    }
                     }
                 }
             }
@@ -1773,7 +1767,7 @@ namespace whris.Application.Library
             return line.RegularHours + line.OvertimeHours + line.OvertimeNightHours - line.TardyLateHours - line.TardyUndertimeHours;
         }
 
-        public static decimal ComputeDayMultiplier(TrnDtrline line, IEnumerable<MstEmployee> employees, IEnumerable<MstDayTypeDay> dayTypeDays, HRISContext _context)
+        public static decimal ComputeDayMultiplier(TrnDtrline line, IEnumerable<MstEmployee> employees, IEnumerable<MstDayTypeDay> dayTypeDays, bool isEligibleForHolidayPay, HRISContext _context)
         {
             var multiplier = 1m;
             var excludedInFixed = false;
@@ -1793,6 +1787,20 @@ namespace whris.Application.Library
                 else
                 {
                     multiplier = _context.MstDayTypes.FirstOrDefault(x => x.Id == dayTypeDay.DayTypeId)?.WorkingDays ?? 0;
+                }
+
+                if (!isEligibleForHolidayPay && line.DayTypeId > 1) // 2: Regular, 3: Special
+                {
+                    if (line.RestDay)
+                    {
+                        // Fallback to Working Day (ID 1) Rest Day multiplier (usually 1.3)
+                        multiplier = _context.MstDayTypes.FirstOrDefault(x => x.Id == 1)?.RestdayDays ?? 1.3m;
+                    }
+                    else
+                    {
+                        // Fallback to Working Day (ID 1) Working multiplier (usually 1.0)
+                        multiplier = 1.0m;
+                    }
                 }
 
                 excludedInFixed = dayTypeDay.ExcludedInFixed;
@@ -2056,7 +2064,6 @@ namespace whris.Application.Library
 
             return Math.Round(amount, 5);
         }
-
         public static decimal ComputeOvertimeNightAmount(TrnDtrline line, IEnumerable<MstEmployee> employees, IEnumerable<MstDayTypeDay> dayTypeDays)
         {
             var amount = 0m;
@@ -2412,6 +2419,12 @@ namespace whris.Application.Library
 
             var rate = line.TotalAmount - line.TardyAmount;
 
+            // Eggs Changes 04/13/2026
+            if (line.OnLeave)
+            {
+                rate = rate * line.DayMultiplier;
+            }
+
             return Math.Round(rate, 5);
         }
 
@@ -2709,8 +2722,6 @@ namespace whris.Application.Library
                     var dline = new TrnDtrLineDto();
 
                     var toBeProcessedPayrollGroupId = employees?.FirstOrDefault(x => x.Id == (dtrLines.FirstOrDefault()?.EmployeeId ?? 0))?.PayrollGroupId ?? 0;
-
-
 
                     foreach (var log in fLogs)
                     {
@@ -3421,7 +3432,11 @@ namespace whris.Application.Library
                                                 {
                                                     if (dline.TimeIn1 is null)
                                                     {
-                                                        dline.TimeIn1 = logDateTime;
+                                                        // Eggs Changes 04/13/2026
+                                                        if (log.LogType != "1")
+                                                        {
+                                                            dline.TimeIn1 = logDateTime;
+                                                        }
                                                     }
                                                     else
                                                     {
@@ -4059,56 +4074,40 @@ namespace whris.Application.Library
                                 line.HalfdayAbsent = false;
                             }
 
+                            // Holiday Eligibility Logic (matching ID 2: Regular Holiday, ID 3: Special Holiday)
                             var isEligibleForHolidayPay = true;
-                            var isEmpProjectBased = employees.FirstOrDefault(x => x.Id == empId)?.EmploymentType ?? 0;
-                            var payrollTypeId = employees.FirstOrDefault(x => x.Id == line.EmployeeId)?.PayrollTypeId ?? 0;
+                            var employeesArr = employees; // Local reference
+                            var empRecord = employeesArr.FirstOrDefault(x => x.Id == line.EmployeeId);
+                            var isEmpProjectBased = empRecord?.EmploymentType ?? 0;
+                            var payrollTypeId = empRecord?.PayrollTypeId ?? 0;
 
                             if (isEmpProjectBased == 3)
                             {
-                                isEligibleForHolidayPay = false;
+                                isEligibleForHolidayPay = false; // Project based (no holiday pay)
                             }
 
-                            if (line.DayTypeId != 1)
+                            if (line.DayTypeId > 1) // 2: Regular, 3: Special
                             {
-                                var dateBefore = dayTypeDays.FirstOrDefault(x => x.Date.Date == line.Date.Date)?.DateBefore ?? DefaultDate;
-                                var dateAfter = dayTypeDays.FirstOrDefault(x => x.Date.Date == line.Date.Date)?.DateAfter ?? DefaultDate;
+                                var dayTypeSetup = dayTypeDays.FirstOrDefault(x => x.Date.Date == line.Date.Date && x.BranchId == empRecord.BranchId);
+                                var dateBefore = dayTypeSetup?.DateBefore ?? DefaultDate;
+                                var dateAfter = dayTypeSetup?.DateAfter ?? DefaultDate;
 
-                                var lineAbsentOnDateAfter = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateAfter);
+                                // Check "Before"
+                                var lineBefore = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateBefore);
+                                var isAbsentOnDateBefore = lineBefore?.Absent ?? true;
+                                if (lineBefore != null && (lineBefore.OnLeave || lineBefore.RestDay)) isAbsentOnDateBefore = false;
 
-                                var isAbsentOnDateBefore = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateBefore)?.Absent ?? true;
-                                var isAbsentOnDateAfter = lineAbsentOnDateAfter?.TimeIn1 is null && lineAbsentOnDateAfter?.TimeIn2 is null;
-
-                                var isLeaveDateBefore = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateBefore)?.OnLeave ?? false;
-                                var isLeaveDateAfter = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateAfter)?.OnLeave ?? false;
-
-                                if (isLeaveDateBefore)
-                                {
-                                    isAbsentOnDateBefore = false;
-                                }
-
-                                if (isLeaveDateAfter)
-                                {
-                                    isAbsentOnDateAfter = false;
-                                }
-
-                                var isDateBeforeRestDay = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateBefore)?.RestDay ?? false;
-                                var isDateAfterRestDay = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateAfter)?.RestDay ?? false;
-
-                                if (isDateBeforeRestDay)
-                                {
-                                    isAbsentOnDateBefore = false;
-                                }
-
-                                if (isDateAfterRestDay)
-                                {
-                                    isAbsentOnDateAfter = false;
-                                }
+                                // Check "After"
+                                var lineAfter = dtrLines.FirstOrDefault(x => x.EmployeeId == line.EmployeeId && x.Date == dateAfter);
+                                var isAbsentOnDateAfter = lineAfter?.Absent ?? true;
+                                if (lineAfter != null && (lineAfter.OnLeave || lineAfter.RestDay)) isAbsentOnDateAfter = false;
 
                                 if (isAbsentOnDateBefore || isAbsentOnDateAfter)
                                 {
                                     isEligibleForHolidayPay = false;
                                 }
 
+                                // Global override if enabled
                                 if (whris.Application.Common.Common.GlobalSettings.EnableHolidayPay == true && line.DayTypeId == 2 && payrollTypeId == 1 && dateBefore == dateAfter)
                                 {
                                     isEligibleForHolidayPay = true;
@@ -4129,13 +4128,15 @@ namespace whris.Application.Library
                             }
 
                             line.NetTotalHours = ComputeNetTotalHours(line);
-                            line.DayMultiplier = ComputeDayMultiplier(line, employees, dayTypeDays, _context);
-                            line.RatePerHour = ComputeRatePerHour(line, employees);
+                            line.DayMultiplier = ComputeDayMultiplier(line, employeesArr, dayTypeDays, isEligibleForHolidayPay, _context);
+                            line.RatePerHour = ComputeRatePerHour(line, employeesArr);
                             line.RatePerNightHour = ComputeRatePerNightHour(line, employees);
                             line.RatePerOvertimeHour = ComputeRatePerOvertimeHour(line, employees);
                             line.RatePerOvertimeNightHour = ComputeRatePerOvertimeNightHour(line, employees);
                             line.RegularAmount = ComputeRegularAmount(line);
                             line.NightAmount = ComputeNightAmount(line, isEligibleForHolidayPay);
+                            line.OvertimeAmount = ComputeOverTimeAmount(line, employeesArr, dayTypeDays, isEligibleForHolidayPay);
+                            line.OvertimeNightAmount = ComputeOvertimeNightAmount(line, employeesArr, dayTypeDays);
 
                             var emp = employees.FirstOrDefault(x => x.Id == line.EmployeeId);
                             var empPayrollTypeId = emp?.PayrollTypeId ?? 1;

@@ -1,4 +1,4 @@
-﻿using Kendo.Mvc.Extensions;
+using Kendo.Mvc.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using whris.Application.Common;
@@ -20,6 +20,7 @@ namespace whris.Application.Library
         static bool isHolidayPayLateDeducted = CompanySettings.Instance.IsHolidayPayLateDeducted;
 
         #region Assign Values
+        // ID 1 = Working Day
         public static decimal GetRegularWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
             var result = 0m; 
@@ -28,6 +29,7 @@ namespace whris.Application.Library
             return result;
         }
 
+        // ID 2 = Regular Holiday (Legal)
         public static decimal GetLegalHolidayWorkingHours(bool isRestDay, int dayType, decimal numberOfHours) 
         {
             var result = 0m; 
@@ -36,6 +38,7 @@ namespace whris.Application.Library
             return result;
         }
 
+        // ID 3 = Special Holiday
         public static decimal GetSpecialHolidayWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
             var result = 0m; 
@@ -425,7 +428,7 @@ namespace whris.Application.Library
 
                 basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-				amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+                amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             }
 
             var employeeContribution = _context.MstTableSsses
@@ -486,25 +489,25 @@ namespace whris.Application.Library
                     .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                     ?.BasicAmountOfTheMonth ?? 0m;
 
-				//basic = line.TotalSalaryAmount -
-				//   line.TotalLegalHolidayWorkingAmount -
-				//   line.TotalSpecialHolidayWorkingAmount -
-				//   line.TotalRegularRestdayAmount -
-				//   line.TotalLegalHolidayRestdayAmount -
-				//   line.TotalSpecialHolidayRestdayAmount -
-				//   line.TotalRegularOvertimeAmount -
-				//   line.TotalLegalHolidayOvertimeAmount -
-				//   line.TotalSpecialHolidayOvertimeAmount -
-				//   line.TotalRegularNightAmount -
-				//   line.TotalLegalHolidayNightAmount -
-				//   line.TotalSpecialHolidayNightAmount -
-				//   line.TotalRegularNightOvertimeAmount -
-				//   line.TotalLegalHolidayNightOvertimeAmount -
-				//   line.TotalSpecialHolidayNightOvertimeAmount;
+                //basic = line.TotalSalaryAmount -
+                //   line.TotalLegalHolidayWorkingAmount -
+                //   line.TotalSpecialHolidayWorkingAmount -
+                //   line.TotalRegularRestdayAmount -
+                //   line.TotalLegalHolidayRestdayAmount -
+                //   line.TotalSpecialHolidayRestdayAmount -
+                //   line.TotalRegularOvertimeAmount -
+                //   line.TotalLegalHolidayOvertimeAmount -
+                //   line.TotalSpecialHolidayOvertimeAmount -
+                //   line.TotalRegularNightAmount -
+                //   line.TotalLegalHolidayNightAmount -
+                //   line.TotalSpecialHolidayNightAmount -
+                //   line.TotalRegularNightOvertimeAmount -
+                //   line.TotalLegalHolidayNightOvertimeAmount -
+                //   line.TotalSpecialHolidayNightOvertimeAmount;
 
-				basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+                basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-				amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+                amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             }
 
             var employeeEc = _context.MstTableSsses
@@ -545,25 +548,25 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.BasicAmountOfTheMonth ?? 0m;
 
-			//basic = line.TotalSalaryAmount -
-			//    line.TotalLegalHolidayWorkingAmount -
-			//    line.TotalSpecialHolidayWorkingAmount -
-			//    line.TotalRegularRestdayAmount -
-			//    line.TotalLegalHolidayRestdayAmount -
-			//    line.TotalSpecialHolidayRestdayAmount -
-			//    line.TotalRegularOvertimeAmount -
-			//    line.TotalLegalHolidayOvertimeAmount -
-			//    line.TotalSpecialHolidayOvertimeAmount -
-			//    line.TotalRegularNightAmount -
-			//    line.TotalLegalHolidayNightAmount -
-			//    line.TotalSpecialHolidayNightAmount -
-			//    line.TotalRegularNightOvertimeAmount -
-			//    line.TotalLegalHolidayNightOvertimeAmount -
-			//    line.TotalSpecialHolidayNightOvertimeAmount;
+            //basic = line.TotalSalaryAmount -
+            //    line.TotalLegalHolidayWorkingAmount -
+            //    line.TotalSpecialHolidayWorkingAmount -
+            //    line.TotalRegularRestdayAmount -
+            //    line.TotalLegalHolidayRestdayAmount -
+            //    line.TotalSpecialHolidayRestdayAmount -
+            //    line.TotalRegularOvertimeAmount -
+            //    line.TotalLegalHolidayOvertimeAmount -
+            //    line.TotalSpecialHolidayOvertimeAmount -
+            //    line.TotalRegularNightAmount -
+            //    line.TotalLegalHolidayNightAmount -
+            //    line.TotalSpecialHolidayNightAmount -
+            //    line.TotalRegularNightOvertimeAmount -
+            //    line.TotalLegalHolidayNightOvertimeAmount -
+            //    line.TotalSpecialHolidayNightOvertimeAmount;
 
-			basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+            basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+            amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             var employerContribution = _context.MstTableSsses
                 .FirstOrDefault(x => (x.AmountStart / mandantoryDeductionDivisor) <= amount && (x.AmountEnd / mandantoryDeductionDivisor) >= amount)
                 ?.EmployerContribution ?? 0m;
@@ -605,25 +608,25 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.BasicAmountOfTheMonth ?? 0m;
 
-			//basic = line.TotalSalaryAmount -
-			//    line.TotalLegalHolidayWorkingAmount -
-			//    line.TotalSpecialHolidayWorkingAmount -
-			//    line.TotalRegularRestdayAmount -
-			//    line.TotalLegalHolidayRestdayAmount -
-			//    line.TotalSpecialHolidayRestdayAmount -
-			//    line.TotalRegularOvertimeAmount -
-			//    line.TotalLegalHolidayOvertimeAmount -
-			//    line.TotalSpecialHolidayOvertimeAmount -
-			//    line.TotalRegularNightAmount -
-			//    line.TotalLegalHolidayNightAmount -
-			//    line.TotalSpecialHolidayNightAmount -
-			//    line.TotalRegularNightOvertimeAmount -
-			//    line.TotalLegalHolidayNightOvertimeAmount -
-			//    line.TotalSpecialHolidayNightOvertimeAmount;
+            //basic = line.TotalSalaryAmount -
+            //    line.TotalLegalHolidayWorkingAmount -
+            //    line.TotalSpecialHolidayWorkingAmount -
+            //    line.TotalRegularRestdayAmount -
+            //    line.TotalLegalHolidayRestdayAmount -
+            //    line.TotalSpecialHolidayRestdayAmount -
+            //    line.TotalRegularOvertimeAmount -
+            //    line.TotalLegalHolidayOvertimeAmount -
+            //    line.TotalSpecialHolidayOvertimeAmount -
+            //    line.TotalRegularNightAmount -
+            //    line.TotalLegalHolidayNightAmount -
+            //    line.TotalSpecialHolidayNightAmount -
+            //    line.TotalRegularNightOvertimeAmount -
+            //    line.TotalLegalHolidayNightOvertimeAmount -
+            //    line.TotalSpecialHolidayNightOvertimeAmount;
 
-			basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+            basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+            amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             var employerEc = _context.MstTableSsses
                 .FirstOrDefault(x => (x.AmountStart / mandantoryDeductionDivisor) <= amount && (x.AmountEnd / mandantoryDeductionDivisor) >= amount)
                 ?.EmployerEc ?? 0m;
@@ -662,25 +665,25 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.BasicAmountOfTheMonth ?? 0m;
 
-			//basic = line.TotalSalaryAmount -
-			//    line.TotalLegalHolidayWorkingAmount -
-			//    line.TotalSpecialHolidayWorkingAmount -
-			//    line.TotalRegularRestdayAmount -
-			//    line.TotalLegalHolidayRestdayAmount -
-			//    line.TotalSpecialHolidayRestdayAmount -
-			//    line.TotalRegularOvertimeAmount -
-			//    line.TotalLegalHolidayOvertimeAmount -
-			//    line.TotalSpecialHolidayOvertimeAmount -
-			//    line.TotalRegularNightAmount -
-			//    line.TotalLegalHolidayNightAmount -
-			//    line.TotalSpecialHolidayNightAmount -
-			//    line.TotalRegularNightOvertimeAmount -
-			//    line.TotalLegalHolidayNightOvertimeAmount -
-			//    line.TotalSpecialHolidayNightOvertimeAmount;
+            //basic = line.TotalSalaryAmount -
+            //    line.TotalLegalHolidayWorkingAmount -
+            //    line.TotalSpecialHolidayWorkingAmount -
+            //    line.TotalRegularRestdayAmount -
+            //    line.TotalLegalHolidayRestdayAmount -
+            //    line.TotalSpecialHolidayRestdayAmount -
+            //    line.TotalRegularOvertimeAmount -
+            //    line.TotalLegalHolidayOvertimeAmount -
+            //    line.TotalSpecialHolidayOvertimeAmount -
+            //    line.TotalRegularNightAmount -
+            //    line.TotalLegalHolidayNightAmount -
+            //    line.TotalSpecialHolidayNightAmount -
+            //    line.TotalRegularNightOvertimeAmount -
+            //    line.TotalLegalHolidayNightOvertimeAmount -
+            //    line.TotalSpecialHolidayNightOvertimeAmount;
 
-			basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+            basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+            amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             var employeeContribution = _context.MstTablePhics
                 .FirstOrDefault(x => (x.AmountStart / mandantoryDeductionDivisor) <= amount && (x.AmountEnd / mandantoryDeductionDivisor) >= amount)
                 ?.EmployeeContribution ?? 0m;
@@ -724,25 +727,25 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.BasicAmountOfTheMonth ?? 0m;
 
-			//basic = line.TotalSalaryAmount -
-			//    line.TotalLegalHolidayWorkingAmount -
-			//    line.TotalSpecialHolidayWorkingAmount -
-			//    line.TotalRegularRestdayAmount -
-			//    line.TotalLegalHolidayRestdayAmount -
-			//    line.TotalSpecialHolidayRestdayAmount -
-			//    line.TotalRegularOvertimeAmount -
-			//    line.TotalLegalHolidayOvertimeAmount -
-			//    line.TotalSpecialHolidayOvertimeAmount -
-			//    line.TotalRegularNightAmount -
-			//    line.TotalLegalHolidayNightAmount -
-			//    line.TotalSpecialHolidayNightAmount -
-			//    line.TotalRegularNightOvertimeAmount -
-			//    line.TotalLegalHolidayNightOvertimeAmount -
-			//    line.TotalSpecialHolidayNightOvertimeAmount;
+            //basic = line.TotalSalaryAmount -
+            //    line.TotalLegalHolidayWorkingAmount -
+            //    line.TotalSpecialHolidayWorkingAmount -
+            //    line.TotalRegularRestdayAmount -
+            //    line.TotalLegalHolidayRestdayAmount -
+            //    line.TotalSpecialHolidayRestdayAmount -
+            //    line.TotalRegularOvertimeAmount -
+            //    line.TotalLegalHolidayOvertimeAmount -
+            //    line.TotalSpecialHolidayOvertimeAmount -
+            //    line.TotalRegularNightAmount -
+            //    line.TotalLegalHolidayNightAmount -
+            //    line.TotalSpecialHolidayNightAmount -
+            //    line.TotalRegularNightOvertimeAmount -
+            //    line.TotalLegalHolidayNightOvertimeAmount -
+            //    line.TotalSpecialHolidayNightOvertimeAmount;
 
-			basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+            basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+            amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
             var employerContribution = _context.MstTablePhics
                 .FirstOrDefault(x => (x.AmountStart / mandantoryDeductionDivisor) <= amount && (x.AmountEnd / mandantoryDeductionDivisor) >= amount)
                 ?.EmployerContribution ?? 0m;
@@ -804,7 +807,7 @@ namespace whris.Application.Library
 
             basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
+            amount = basic + (mandantoryDeductionDivisor == 1 ? basicAmountOfTheMonth : 0);
 
             var hdmfType = _context.MstEmployees.FirstOrDefault(x => x.Id == line.EmployeeId)?.Hdmftype ?? "";
 
@@ -862,25 +865,25 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.BasicAmountOfTheMonth ?? 0m;
 
-			//basic = line.TotalSalaryAmount -
-			//    line.TotalLegalHolidayWorkingAmount -
-			//    line.TotalSpecialHolidayWorkingAmount -
-			//    line.TotalRegularRestdayAmount -
-			//    line.TotalLegalHolidayRestdayAmount -
-			//    line.TotalSpecialHolidayRestdayAmount -
-			//    line.TotalRegularOvertimeAmount -
-			//    line.TotalLegalHolidayOvertimeAmount -
-			//    line.TotalSpecialHolidayOvertimeAmount -
-			//    line.TotalRegularNightAmount -
-			//    line.TotalLegalHolidayNightAmount -
-			//    line.TotalSpecialHolidayNightAmount -
-			//    line.TotalRegularNightOvertimeAmount -
-			//    line.TotalLegalHolidayNightOvertimeAmount -
-			//    line.TotalSpecialHolidayNightOvertimeAmount;
+            //basic = line.TotalSalaryAmount -
+            //    line.TotalLegalHolidayWorkingAmount -
+            //    line.TotalSpecialHolidayWorkingAmount -
+            //    line.TotalRegularRestdayAmount -
+            //    line.TotalLegalHolidayRestdayAmount -
+            //    line.TotalSpecialHolidayRestdayAmount -
+            //    line.TotalRegularOvertimeAmount -
+            //    line.TotalLegalHolidayOvertimeAmount -
+            //    line.TotalSpecialHolidayOvertimeAmount -
+            //    line.TotalRegularNightAmount -
+            //    line.TotalLegalHolidayNightAmount -
+            //    line.TotalSpecialHolidayNightAmount -
+            //    line.TotalRegularNightOvertimeAmount -
+            //    line.TotalLegalHolidayNightOvertimeAmount -
+            //    line.TotalSpecialHolidayNightOvertimeAmount;
 
-			basic = Lookup.GetEmployeeBasic(line.EmployeeId);
+            basic = Lookup.GetEmployeeBasic(line.EmployeeId);
 
-			amount = basic + basicAmountOfTheMonth;
+            amount = basic + basicAmountOfTheMonth;
 
             var hdmfType = _context.MstEmployees.FirstOrDefault(x => x.Id == line.EmployeeId)?.Hdmftype ?? "";
 
@@ -1104,7 +1107,8 @@ namespace whris.Application.Library
                             x.Employee.DailyRate,
                             x.Employee.PayrollRate,
                             x.RestDay,
-                            x.DayTypeId
+                            x.DayTypeId,
+                            x.DayMultiplier
                         })
                         .ToList();
 
@@ -1123,7 +1127,8 @@ namespace whris.Application.Library
                             x.Employee.DailyRate,                           
                             x.Employee.PayrollRate,
                             x.RestDay,
-                            x.DayTypeId
+                            x.DayTypeId,
+                            x.DayMultiplier
                         })
                         .ToList();
                     }
@@ -1222,35 +1227,39 @@ namespace whris.Application.Library
                             }
                         }
 
-                        var totalRegularWorkingHours = GetRegularWorkingHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.RegularHours)) + holidayHoursWithNoPayLegal + holidayHoursWithNoPaySpecial;
-                        var totalLegalHolidayWorkingHours = GetLegalHolidayWorkingHours(line.Key.RestDay, line.Key.DayTypeId, legalHours);
-                        var totalSpecialHolidayWorkingHours = GetSpecialHolidayWorkingHours(line.Key.RestDay, line.Key.DayTypeId, specialHours);
+                        var effectiveDayType = (line.Key.DayTypeId > 1 &&
+                                               ((line.Key.PayrollTypeId == 1 && line.Key.DayMultiplier == 1) ||
+                                                (line.Key.PayrollTypeId == 2 && line.Key.DayMultiplier == 0))) ? 1 : line.Key.DayTypeId;
+
+                        var totalRegularWorkingHours = GetRegularWorkingHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.RegularHours)) + holidayHoursWithNoPayLegal + holidayHoursWithNoPaySpecial;
+                        var totalLegalHolidayWorkingHours = GetLegalHolidayWorkingHours(line.Key.RestDay, effectiveDayType, legalHours);
+                        var totalSpecialHolidayWorkingHours = GetSpecialHolidayWorkingHours(line.Key.RestDay, effectiveDayType, specialHours);
 
                         var dayTypeRestDayMultiplier = ctx.MstDayTypes.Where(x => x.Id == line.Key.DayTypeId).FirstOrDefault()?.RestdayDays ?? 1;
 
-                        var totalRegularRestdayHours = GetRegularRestDayHours(line.Key.RestDay, line.Key.DayTypeId, (line.Key.RestDay && dayTypeRestDayMultiplier == 1 ? 0 : line.Sum(x => x.RegularHours)));
-                        var totalLegalHolidayRestdayHours = GetLegalHolidayRestDayHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.RegularHours));
-                        var totalSpecialHolidayRestdayHours = GetSpecialHolidayRestDayHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.RegularHours));
-                        var totalRegularOvertimeHours = GetRegularOvertimeHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeHours));
-                        var totalLegalHolidayOvertimeHours = GetLegalHolidayOvertimeHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeHours));
-                        var totalSpecialHolidayOvertimeHours = GetSpecialHolidayOvertimeHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeHours));
-                        var totalRegularNightHours = GetRegularNightHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.NightHours));
-                        var totalLegalHolidayNightHours = GetLegalHolidayNightHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.NightHours));
-                        var totalSpecialHolidayNightHours = GetSpecialHolidayNightHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.NightHours));
-                        var totalRegularNightOvertimeHours = GetRegularNightOvertimeHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightHours));
-                        var totalLegalHolidayNightOvertimeHours = GetLegalHolidayNightOvertimeHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightHours));
-                        var totalSpecialHolidayNighOvertimetHours = GetSpecialHolidayNighOvertimetHours(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightHours));
+                        var totalRegularRestdayHours = GetRegularRestDayHours(line.Key.RestDay, effectiveDayType, (line.Key.RestDay && dayTypeRestDayMultiplier == 1 ? 0 : line.Sum(x => x.RegularHours)));
+                        var totalLegalHolidayRestdayHours = GetLegalHolidayRestDayHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.RegularHours));
+                        var totalSpecialHolidayRestdayHours = GetSpecialHolidayRestDayHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.RegularHours));
+                        var totalRegularOvertimeHours = GetRegularOvertimeHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeHours));
+                        var totalLegalHolidayOvertimeHours = GetLegalHolidayOvertimeHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeHours));
+                        var totalSpecialHolidayOvertimeHours = GetSpecialHolidayOvertimeHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeHours));
+                        var totalRegularNightHours = GetRegularNightHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.NightHours));
+                        var totalLegalHolidayNightHours = GetLegalHolidayNightHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.NightHours));
+                        var totalSpecialHolidayNightHours = GetSpecialHolidayNightHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.NightHours));
+                        var totalRegularNightOvertimeHours = GetRegularNightOvertimeHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeNightHours));
+                        var totalLegalHolidayNightOvertimeHours = GetLegalHolidayNightOvertimeHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeNightHours));
+                        var totalSpecialHolidayNighOvertimetHours = GetSpecialHolidayNighOvertimetHours(line.Key.RestDay, effectiveDayType, line.Sum(x => x.OvertimeNightHours));
                         var totalTardyLateHours = line.Sum(x => x.TardyLateHours);
                         var totalTardyUndertimeHours = line.Sum(x => x.TardyUndertimeHours);
-                        var totalRegularWorkingAmount = GetRegularWorkingAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.TotalAmount));
+                        var totalRegularWorkingAmount = GetRegularWorkingAmount(line.Key.RestDay, effectiveDayType, line.Sum(x => x.TotalAmount));
 
-                        var totalLegalHolidayWorkingAmount = GetLegalHolidayWorkingAmount(line.Key.RestDay, line.Key.DayTypeId,
+                        var totalLegalHolidayWorkingAmount = GetLegalHolidayWorkingAmount(line.Key.RestDay, effectiveDayType,
                                 line.Sum(x => x.NetAmount) == 0 ? 0 : legal -
                                 line.Sum(x => x.OvertimeAmount) -
                                 line.Sum(x => x.NightAmount) -
                                 line.Sum(x => x.OvertimeNightAmount));                       
 
-                        var totalSpecialHolidayWorkingAmount = GetSpecialHolidayWorkingAmount(line.Key.RestDay, line.Key.DayTypeId,
+                        var totalSpecialHolidayWorkingAmount = GetSpecialHolidayWorkingAmount(line.Key.RestDay, effectiveDayType,
                                 line.Sum(x => x.NetAmount) == 0 ? 0 : special -
                                 line.Sum(x => x.OvertimeAmount) -
                                 line.Sum(x => x.NightAmount) -
@@ -1258,10 +1267,10 @@ namespace whris.Application.Library
 
                         if (line.Key.PayrollTypeId == 3) 
                         {
-                            totalLegalHolidayWorkingAmount = GetLegalHolidayWorkingAmount(line.Key.RestDay, line.Key.DayTypeId,
+                            totalLegalHolidayWorkingAmount = GetLegalHolidayWorkingAmount(line.Key.RestDay, effectiveDayType,
                                line.Sum(x => x.NetAmount) == 0 ? 0 : legal);
 
-                            totalSpecialHolidayWorkingAmount = GetSpecialHolidayWorkingAmount(line.Key.RestDay, line.Key.DayTypeId,
+                            totalSpecialHolidayWorkingAmount = GetSpecialHolidayWorkingAmount(line.Key.RestDay, effectiveDayType,
                                 line.Sum(x => x.NetAmount) == 0 ? 0 : special);
                         }
 
