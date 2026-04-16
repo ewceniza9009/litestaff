@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -108,7 +108,8 @@ namespace whris.Application.Mobile.RepPayroll
         INNER JOIN MstPosition ON MstEmployee.PositionId = MstPosition.Id 
         INNER JOIN MstDepartment ON MstEmployee.DepartmentId = MstDepartment.Id
         WHERE TrnDTR.Id = @DTRId 
-          AND TrnDTRLine.EmployeeId = @ResolvedEmployeeId";
+          AND TrnDTRLine.EmployeeId = @ResolvedEmployeeId
+        ORDER BY TrnDTRLine.Date ASC";
 
             using (var connection = new SqlConnection(Config.ConnectionString))
             {

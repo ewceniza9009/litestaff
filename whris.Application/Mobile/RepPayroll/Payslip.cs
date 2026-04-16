@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -167,6 +167,7 @@ namespace whris.Application.Mobile.RepPayroll
                         SUM(LL.Debit - LL.Credit) AS Balance
                     FROM TrnLeaveLedger AS LL
                     WHERE LL.EmployeeId = TrnPayrollLine.EmployeeId
+                    AND LL.Date <= TrnPayroll.PayrollDate
                     GROUP BY LL.LeaveType
                 ) AS Balances
                 FOR XML PATH(''), TYPE
@@ -277,43 +278,47 @@ namespace whris.Application.Mobile.RepPayroll
         '</table>'
     ) AS OtBreakdown,
 
-        ('<table>'
-         + STUFF(
-                       (
-                           SELECT '<tr><td style=""""width: 135px; font-size: 12px;"""">' + OtherDeduction
-                                  + '</td><td style=""""width: 70px; text-align: right; font-size: 12px;"""">'
-                                  + CONVERT(NVARCHAR, FORMAT(ROUND(Balance, 2), 'N2')) + '</td></tr>'
-                           FROM
-                           (
-                               SELECT MstEmployeeLoan.Id,
-                                      MstEmployeeLoan.EmployeeId,
-                                      MstEmployeeLoan.OtherDeductionId,
-                                      MstOtherDeduction.OtherDeduction,
-                                      MstEmployeeLoan.Balance
-                               FROM MstEmployeeLoan
-                                   INNER JOIN MstOtherDeduction
-                                       ON MstOtherDeduction.Id = MstEmployeeLoan.OtherDeductionId
-                           ) LoanSub
-                           WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId AND LoanSub.Balance <> 0 
-                           FOR XML PATH(''), ROOT('root'), TYPE
-                       ).value('.', 'NVARCHAR(MAX)'),
-                       1,
-                       0,
-                       ''
-                   ) + '</table>'
-           ) AS LoanBalancesBreakdown,
+        ('<table>' +
+            STUFF(
+                (
+                    SELECT '<tr><td style=""width: 135px; font-size: 12px;"">' + OtherDeduction + '</td><td style=""width: 70px; text-align: right; font-size: 12px;"">' + CONVERT(NVARCHAR, FORMAT(ROUND(HistoricalBalance, 2), 'N2')) + '</td></tr>'
+                    FROM (
+                        SELECT 
+                            MstOtherDeduction.OtherDeduction,
+                            MstEmployeeLoan.Balance + ISNULL((
+                                SELECT SUM(PODL.Amount)
+                                FROM TrnPayrollOtherDeductionLine PODL
+                                INNER JOIN TrnPayrollOtherDeduction POD ON PODL.PayrollOtherDeductionId = POD.Id
+                                WHERE PODL.EmployeeLoanId = MstEmployeeLoan.Id
+                                AND POD.PODDate > TrnPayroll.PayrollDate
+                            ), 0) AS HistoricalBalance
+                        FROM MstEmployeeLoan
+                        INNER JOIN MstOtherDeduction ON MstEmployeeLoan.OtherDeductionId = MstOtherDeduction.Id
+                        WHERE MstEmployeeLoan.EmployeeId = TrnPayrollLine.EmployeeId
+                        AND MstEmployeeLoan.DateStart <= TrnPayroll.PayrollDate
+                    ) LoanSub
+                    WHERE LoanSub.HistoricalBalance <> 0 
+                    FOR XML PATH(''), ROOT('root'), TYPE
+                ).value('.', 'NVARCHAR(MAX)'), 1, 0, ''
+            ) + '</table>'
+        ) AS LoanBalancesBreakdown,
 
-         (
-        SELECT 
-            SUM(LoanSub.Balance)
-        FROM (
-            SELECT 
-                MstEmployeeLoan.EmployeeId,
-                MstEmployeeLoan.Balance
-            FROM MstEmployeeLoan
-            ) AS LoanSub
-            WHERE LoanSub.EmployeeId = TrnPayrollLine.EmployeeId
-            ) AS LoanBalances,
+          (
+         SELECT 
+             SUM(MstEmployeeLoan.Balance)
+         FROM MstEmployeeLoan
+         WHERE MstEmployeeLoan.EmployeeId = TrnPayrollLine.EmployeeId
+         AND MstEmployeeLoan.DateStart <= TrnPayroll.PayrollDate
+         ) + 
+         ISNULL((
+             SELECT SUM(PODL.Amount)
+             FROM TrnPayrollOtherDeductionLine PODL
+             INNER JOIN TrnPayrollOtherDeduction POD ON PODL.PayrollOtherDeductionId = POD.Id
+             INNER JOIN MstEmployeeLoan ON PODL.EmployeeLoanId = MstEmployeeLoan.Id
+             WHERE PODL.EmployeeId = TrnPayrollLine.EmployeeId
+             AND POD.PODDate > TrnPayroll.PayrollDate
+             AND MstEmployeeLoan.DateStart <= TrnPayroll.PayrollDate
+         ), 0) AS LoanBalances,
 
         TrnPayrollLine.NetIncome, 
         TrnPayroll.PreparedBy,
