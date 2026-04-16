@@ -3425,6 +3425,7 @@ namespace whris.Application.Library
                                                     }
                                                 }
                                             }
+
                                             if ((shiftCodeDay?.TimeIn1 ?? dline.Date) != dline.Date && (shiftCodeDay?.TimeOut1 ?? dline.Date) == dline.Date && shiftCodeDay?.TimeOut2 != dline.Date)
                                             {
                                                 if (logDateTime < shiftCodeDay?.TimeIn1 || (logDateTime >= shiftCodeDay?.TimeIn1 && logDateTime < shiftCodeDay?.TimeOut2))
