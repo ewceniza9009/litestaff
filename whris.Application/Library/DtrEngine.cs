@@ -2589,16 +2589,14 @@ namespace whris.Application.Library
                                         continue;
                                     }
 
-                                    var escSetup2 = new EmployeeShiftCodeDay();
                                     if (employeeShiftCodes is not null && dline is not null)
                                     {
-                                        escSetup2.ParamEmployeeId = dline.EmployeeId;
-                                        escSetup2.ParamDay = dline.Date.ToString("dddd");
-                                        escSetup2.ParamLogTimeIn1 = DateTime.Parse(
-                                            $"{log.Date:d} {log.Time:hh:mm tt}"
-                                        );
-
-                                        var escDays2 = escSetup2.Result(
+                                        var escDays2 = GetEmployeeShiftCodeDays(
+                                            employeeShiftCodes,
+                                            shiftCodeDays,
+                                            dline.EmployeeId,
+                                            dline.Date.ToString("dddd"),
+                                            DateTime.Parse($"{log.Date:d} {log.Time:hh:mm tt}"),
                                             isLongShift ? log.LogType : null
                                         );
                                         dline.ShiftCodeId = shiftCodeId = QuickChangeShiftv2(
@@ -2672,8 +2670,10 @@ namespace whris.Application.Library
 
                                     foreach (var sc in orderedShiftDays)
                                     {
+                                        var scDate = firstDateOfLogWeekly.AddDays(weekDayMap[sc.Day]);
+
                                         sc.TimeIn1 = DateTime.Parse(
-                                            $"{tempDate} {sc.TimeIn1:hh:mm tt}"
+                                            $"{scDate} {sc.TimeIn1:hh:mm tt}"
                                         );
 
                                         if (sc.TimeOut1 is not null)
@@ -2683,10 +2683,10 @@ namespace whris.Application.Library
                                             sc.TimeOut1 =
                                                 in1o > o1o
                                                     ? DateTime
-                                                      .Parse($"{tempDate} {sc.TimeOut1:hh:mm tt}")
+                                                      .Parse($"{scDate} {sc.TimeOut1:hh:mm tt}")
                                                       .AddDays(1)
                                                     : DateTime.Parse(
-                                                          $"{tempDate} {sc.TimeOut1:hh:mm tt}"
+                                                          $"{scDate} {sc.TimeOut1:hh:mm tt}"
                                                       );
                                         }
                                         if (sc.TimeIn2 is not null)
@@ -2696,10 +2696,10 @@ namespace whris.Application.Library
                                             sc.TimeIn2 =
                                                 in1o > in2o
                                                     ? DateTime
-                                                      .Parse($"{tempDate} {sc.TimeIn2:hh:mm tt}")
+                                                      .Parse($"{scDate} {sc.TimeIn2:hh:mm tt}")
                                                       .AddDays(1)
                                                     : DateTime.Parse(
-                                                          $"{tempDate} {sc.TimeIn2:hh:mm tt}"
+                                                          $"{scDate} {sc.TimeIn2:hh:mm tt}"
                                                       );
                                         }
                                         if (sc.TimeOut2 is not null)
@@ -2711,14 +2711,12 @@ namespace whris.Application.Library
                                             sc.TimeOut2 =
                                                 in1o > out2o
                                                     ? DateTime
-                                                      .Parse($"{tempDate} {sc.TimeOut2:hh:mm tt}")
+                                                      .Parse($"{scDate} {sc.TimeOut2:hh:mm tt}")
                                                       .AddDays(1)
                                                     : DateTime.Parse(
-                                                          $"{tempDate} {sc.TimeOut2:hh:mm tt}"
+                                                          $"{scDate} {sc.TimeOut2:hh:mm tt}"
                                                       );
                                         }
-
-                                        tempDate = tempDate.AddDays(1);
                                     }
 
                                     var logDateShiftDay = UnknownDayKey;
@@ -3741,6 +3739,39 @@ namespace whris.Application.Library
                     && line.TimeIn1ShiftCodeId != 0
                 )
                     line.ShiftCodeId = line.TimeIn1ShiftCodeId;
+
+                line.RegularHours = ComputeRegularHours(
+                    new TrnDtrline
+                    {
+                        TimeIn1 = line.TimeIn1,
+                        TimeOut1 = line.TimeOut1,
+                        TimeIn2 = line.TimeIn2,
+                        TimeOut2 = line.TimeOut2,
+                        DayTypeId = line.DayTypeId,
+                        ShiftCodeId = line.ShiftCodeId,
+                        EmployeeId = line.EmployeeId
+                    },
+                    shiftCodeDays,
+                    true,
+                    context
+                );
+                line.TardyLateHours = ComputeTardyLateHours(
+                    new TrnDtrline
+                    {
+                        Date = line.Date,
+                        ShiftCodeId = line.ShiftCodeId,
+                        TimeIn1 = line.TimeIn1,
+                        TimeOut1 = line.TimeOut1,
+                        TimeIn2 = line.TimeIn2,
+                        TimeOut2 = line.TimeOut2,
+                        ShiftDates = line.ShiftDates,
+                        EmployeeId = line.EmployeeId
+                    },
+                    shiftCodeDays,
+                    employees,
+                    context
+                );
+                line.NetTotalHours = line.RegularHours - line.TardyLateHours;
             }
 
             employees = null;
@@ -4308,6 +4339,52 @@ namespace whris.Application.Library
             }
 
             return logs;
+        }
+        #endregion
+        #region Helpers
+        public static IEnumerable<EmployeeShiftCodeDay.Record> GetEmployeeShiftCodeDays(
+            IEnumerable<MstEmployeeShiftCode> employeeShiftCodes,
+            IEnumerable<MstShiftCodeDay> shiftCodeDays,
+            int employeeId,
+            string day,
+            DateTime logDateTime,
+            string? logType = "I"
+        )
+        {
+            var result = (from sc in employeeShiftCodes
+                         join scd in shiftCodeDays on sc.ShiftCodeId equals scd.ShiftCodeId
+                         where sc.EmployeeId == employeeId && scd.Day == day
+                         select new EmployeeShiftCodeDay.Record
+                         {
+                             EmployeeId = sc.EmployeeId,
+                             ShiftCodeId = scd.ShiftCodeId,
+                             Day = scd.Day,
+                             TimeIn1 = scd.TimeIn1 ?? DateTime.MinValue,
+                             TimeOut2 = scd.TimeOut2 ?? DateTime.MinValue,
+                             LogTimeIn1 = logDateTime
+                         }).ToList();
+
+            foreach (var item in result)
+            {
+                item.TimeIn1 = DateTime.Parse($"{logDateTime.Date:d} {item.TimeIn1:hh:mm tt}");
+                item.TimeOut2 = DateTime.Parse($"{logDateTime.Date:d} {item.TimeOut2:hh:mm tt}");
+
+                var discrepancy = (item.TimeIn1 - item.LogTimeIn1).TotalHours;
+                if (discrepancy < -20) item.TimeIn1 = item.TimeIn1.AddDays(1);
+                if (discrepancy > 20) item.TimeIn1 = item.TimeIn1.AddDays(-1);
+
+                item.Interval = Math.Abs((item.TimeIn1 - item.LogTimeIn1).TotalHours);
+
+                if (logType == "O")
+                {
+                    discrepancy = (item.TimeOut2 - item.LogTimeIn1).TotalHours;
+                    if (discrepancy < -20) item.TimeOut2 = item.TimeOut2.AddDays(1);
+                    if (discrepancy > 20) item.TimeOut2 = item.TimeOut2.AddDays(-1);
+                    item.Interval = Math.Abs((item.TimeOut2 - item.LogTimeIn1).TotalHours);
+                }
+            }
+
+            return result;
         }
         #endregion
     }
