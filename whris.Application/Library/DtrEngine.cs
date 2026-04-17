@@ -35,7 +35,6 @@ namespace whris.Application.Library
     // NOTE: DtrBatchProcessor is defined in DTR.cs and shared by both classes.
     //       It does NOT need to be duplicated here.
 
-
     // =========================================================================
     /// <summary>
     /// DtrEngine — refactored replacement for the <c>DTR</c> class.
@@ -4341,6 +4340,7 @@ namespace whris.Application.Library
             return logs;
         }
         #endregion
+
         #region Helpers
         public static IEnumerable<EmployeeShiftCodeDay.Record> GetEmployeeShiftCodeDays(
             IEnumerable<MstEmployeeShiftCode> employeeShiftCodes,
