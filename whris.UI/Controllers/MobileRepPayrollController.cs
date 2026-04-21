@@ -43,7 +43,9 @@ namespace whris.UI.Controllers
 
         public async Task<JsonResult> GetDTRs(string Code)
         {
-            return Json(await Common.GetDTRs2Async(Code));
+            var result = await Common.GetDTRs2Async(Code);
+
+            return Json(result);
         }
 
         public async Task<JsonResult> GetDTRSlip(int DTRId, string Code)
@@ -53,7 +55,10 @@ namespace whris.UI.Controllers
                 DTRId = DTRId,
                 MobileCode = Code
             };
-            return Json(await dtrslip.ResultAsync());
+
+            var result = await dtrslip.ResultAsync();
+
+            return Json(result);
         }
 
         public async Task<JsonResult> GetMemos(string Code)
