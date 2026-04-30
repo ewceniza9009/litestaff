@@ -91,6 +91,11 @@ namespace whris.UI.Pages.RptPayroll
                 request.ParamCompanyId
             };
 
+            // Fetch payroll info for headers
+            var payrollInfo = connection.QueryFirstOrDefault("SELECT Remarks, PayrollDate FROM TrnPayroll WHERE Id = @ParamPayrollId", new { request.ParamPayrollId });
+            string periodCovered = payrollInfo?.Remarks ?? "";
+            DateTime? payrollDate = payrollInfo?.PayrollDate;
+
             using (var reader = connection.ExecuteReader(GetSqlScript(), parameters))
             {
                 while (reader.Read())
@@ -111,6 +116,8 @@ namespace whris.UI.Pages.RptPayroll
                 return Page();
             }
 
+            string companyName = results.First().ContainsKey("CompanyName") ? results.First()["CompanyName"]?.ToString() ?? "CEBU GOLDEN RESTAURANT INC" : "CEBU GOLDEN RESTAURANT INC";
+
             var dataTable = new DataTable();
             var headers = results.First().Keys.ToList();
             foreach (var header in headers)
@@ -126,13 +133,27 @@ namespace whris.UI.Pages.RptPayroll
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
-                var worksheet = package.Workbook.Worksheets.Add("Payroll Worksheet w/ Other Income & Deduction Breakdown");
+                var worksheet = package.Workbook.Worksheets.Add("Payroll Worksheet");
 
-                worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+                // Headers at the top
+                worksheet.Cells["A1"].Value = companyName;
+                worksheet.Cells["A1"].Style.Font.Bold = true;
+                worksheet.Cells["A1"].Style.Font.Size = 14;
 
-                using (var range = worksheet.Cells[1, 1, 1, headers.Count])
+                worksheet.Cells["A2"].Value = $"PERIOD COVERED: {periodCovered}";
+                worksheet.Cells["A3"].Value = $"PAYROLL FOR: {payrollDate?.ToString("MMMM d, yyyy")}";
+
+                // Load data starting from A5
+                worksheet.Cells["A5"].LoadFromDataTable(dataTable, true);
+
+                // Style the headers at row 5
+                using (var range = worksheet.Cells[5, 1, 5, headers.Count])
                 {
                     range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    range.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                    worksheet.Cells[5, 1, 5, headers.Count].AutoFilter = true;
                 }
 
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
@@ -198,11 +219,10 @@ namespace whris.UI.Pages.RptPayroll
                 -- Construct the final dynamic SQL query
                 SET @sql = N'
                 SELECT
-                    -- Explicitly list all columns from MainReport except PayrollId, EmployeeId, PayrollNumber, PayrollDate
-                    MainReport.Remarks AS PayrollRemarks,
+                    MainReport.FullName,
+                    IIF(MainReport.PayrollTypeId = 2, ''BANK'', ''CASH'') AS [Cash/Bank],
                     MainReport.BranchName,
                     MainReport.CompanyName,
-                    MainReport.FullName,
                     MainReport.TotalWorkingHours,
                     MainReport.TotalRestdayHours,
                     MainReport.TotalOverTimeHours,
@@ -210,34 +230,30 @@ namespace whris.UI.Pages.RptPayroll
                     MainReport.TotalTardyHours,
                     MainReport.FixBasicSalary,
                     MainReport.VariableBasicSalary,
+                    0 AS [UNCREDITED HOURS],
+                    0 AS [1 DAY],
+                    0 AS [ASSUMED 4 DAYS],
+                    0 AS [UNDERTIME],
+                    0 AS [OVER PAY],
+                    MainReport.TotalSalaryAmount AS [Total Worked Amount],
                     MainReport.OtherSalary,
-                    MainReport.TotalSalaryAmount, 
-                    MainReport.TotalTardyAmount, 
-                    MainReport.TotalAbsentAmount, 
-                    MainReport.TotalNetSalaryAmount,
-                    MainReport.TotalOtherIncomeTaxable, 
-                    MainReport.GrossIncome, 
-                    MainReport.TotalOtherIncomeNonTaxable,
-                    MainReport.GrossIncomeWithNonTaxable, 
-                    MainReport.SSSContribution, 
-                    MainReport.SSSECContribution,
-                    MainReport.SSSContributionTotal, 
-                    MainReport.PHICContribution, 
-                    MainReport.HDMFContribution,
-                    MainReport.Tax, 
-                    MainReport.TotalOtherDeduction, 
-                    MainReport.NetIncome'
-                    -- Append dynamic income and deduction columns
+                    0 AS [OVERTIME],
+                    0 AS [OVERDEDUCTION],
+                    0 AS [Premium- Regular Holiday],
+                    MainReport.TotalSalaryAmount + MainReport.OtherSalary AS [Totals] '
                     + CASE WHEN @incomeColsForFinalSelect IS NOT NULL THEN N', ' + @incomeColsForFinalSelect ELSE N'' END
+                    + N', MainReport.GrossIncome AS [GROSS PAY] '
                     + CASE WHEN @deductionColsForFinalSelect IS NOT NULL THEN N', ' + @deductionColsForFinalSelect ELSE N'' END
-                + N'
+                    + N', MainReport.SSSContribution,
+                    MainReport.PHICContribution AS [PHIC],
+                    MainReport.SSSContribution + MainReport.PHICContribution + MainReport.HDMFContribution + MainReport.Tax + MainReport.TotalOtherDeduction AS [TOTAL DEDUCTIONS],
+                    MainReport.NetIncome AS [NET PAY]
                 FROM
                     (
                         SELECT
-                            -- PayrollId and EmployeeId are selected here for JOINing purposes
-                            -- but are not included in the final SELECT list above.
                             TrnPayrollLine.PayrollId, 
                             TrnPayrollLine.EmployeeId,
+                            MstEmployee.PayrollTypeId,
                             TrnPayroll.PayrollNumber, 
                             TrnPayroll.PayrollDate, 
                             TrnPayroll.Remarks,
@@ -255,7 +271,7 @@ namespace whris.UI.Pages.RptPayroll
                             TrnPayrollLine.TotalSalaryAmount, TrnPayrollLine.TotalTardyAmount, TrnPayrollLine.TotalAbsentAmount, TrnPayrollLine.TotalNetSalaryAmount,
                             TrnPayrollLine.TotalOtherIncomeTaxable, TrnPayrollLine.GrossIncome, TrnPayrollLine.TotalOtherIncomeNonTaxable,
                             TrnPayrollLine.GrossIncomeWithNonTaxable, TrnPayrollLine.SSSContribution, TrnPayrollLine.SSSECContribution,
-                            TrnPayrollLine.SSSContribution AS SSSContributionTotal, TrnPayrollLine.PHICContribution, TrnPayrollLine.HDMFContribution,
+                            TrnPayrollLine.PHICContribution, TrnPayrollLine.HDMFContribution,
                             TrnPayrollLine.Tax, TrnPayrollLine.TotalOtherDeduction, TrnPayrollLine.NetIncome              
                         FROM TrnPayrollLine
                         INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id

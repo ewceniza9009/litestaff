@@ -1,4 +1,4 @@
-﻿//For DayType
+//For DayType
 $transitionTime = 200;
 
 var grid = new Object();
@@ -315,12 +315,20 @@ function CmdAddDayTypeDay(e)
             userId: $("#Id").val()
         },
         success: function (data) {
-            data.Date = new Date(data.Date).toLocaleDateString();
-            data.DateBefore = new Date(data.DateBefore).toLocaleDateString();
-            data.DateAfter = new Date(data.DateAfter).toLocaleDateString();
-
-            $("#MstDayTypeDays").getKendoGrid()
-                .dataSource.insert(data);
+            var grid = $("#MstDayTypeDays").getKendoGrid();
+            if (Array.isArray(data)) {
+                data.forEach(function(item) {
+                    item.Date = new Date(item.Date);
+                    item.DateBefore = new Date(item.DateBefore);
+                    item.DateAfter = new Date(item.DateAfter);
+                    grid.dataSource.insert(item);
+                });
+            } else {
+                data.Date = new Date(data.Date);
+                data.DateBefore = new Date(data.DateBefore);
+                data.DateAfter = new Date(data.DateAfter);
+                grid.dataSource.insert(data);
+            }
         }
     });
 }
@@ -417,4 +425,88 @@ function loadPartialViewViaTurnPage() {
             }
         }
     });
+}
+
+function CmdOpenBulkAddModal() {
+    $("#bulkAddDialog").data("kendoDialog").open();
+    if (!$("#bulkDate").data("kendoDatePicker")) {
+        $("#bulkDate").kendoDatePicker({
+            value: new Date(),
+            format: "MM/dd/yyyy",
+            change: function() {
+                var date = this.value();
+                if (date) {
+                    var dateBefore = new Date(date);
+                    dateBefore.setDate(date.getDate() - 1);
+                    $("#bulkDateBefore").data("kendoDatePicker").value(dateBefore);
+                    
+                    var dateAfter = new Date(date);
+                    dateAfter.setDate(date.getDate() + 1);
+                    $("#bulkDateAfter").data("kendoDatePicker").value(dateAfter);
+                }
+            }
+        });
+        
+        var defaultDate = new Date();
+        var defaultBefore = new Date(defaultDate);
+        defaultBefore.setDate(defaultDate.getDate() - 1);
+        var defaultAfter = new Date(defaultDate);
+        defaultAfter.setDate(defaultDate.getDate() + 1);
+
+        $("#bulkDateBefore").kendoDatePicker({
+            value: defaultBefore,
+            format: "MM/dd/yyyy"
+        });
+        
+        $("#bulkDateAfter").kendoDatePicker({
+            value: defaultAfter,
+            format: "MM/dd/yyyy"
+        });
+    }
+}
+
+function onConfirmBulkAdd() {
+    var datePicker = $("#bulkDate").data("kendoDatePicker");
+    var selectedDate = datePicker.value();
+    
+    var dateBeforePicker = $("#bulkDateBefore").data("kendoDatePicker");
+    var selectedDateBefore = dateBeforePicker.value();
+    
+    var dateAfterPicker = $("#bulkDateAfter").data("kendoDatePicker");
+    var selectedDateAfter = dateAfterPicker.value();
+    
+    if (!selectedDate || !selectedDateBefore || !selectedDateAfter) {
+        alert("Please select all dates.");
+        return false;
+    }
+
+    var token = $('input[name="__RequestVerificationToken"]', $("#frmDetail")).val();
+
+    $.ajax({
+        url: "/MstDayType/Detail?handler=BulkAddDayTypeDay",
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: {
+            __RequestVerificationToken: token,
+            userId: $("#Id").val(),
+            date: kendo.toString(selectedDate, "yyyy-MM-dd"),
+            dateBefore: kendo.toString(selectedDateBefore, "yyyy-MM-dd"),
+            dateAfter: kendo.toString(selectedDateAfter, "yyyy-MM-dd")
+        },
+        success: function (data) {
+            var grid = $("#MstDayTypeDays").getKendoGrid();
+            if (Array.isArray(data)) {
+                data.forEach(function(item) {
+                    item.Date = new Date(item.Date);
+                    item.DateBefore = new Date(item.DateBefore);
+                    item.DateAfter = new Date(item.DateAfter);
+                    grid.dataSource.insert(item);
+                });
+            }
+            $isDirty = true;
+        }
+    });
+    
+    return true;
 }

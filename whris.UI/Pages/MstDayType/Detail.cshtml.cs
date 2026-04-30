@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using whris.Application.CQRS.MstDayType.Commands;
 using whris.Application.CQRS.MstDayType.Queries;
 using whris.Application.Dtos;
@@ -86,6 +90,56 @@ namespace whris.UI.Pages.MstDayType
             };
 
             return new JsonResult(await _mediator.Send(getDayTypeForm));
+        }
+
+        public async Task<IActionResult> OnPostBulkAddDayTypeDay(int userId, DateTime date, DateTime dateBefore, DateTime dateAfter)
+        {
+            using var context = new whris.Data.Data.HRISContext();
+            
+            var lockedBranches = context.MstBranches
+                .Include(b => b.Company)
+                .Where(b => b.Company.IsLocked)
+                .ToList();
+
+            var result = new List<MstDayTypeDayDto>();
+
+            if (lockedBranches.Any())
+            {
+                foreach (var branch in lockedBranches)
+                {
+                    result.Add(new MstDayTypeDayDto()
+                    {
+                        Id = 0,
+                        DayTypeId = userId,
+                        BranchId = branch.Id,
+                        Date = date.Date,
+                        DateAfter = dateAfter.Date,
+                        DateBefore = dateBefore.Date,
+                        ExcludedInFixed = false,
+                        Remarks = "NA",
+                        WithAbsentInFixed = false,
+                        IsDeleted = false,
+                    });
+                }
+            }
+            else
+            {
+                result.Add(new MstDayTypeDayDto()
+                {
+                    Id = 0,
+                    DayTypeId = userId,
+                    BranchId = context.MstBranches.FirstOrDefault()?.Id ?? 0,
+                    Date = date.Date,
+                    DateAfter = dateAfter.Date,
+                    DateBefore = dateBefore.Date,
+                    ExcludedInFixed = false,
+                    Remarks = "NA",
+                    WithAbsentInFixed = false,
+                    IsDeleted = false,
+                });
+            }
+
+            return new JsonResult(await Task.Run(() => result));
         }
 
         public async Task<IActionResult> OnGetBranches()
