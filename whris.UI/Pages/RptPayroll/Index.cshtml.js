@@ -1,4 +1,4 @@
-﻿$selectedReportId = 0;
+$selectedReportId = 0;
 
 $("#DateStart").val(new Date().toLocaleDateString());
 $("#DateEnd").val(new Date().toLocaleDateString());
@@ -61,6 +61,55 @@ function CmdPreview()
                 a.style.display = 'none';
                 a.href = url;
                 a.download = 'PayrollWorksheetWIncomeDeductionBreakdown.xlsx';                 
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    if ($selectedReportId == 3.3) {
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        const payrollId = $("#PayrollId").val();
+        const employmentType = $("#EmploymentType").val();
+        const companyId = $("#CompanyId").val();
+        const branchId = $("#BranchId").val();
+
+        const formData = new FormData();
+        formData.append("ParamPayrollId", payrollId);
+        formData.append("ParamEmploymentType", employmentType);
+        formData.append("ParamCompanyId", companyId);
+        formData.append("ParamBranchId", branchId);
+
+        fetch('/RptPayroll/Index?handler=ExportToExcelLegacy', {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': token
+            },
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const disposition = response.headers.get('content-disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    return response.blob();
+                }
+                return null;
+            })
+            .then(blob => {
+                if (!blob) return;
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'PayrollWorksheetWIncomeDeductionBreakdown_Legacy.xlsx';
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);

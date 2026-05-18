@@ -64,6 +64,7 @@ namespace whris.UI.Pages.RptPayroll
                 new ReportList(){ Value = "2.1", Text = "Payslip (Continues)" },
                 new ReportList(){ Value = "3", Text = "" },
                 new ReportList(){ Value = "3.1", Text = "Payroll Worksheet w/ Other Income & Deduction Breakdown (Excel)" },
+                new ReportList(){ Value = "3.3", Text = "Payroll Worksheet w/ Other Income & Deduction Breakdown (Excel) - Legacy" },
                 new ReportList(){ Value = "3.2", Text = "" },
                 new ReportList(){ Value = "4", Text = "Payroll Worksheet w/ No. of Hrs" },
                 new ReportList(){ Value = "5", Text = "Payroll Worksheet w/ Departments" },
@@ -272,6 +273,243 @@ namespace whris.UI.Pages.RptPayroll
                             TrnPayrollLine.TotalOtherIncomeTaxable, TrnPayrollLine.GrossIncome, TrnPayrollLine.TotalOtherIncomeNonTaxable,
                             TrnPayrollLine.GrossIncomeWithNonTaxable, TrnPayrollLine.SSSContribution, TrnPayrollLine.SSSECContribution,
                             TrnPayrollLine.PHICContribution, TrnPayrollLine.HDMFContribution,
+                            TrnPayrollLine.Tax, TrnPayrollLine.TotalOtherDeduction, TrnPayrollLine.NetIncome              
+                        FROM TrnPayrollLine
+                        INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id
+                        INNER JOIN MstEmployee ON TrnPayrollLine.EmployeeId = MstEmployee.Id
+                        INNER JOIN MstBranch ON MstEmployee.BranchId = MstBranch.Id
+                        INNER JOIN MstCompany ON MstEmployee.CompanyId = MstCompany.Id
+                        WHERE TrnPayroll.IsLocked = 1
+                            AND TrnPayrollLine.PayrollId = @ParamPayrollId
+                            AND ISNULL(MstEmployee.EmploymentType, 1) LIKE ISNULL(@ParamEmploymentType, ''%'')
+                            AND (@ParamBranchId = 0 OR MstEmployee.BranchId = @ParamBranchId)
+                            AND (@ParamCompanyId = 0 OR MstEmployee.CompanyId = @ParamCompanyId)
+                    ) AS MainReport'
+                -- Join pivoted deduction data
+                + CASE WHEN @deductionCols IS NOT NULL THEN N'
+                LEFT JOIN
+                    (
+                        SELECT PayrollId, EmployeeId, ' + @deductionColsForSubquery + N'
+                        FROM (
+                            SELECT TrnPayroll.Id AS PayrollId, TrnPayrollOtherDeductionLine.EmployeeId, MstOtherDeduction.OtherDeduction, TrnPayrollOtherDeductionLine.Amount
+                            FROM TrnPayrollOtherDeductionLine
+                            INNER JOIN TrnPayrollOtherDeduction ON TrnPayrollOtherDeduction.Id = TrnPayrollOtherDeductionLine.PayrollOtherDeductionId
+                            INNER JOIN TrnPayroll ON TrnPayrollOtherDeduction.Id = TrnPayroll.PayrollOtherDeductionId
+                            INNER JOIN MstEmployee ON MstEmployee.Id = TrnPayrollOtherDeductionLine.EmployeeId
+                            INNER JOIN MstOtherDeduction ON MstOtherDeduction.Id = TrnPayrollOtherDeductionLine.OtherDeductionId
+                            WHERE TrnPayroll.IsLocked = 1 AND TrnPayroll.Id = @ParamPayrollId
+                        ) AS SourceData
+                        PIVOT (SUM(Amount) FOR OtherDeduction IN (' + @deductionCols + N')) AS PivotTable
+                    ) AS PivotedDeductions ON MainReport.PayrollId = PivotedDeductions.PayrollId AND MainReport.EmployeeId = PivotedDeductions.EmployeeId'
+                ELSE N'' END
+                -- Join pivoted income data
+                + CASE WHEN @incomeCols IS NOT NULL THEN N'
+                LEFT JOIN
+                    (
+                        SELECT PayrollId, EmployeeId, ' + @incomeColsForSubquery + N'
+                        FROM (
+                            SELECT TrnPayroll.Id AS PayrollId, TrnPayrollOtherIncomeLine.EmployeeId, MstOtherIncome.OtherIncome, TrnPayrollOtherIncomeLine.Amount
+                            FROM TrnPayrollOtherIncomeLine
+                            INNER JOIN TrnPayrollOtherIncome ON TrnPayrollOtherIncome.Id = TrnPayrollOtherIncomeLine.PayrollOtherIncomeId
+                            INNER JOIN TrnPayroll ON TrnPayrollOtherIncome.Id = TrnPayroll.PayrollOtherIncomeId
+                            INNER JOIN MstEmployee ON MstEmployee.Id = TrnPayrollOtherIncomeLine.EmployeeId
+                            INNER JOIN MstOtherIncome ON MstOtherIncome.Id = TrnPayrollOtherIncomeLine.OtherIncomeId
+                            WHERE TrnPayroll.IsLocked = 1 AND TrnPayroll.Id = @ParamPayrollId
+                        ) AS SourceData
+                        PIVOT (SUM(Amount) FOR OtherIncome IN (' + @incomeCols + N')) AS PivotTable
+                    ) AS PivotedIncomes ON MainReport.PayrollId = PivotedIncomes.PayrollId AND MainReport.EmployeeId = PivotedIncomes.EmployeeId'
+                ELSE N'' END
+                + N'
+                ORDER BY
+                    MainReport.FullName;
+                ';
+
+                -- Execute the final query
+                EXEC sp_executesql @sql,
+                    N'@ParamPayrollId INT, @ParamEmploymentType NVARCHAR(50), @ParamBranchId INT, @ParamCompanyId INT',
+                    @ParamPayrollId = @ParamPayrollId,
+                    @ParamEmploymentType = @ParamEmploymentType,
+                    @ParamBranchId = @ParamBranchId,
+                    @ParamCompanyId = @ParamCompanyId;";
+        }
+        public IActionResult OnPostExportToExcelLegacyAsync(ExcelRequestModel request)
+        {
+            var results = new List<IDictionary<string, object>>();
+            using var connection = new SqlConnection(Config.ConnectionString);
+
+            var parameters = new
+            {
+                request.ParamPayrollId,
+                ParamEmploymentType = string.IsNullOrEmpty(request.ParamEmploymentType) ? null : request.ParamEmploymentType,
+                request.ParamBranchId,
+                request.ParamCompanyId
+            };
+
+            using (var reader = connection.ExecuteReader(GetSqlScriptLegacy(), parameters))
+            {
+                while (reader.Read())
+                {
+                    var row = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        var name = reader.GetName(i);
+                        var value = reader.GetValue(i);
+                        row[name] = value == DBNull.Value ? null : value;
+                    }
+                    results.Add(row);
+                }
+            }
+
+            if (!results.Any())
+            {
+                return Page();
+            }
+
+            var dataTable = new DataTable();
+            var headers = results.First().Keys.ToList();
+            foreach (var header in headers)
+            {
+                var firstValue = results.First()[header];
+                dataTable.Columns.Add(header, firstValue?.GetType() ?? typeof(string));
+            }
+            foreach (var row in results)
+            {
+                dataTable.Rows.Add(row.Values.ToArray());
+            }
+
+            var stream = new MemoryStream();
+            using (var package = new ExcelPackage(stream))
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Payroll Worksheet w/ Other Income & Deduction Breakdown");
+
+                worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+
+                using (var range = worksheet.Cells[1, 1, 1, headers.Count])
+                {
+                    range.Style.Font.Bold = true;
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                package.SaveAs(stream);
+                stream.Position = 0;
+            }
+
+            var excelName = $"PayrollWorksheetWIncomeDeductionBreakdown_Legacy_{DateTime.Now:yyyyMMdd}.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private string GetSqlScriptLegacy()
+        {
+            return @"
+            --DECLARE @ParamPayrollId AS INTEGER;
+                --DECLARE @ParamEmploymentType AS NVARCHAR(50);
+                --DECLARE @ParamBranchId AS INTEGER;
+                --DECLARE @ParamCompanyId AS INTEGER;
+
+                --SET @ParamPayrollId = 24;
+                --SET @ParamEmploymentType = NULL;
+                --SET @ParamBranchId = 0;
+                --SET @ParamCompanyId = 0;
+
+                DECLARE @deductionCols AS NVARCHAR(MAX),
+                        @deductionColsForSubquery AS NVARCHAR(MAX),
+                        @deductionColsForFinalSelect AS NVARCHAR(MAX),
+                        @incomeCols AS NVARCHAR(MAX),
+                        @incomeColsForSubquery AS NVARCHAR(MAX),
+                        @incomeColsForFinalSelect AS NVARCHAR(MAX),
+                        @sql AS NVARCHAR(MAX);
+
+                -- Prepare dynamic deduction columns
+                WITH DeductionNames AS (
+                    SELECT DISTINCT OD.OtherDeduction
+                    FROM MstOtherDeduction OD
+                    INNER JOIN TrnPayrollOtherDeductionLine ODL ON OD.Id = ODL.OtherDeductionId
+                    INNER JOIN TrnPayrollOtherDeduction POD ON ODL.PayrollOtherDeductionId = POD.Id
+                    INNER JOIN TrnPayroll P ON POD.Id = P.PayrollOtherDeductionId
+                    WHERE P.Id = @ParamPayrollId AND ODL.Amount <> 0
+                )
+                SELECT
+                    @deductionCols = STUFF((SELECT ',' + QUOTENAME(OtherDeduction) FROM DeductionNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, ''),
+                    @deductionColsForSubquery = STUFF((SELECT ',' + QUOTENAME(OtherDeduction) FROM DeductionNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, ''),
+                    @deductionColsForFinalSelect = STUFF((SELECT ', ISNULL(PivotedDeductions.' + QUOTENAME(OtherDeduction) + ', 0) AS ' + QUOTENAME(OtherDeduction + '_Deduction') FROM DeductionNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '');
+
+                -- Prepare dynamic income columns
+                WITH IncomeNames AS (
+                    SELECT DISTINCT OI.OtherIncome
+                    FROM MstOtherIncome OI
+                    INNER JOIN TrnPayrollOtherIncomeLine OIL ON OI.Id = OIL.OtherIncomeId
+                    INNER JOIN TrnPayrollOtherIncome POI ON OIL.PayrollOtherIncomeId = POI.Id
+                    INNER JOIN TrnPayroll P ON POI.Id = P.PayrollOtherIncomeId
+                    WHERE P.Id = @ParamPayrollId AND OIL.Amount <> 0
+                )
+                SELECT
+                    @incomeCols = STUFF((SELECT ',' + QUOTENAME(OtherIncome) FROM IncomeNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, ''),
+                    @incomeColsForSubquery = STUFF((SELECT ',' + QUOTENAME(OtherIncome) FROM IncomeNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, ''),
+                    @incomeColsForFinalSelect = STUFF((SELECT ', ISNULL(PivotedIncomes.' + QUOTENAME(OtherIncome) + ', 0) AS ' + QUOTENAME(OtherIncome + '_Income') FROM IncomeNames FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '');
+
+                -- Construct the final dynamic SQL query
+                SET @sql = N'
+                SELECT
+                    -- Explicitly list all columns from MainReport except PayrollId, EmployeeId, PayrollNumber, PayrollDate
+                    MainReport.Remarks AS PayrollRemarks,
+                    MainReport.BranchName,
+                    MainReport.CompanyName,
+                    MainReport.FullName,
+                    MainReport.TotalWorkingHours,
+                    MainReport.TotalRestdayHours,
+                    MainReport.TotalOverTimeHours,
+                    MainReport.TotalNightHours,
+                    MainReport.TotalTardyHours,
+                    MainReport.FixBasicSalary,
+                    MainReport.VariableBasicSalary,
+                    MainReport.OtherSalary,
+                    MainReport.TotalSalaryAmount, 
+                    MainReport.TotalTardyAmount, 
+                    MainReport.TotalAbsentAmount, 
+                    MainReport.TotalNetSalaryAmount,
+                    MainReport.TotalOtherIncomeTaxable, 
+                    MainReport.GrossIncome, 
+                    MainReport.TotalOtherIncomeNonTaxable,
+                    MainReport.GrossIncomeWithNonTaxable, 
+                    MainReport.SSSContribution, 
+                    MainReport.SSSECContribution,
+                    MainReport.SSSContributionTotal, 
+                    MainReport.PHICContribution, 
+                    MainReport.HDMFContribution,
+                    MainReport.Tax, 
+                    MainReport.TotalOtherDeduction, 
+                    MainReport.NetIncome'
+                    -- Append dynamic income and deduction columns
+                    + CASE WHEN @incomeColsForFinalSelect IS NOT NULL THEN N', ' + @incomeColsForFinalSelect ELSE N'' END
+                    + CASE WHEN @deductionColsForFinalSelect IS NOT NULL THEN N', ' + @deductionColsForFinalSelect ELSE N'' END
+                + N'
+                FROM
+                    (
+                        SELECT
+                            -- PayrollId and EmployeeId are selected here for JOINing purposes
+                            -- but are not included in the final SELECT list above.
+                            TrnPayrollLine.PayrollId, 
+                            TrnPayrollLine.EmployeeId,
+                            TrnPayroll.PayrollNumber, 
+                            TrnPayroll.PayrollDate, 
+                            TrnPayroll.Remarks,
+                            MstBranch.Branch as BranchName,
+                            MstCompany.Company as CompanyName,
+                            MstEmployee.FullName,
+                            [TotalRegularWorkingHours] + [TotalLegalHolidayWorkingHours] + [TotalSpecialHolidayWorkingHours] AS TotalWorkingHours,
+                            [TotalRegularRestdayHours] + [TotalLegalHolidayRestdayHours] + [TotalSpecialHolidayRestdayHours] AS TotalRestdayHours,
+                            [TotalRegularOvertimeHours] + [TotalLegalHolidayOvertimeHours] + [TotalSpecialHolidayOvertimeHours] + [TotalSpecialHolidayNightHours] AS TotalOverTimeHours,
+                            [TotalRegularNightHours] + [TotalLegalHolidayNightHours] AS TotalNightHours,
+                            [TotalTardyLateHours] + [TotalTardyUndertimeHours] AS TotalTardyHours,
+                            IIF([MstEmployee].[PayrollTypeId] = 2, [mstEmployee].[PayrollRate], 0) AS FixBasicSalary,
+                            IIF([MstEmployee].[PayrollTypeId] = 1, [TotalSalaryAmount] - [TotalLegalHolidayWorkingAmount] - [TotalSpecialHolidayWorkingAmount] - [TotalRegularRestdayAmount] - [TotalLegalHolidayRestdayAmount] - [TotalSpecialHolidayRestdayAmount] - [TotalRegularOvertimeAmount] - [TotalLegalHolidayOvertimeAmount] - [TotalSpecialHolidayOvertimeAmount] - [TotalRegularNightAmount] - [TotalLegalHolidayNightAmount] - [TotalSpecialHolidayNightAmount] - [TotalRegularNightOvertimeAmount] - [TotalLegalHolidayNightOvertimeAmount] - [TotalSpecialHolidayNightOvertimeAmount], 0) AS VariableBasicSalary,
+                            [TotalLegalHolidayWorkingAmount] + [TotalSpecialHolidayWorkingAmount] + [TotalRegularRestdayAmount] + [TotalLegalHolidayRestdayAmount] + [TotalSpecialHolidayRestdayAmount] + [TotalRegularOvertimeAmount] + [TotalLegalHolidayOvertimeAmount] + [TotalSpecialHolidayOvertimeAmount] + [TotalRegularNightAmount] + [TotalLegalHolidayNightAmount] + [TotalSpecialHolidayNightAmount] + [TotalRegularNightOvertimeAmount] + [TotalLegalHolidayNightOvertimeAmount] + [TotalSpecialHolidayNightOvertimeAmount] AS OtherSalary,
+                            TrnPayrollLine.TotalSalaryAmount, TrnPayrollLine.TotalTardyAmount, TrnPayrollLine.TotalAbsentAmount, TrnPayrollLine.TotalNetSalaryAmount,
+                            TrnPayrollLine.TotalOtherIncomeTaxable, TrnPayrollLine.GrossIncome, TrnPayrollLine.TotalOtherIncomeNonTaxable,
+                            TrnPayrollLine.GrossIncomeWithNonTaxable, TrnPayrollLine.SSSContribution, TrnPayrollLine.SSSECContribution,
+                            TrnPayrollLine.SSSContribution AS SSSContributionTotal, TrnPayrollLine.PHICContribution, TrnPayrollLine.HDMFContribution,
                             TrnPayrollLine.Tax, TrnPayrollLine.TotalOtherDeduction, TrnPayrollLine.NetIncome              
                         FROM TrnPayrollLine
                         INNER JOIN TrnPayroll ON TrnPayrollLine.PayrollId = TrnPayroll.Id
