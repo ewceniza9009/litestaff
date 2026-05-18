@@ -24,17 +24,18 @@ namespace whris.Application.Library
         // ID 1 = Working Day
         public static decimal GetRegularWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
-            if (!isRestDay && dayType == 1) { result = numberOfHours;  }
-            else { result = 0; } 
+            var result = 0m;
+            if (!isRestDay && dayType == 1) { result = numberOfHours; }
+            else { result = 0; }
             return result;
         }
 
         // ID 2 = Regular Holiday (Legal)
-        public static decimal GetLegalHolidayWorkingHours(bool isRestDay, int dayType, decimal numberOfHours) 
+        public static decimal GetLegalHolidayWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
-            if (!isRestDay && dayType == 2) {  result = numberOfHours; } else
+            var result = 0m;
+            if (!isRestDay && dayType == 2) { result = numberOfHours; }
+            else
             { result = 0; }
             return result;
         }
@@ -42,47 +43,47 @@ namespace whris.Application.Library
         // ID 3 = Special Holiday
         public static decimal GetSpecialHolidayWorkingHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
+            var result = 0m;
             if (!isRestDay && dayType == 3) { result = numberOfHours; }
-            else { result = 0; } 
+            else { result = 0; }
             return result;
         }
 
         public static decimal GetRegularRestDayHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
-            if (isRestDay && dayType == 1) { result = numberOfHours;  }
-            else { result = 0; } 
+            var result = 0m;
+            if (isRestDay && dayType == 1) { result = numberOfHours; }
+            else { result = 0; }
             return result;
         }
 
         public static decimal GetLegalHolidayRestDayHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
-            if (isRestDay && dayType == 2) {  result = numberOfHours;  }
-            else {  result = 0; } 
+            var result = 0m;
+            if (isRestDay && dayType == 2) { result = numberOfHours; }
+            else { result = 0; }
             return result;
         }
 
         public static decimal GetSpecialHolidayRestDayHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
+            var result = 0m;
             if (isRestDay && dayType == 3) { result = numberOfHours; }
-            else {  result = 0; } 
+            else { result = 0; }
             return result;
         }
 
         public static decimal GetRegularOvertimeHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
-            if (dayType == 1) {  result = numberOfHours; }
-            else { result = 0; } 
+            var result = 0m;
+            if (dayType == 1) { result = numberOfHours; }
+            else { result = 0; }
             return result;
         }
 
         public static decimal GetLegalHolidayOvertimeHours(bool isRestDay, int dayType, decimal numberOfHours)
         {
-            var result = 0m; 
+            var result = 0m;
             if (dayType == 2) { result = numberOfHours; }
             else { result = 0; }
             return result;
@@ -202,7 +203,7 @@ namespace whris.Application.Library
 
         public static decimal GetLegalHolidayOvertimeAmount(bool isRestDay, int dayType, decimal amount)
         {
-            if (!isComputeNightOvertimeOnNonRegularDays) 
+            if (!isComputeNightOvertimeOnNonRegularDays)
             {
                 return 0;
             }
@@ -372,7 +373,7 @@ namespace whris.Application.Library
             return 0;
         }
 
-        public static decimal ComputeSSSContribution(TrnPayrollLine line, HRISContext _context) 
+        public static decimal ComputeSSSContribution(TrnPayrollLine line, HRISContext _context)
         {
             var amount = 0m;
             var sssContribution = 0m;
@@ -384,8 +385,8 @@ namespace whris.Application.Library
                 ?.IsExemptedInMandatoryDeductions ?? false;
             var isSSSForApprove = employee?.Sssnumber?.Contains("FA") ?? true;
 
-            if(isSSSForApprove) return sssContribution;
-            if(isExemptedOnMandatoryDeductions) return sssContribution;
+            if (isSSSForApprove) return sssContribution;
+            if (isExemptedOnMandatoryDeductions) return sssContribution;
 
             var basic = 0m;
             var sssIsGrossAmount = _context.MstEmployees
@@ -405,7 +406,7 @@ namespace whris.Application.Library
 
                 amount = line.TotalSalaryAmount + (mandantoryDeductionDivisor == 1 ? totalSalaryAmountOfTheMonth : 0);
             }
-            else 
+            else
             {
                 var basicAmountOfTheMonth = query.Result()
                     .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
@@ -446,7 +447,7 @@ namespace whris.Application.Library
             line.OrigSSSContribution = (employeeContribution / mandantoryDeductionDivisor);
             line.SSSWISP = employeeWISP / mandantoryDeductionDivisor;
 
-            sssContribution = (employeeContribution/mandantoryDeductionDivisor) + (employeeWISP/mandantoryDeductionDivisor) + SSSAddon + (mandantoryDeductionDivisor == 1 ? sSSContributionOfTheMonth : 0);
+            sssContribution = (employeeContribution / mandantoryDeductionDivisor) + (employeeWISP / mandantoryDeductionDivisor) + SSSAddon + (mandantoryDeductionDivisor == 1 ? sSSContributionOfTheMonth : 0);
 
             return sssContribution;
         }
@@ -578,7 +579,7 @@ namespace whris.Application.Library
                 .FirstOrDefault(x => x.EmployeeId == line.EmployeeId)
                 ?.SSSContributionEmployerOfTheMonth ?? 0m;
 
-            sSSECContributionEmployer = (employerContribution / mandantoryDeductionDivisor) + (employerWISP / mandantoryDeductionDivisor) +  + (mandantoryDeductionDivisor == 1 ? sSSContributionEmployerOfTheMonth : 0);
+            sSSECContributionEmployer = (employerContribution / mandantoryDeductionDivisor) + (employerWISP / mandantoryDeductionDivisor) + +(mandantoryDeductionDivisor == 1 ? sSSContributionEmployerOfTheMonth : 0);
 
             return sSSECContributionEmployer;
         }
@@ -694,9 +695,9 @@ namespace whris.Application.Library
 
             phicContribution = (employeeContribution / mandantoryDeductionDivisor) + (mandantoryDeductionDivisor == 1 ? phicContributionOfTheMonth : 0);
 
-            if (isComputePhicByPercentage && phicPercentage > 0) 
+            if (isComputePhicByPercentage && phicPercentage > 0)
             {
-                phicContribution = basic * phicPercentage/100;
+                phicContribution = basic * phicPercentage / 100;
             }
 
             return phicContribution;
@@ -824,7 +825,7 @@ namespace whris.Application.Library
                 hdmfContribution = (amount * (employeePercentage / 100)) / mandantoryDeductionDivisor;
                 hdmfContribution = hdmfContribution - (mandantoryDeductionDivisor == 1 ? hdmfContributionOfTheMonth : 0);
             }
-            else 
+            else
             {
                 var employeeValue = _context.MstTableHdmfs
                    .FirstOrDefault(x => (x.AmountStart / mandantoryDeductionDivisor) <= amount && (x.AmountEnd / mandantoryDeductionDivisor) >= amount)
@@ -961,7 +962,7 @@ namespace whris.Application.Library
                     phicContributionOfTheMonth +
                     hdmfContributionOfTheMonth;
             }
-            else 
+            else
             {
                 dblTotalSalaryAmount = line.TotalNetSalaryAmount +
                     line.Ssscontribution +
@@ -983,7 +984,7 @@ namespace whris.Application.Library
                     .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount == dblTotalSalaryAmount)
                     ?.Max(x => (decimal?)x.Percentage) ?? 0;
             }
-            else 
+            else
             {
                 dblCompensationLevel = _context.MstTableWtaxSemiMonthlies
                         .Where(x => x.TaxCodeId == line.TaxCodeId && x.Amount < dblTotalSalaryAmount)
@@ -1008,21 +1009,21 @@ namespace whris.Application.Library
 
                 dblTotalOtherIncomeTaxable = line.TotalOtherIncomeTaxable + totalOtherIncomeTaxableOfTheMonth;
             }
-            else 
+            else
             {
                 dblTotalOtherIncomeTaxable = line.TotalOtherIncomeTaxable;
             }
 
-            if (dblCompensationLevelPercentage == 0) 
+            if (dblCompensationLevelPercentage == 0)
             {
                 if (taxTable == "Monthly")
                 {
                     dblCompensationLevelPercentage = _context.MstTableWtaxMonthlies
-                        .FirstOrDefault(x => x.TaxCodeId == line.TaxCodeId && 
+                        .FirstOrDefault(x => x.TaxCodeId == line.TaxCodeId &&
                             x.Amount < dblTotalSalaryAmount + dblTotalOtherIncomeTaxable)
                         ?.Percentage ?? 0;
                 }
-                else 
+                else
                 {
                     dblCompensationLevelPercentage = _context.MstTableWtaxSemiMonthlies
                         .FirstOrDefault(x => x.TaxCodeId == line.TaxCodeId &&
@@ -1052,7 +1053,7 @@ namespace whris.Application.Library
                     ?.Max(x => (decimal?)x.Tax) ?? 0;
                 return Math.Round(dblTax, 2);
             }
-            
+
             decimal _dblTaxPercentage = _context.MstTableWtaxSemiMonthlies
                 .Where(x => x.TaxCodeId == line.TaxCodeId)
                 ?.Max(x => (decimal?)x.Percentage) ?? 0;
@@ -1061,7 +1062,7 @@ namespace whris.Application.Library
                 ?.Max(x => (decimal?)x.Amount) ?? 0;
             decimal dblTaxPercentage = _dblTaxPercentage / 100;
             decimal dblExcessAmount = (dblTotalSalaryAmount - line.Ssscontribution - line.Phiccontribution - line.Hdmfcontribution) - dblTaxAmountException;
-            if(dblExcessAmount > 0)
+            if (dblExcessAmount > 0)
             {
                 dblTax = dblExcessAmount * dblTaxPercentage;
                 return Math.Round(dblTax, 2);
@@ -1080,7 +1081,7 @@ namespace whris.Application.Library
         #region Edit Payroll Lines based on DTR Line inputs
         internal static async Task ProcessDtrLines(AddPayrollLinesByProcessDtr command, HRISContext _context)
         {
-            try 
+            try
             {
                 using (var ctx = new HRISContext())
                 {
@@ -1094,7 +1095,7 @@ namespace whris.Application.Library
                     }
 
                     ctx.SaveChanges();
-                            
+
                     var trnDtrLines = ctx.TrnDtrlines
                         .Include(x => x.Employee)
                         .Where(x => x.Dtrid == command.DtrId)
@@ -1125,7 +1126,7 @@ namespace whris.Application.Library
                             x.Employee.TaxCodeId,
                             x.Employee.AccountId,
                             x.Employee.HourlyRate,
-                            x.Employee.DailyRate,                           
+                            x.Employee.DailyRate,
                             x.Employee.PayrollRate,
                             x.RestDay,
                             x.DayTypeId,
@@ -1165,7 +1166,7 @@ namespace whris.Application.Library
                         newPayrollLine.TaxCodeId = line.Key.TaxCodeId;
                         newPayrollLine.AccountId = line.Key.AccountId;
 
-                        newPayrollLine.PayrollRate = line.Key.PayrollRate;                        
+                        newPayrollLine.PayrollRate = line.Key.PayrollRate;
 
                         var regAmount = line.Where(x => x.NetAmount != x.RegularAmount).Sum(x => x.RegularAmount);
                         var legal = line.Sum(x => x.NetAmount) == line.Sum(x => x.RegularAmount) ?
@@ -1191,7 +1192,7 @@ namespace whris.Application.Library
                             specialNet = line.Sum(x => x.RegularAmount) * 0.3m;
                         }
 
-                        if (line.Key.PayrollTypeId == 1 && line.Key.DayTypeId > 1 && line.Sum(x => x.NetAmount) > 0) 
+                        if (line.Key.PayrollTypeId == 1 && line.Key.DayTypeId > 1 && line.Sum(x => x.NetAmount) > 0)
                         {
                             var totalSpecAmount = line.Where(x => x.NetAmount != x.RegularAmount).Sum(x => x.RegularAmount);
 
@@ -1272,7 +1273,7 @@ namespace whris.Application.Library
                         //        line.Sum(x => x.NightAmount) -
                         //        line.Sum(x => x.OvertimeNightAmount));
 
-                        if (line.Key.PayrollTypeId == 3) 
+                        if (line.Key.PayrollTypeId == 3)
                         {
                             totalLegalHolidayWorkingAmount = GetLegalHolidayWorkingAmount(line.Key.RestDay, effectiveDayType,
                                line.Sum(x => x.NetAmount) == 0 ? 0 : legal);
@@ -1289,7 +1290,7 @@ namespace whris.Application.Library
                         decimal addRegularWorkingAmount = 0;
                         if (totalRegularRestdayAmount > 0) // Bro's Changes
                         {
-                            if(line.Key.PayrollTypeId != 1)
+                            if (line.Key.PayrollTypeId != 1)
                             {
                                 var origTotalRegularRestDayAmount = totalRegularRestdayAmount;
                                 // Eggs Changes
@@ -1312,7 +1313,7 @@ namespace whris.Application.Library
                                 line.Sum(x => x.OvertimeNightAmount));
 
                         if (totalLegalHolidayRestdayAmount > 0) // Confirm this change with sir joel
-                        {                     
+                        {
                             var origTotalLegalRestDayAmount = totalLegalHolidayRestdayAmount;
                             totalLegalHolidayRestdayAmount = regAmount * 1.6m;
                             totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalLegalRestDayAmount - totalLegalHolidayRestdayAmount);
@@ -1324,8 +1325,8 @@ namespace whris.Application.Library
                                 line.Sum(x => x.OvertimeNightAmount));
 
                         if (totalSpecialHolidayRestdayAmount > 0) // Confirm this change with sir joel
-                        {                          
-                            var origTotalSpecialRestDayAmount = totalSpecialHolidayRestdayAmount     ;
+                        {
+                            var origTotalSpecialRestDayAmount = totalSpecialHolidayRestdayAmount;
                             totalSpecialHolidayRestdayAmount = regAmount * 0.50m;
                             totalRegularWorkingAmount = totalRegularWorkingAmount + (origTotalSpecialRestDayAmount - totalSpecialHolidayRestdayAmount);
                         }
@@ -1346,7 +1347,7 @@ namespace whris.Application.Library
                         var totalSpecialHolidayNightOvertimeAmount = GetSpecialHolidayNightOvertimeAmount(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightAmount));
                         var totalSpecialHolidayNightOvertimeAmountDeduction = GetSpecialHolidayNightOvertimeAmountDeduction(line.Key.RestDay, line.Key.DayTypeId, line.Sum(x => x.OvertimeNightAmount));
                         decimal totalSalaryAmount = 0;
-                        if(line.Key.PayrollTypeId == 3)
+                        if (line.Key.PayrollTypeId == 3)
                         {
                             decimal amount = line.Sum(x => x.TotalAmount);
                             if (line.Key.DayTypeId > 1)
@@ -1362,7 +1363,14 @@ namespace whris.Application.Library
                         {
                             if (line.Key.DayTypeId == 3)
                             {
-                                totalSalaryAmount = line.Sum(x => x.TotalAmount) + totalSpecialHolidayWorkingAmount;
+                                if (line.Key.PayrollTypeId == 1)
+                                {
+                                    totalSalaryAmount = line.Sum(x => x.TotalAmount);
+                                }
+                                else
+                                {
+                                    totalSalaryAmount = line.Sum(x => x.TotalAmount) + totalSpecialHolidayWorkingAmount;
+                                }
                             }
                             else
                             {
@@ -1386,7 +1394,12 @@ namespace whris.Application.Library
 
                         var totalTardyAmount = line.Sum(x => x.TardyAmount) + holidayTotalLateAmount;
                         //var totalTardyAmount = line.Sum(x => x.TardyAmount);
-                        var totalAbsentAmount = line.Sum(x => x.AbsentAmount);
+                        decimal totalAbsentAmount = 0;
+                        if (line.Key.PayrollTypeId != 1)
+                        {
+                            totalAbsentAmount = line.Sum(x => x.AbsentAmount);
+                        }
+
                         decimal totalNetSalaryAmount = 0;
                         totalNetSalaryAmount = line.Sum(x => x.NetAmount) - holidayTotalLateAmount;
                         //totalNetSalaryAmount = line.Sum(x => x.NetAmount);
@@ -1560,7 +1573,7 @@ namespace whris.Application.Library
                                 newPayrollLine.TotalSalaryAmount = dblPayrollRate;
                                 newPayrollLine.TotalNetSalaryAmount = totalNetSalaryAmount2;
 
-                                if (line.Key.PayrollTypeId == 2) 
+                                if (line.Key.PayrollTypeId == 2)
                                 {
                                     newPayrollLine.TotalSalaryAmount = line.Key.PayrollRate;
                                     newPayrollLine.TotalAbsentAmount = 0;
@@ -1585,13 +1598,13 @@ namespace whris.Application.Library
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("hourly rate")) 
+                if (ex.Message.Contains("hourly rate"))
                 {
                     throw new Exception(ex.Message);
                 }
 
                 Console.WriteLine("Message: " + ex.Message);
-            }           
+            }
         }
 
         internal static async Task ProcessPayrollOtherIncome(EditPayrollLinesByOtherIncome command)
@@ -1654,9 +1667,9 @@ namespace whris.Application.Library
             }
         }
 
-        internal static async Task ProcessSSS(EditPayrollLinesByMandatory command, HRISContext _context) 
+        internal static async Task ProcessSSS(EditPayrollLinesByMandatory command, HRISContext _context)
         {
-            using (var ctx = new HRISContext()) 
+            using (var ctx = new HRISContext())
             {
                 var payrollGroupId = ctx.TrnPayrolls
                     .Where(x => x.Id == command.PayrollId)
@@ -1665,29 +1678,29 @@ namespace whris.Application.Library
 
                 mandantoryDeductionDivisor = 2;
 
-                if (payrollGroupId == 52) 
+                if (payrollGroupId == 52)
                 {
                     mandantoryDeductionDivisor = 4;
                 }
 
-                if (payrollGroupId == 55) 
+                if (payrollGroupId == 55)
                 {
                     mandantoryDeductionDivisor = 1;
                 }
 
-                if (command.IsProcessInMonth) 
+                if (command.IsProcessInMonth)
                 {
                     mandantoryDeductionDivisor = 1;
                 }
 
                 var payrollLines = ctx.TrnPayrollLines.Where(x => x.PayrollId == command.PayrollId);
 
-                if (command.EmployeeId is not null) 
+                if (command.EmployeeId is not null)
                 {
                     payrollLines = ctx.TrnPayrollLines.Where(x => x.PayrollId == command.PayrollId && x.EmployeeId == command.EmployeeId);
                 }
 
-                foreach (var line in payrollLines) 
+                foreach (var line in payrollLines)
                 {
                     line.Ssscontribution = ComputeSSSContribution(line, _context);
                     line.Ssseccontribution = ComputeSSSECContribution(line, _context);
@@ -1785,7 +1798,7 @@ namespace whris.Application.Library
             }
         }
 
-        internal static async Task ProcessWithholdingTax(EditPayrollLinesByWithholding command, HRISContext _context) 
+        internal static async Task ProcessWithholdingTax(EditPayrollLinesByWithholding command, HRISContext _context)
         {
             using (var ctx = new HRISContext())
             {
@@ -1823,7 +1836,7 @@ namespace whris.Application.Library
                     decimal grossIncome;
                     decimal grossIncomeWithNonTaxable;
                     decimal mandatoryDeduction;
-               
+
 
                     if (is13thMonth)
                     {
@@ -1831,7 +1844,7 @@ namespace whris.Application.Library
                         grossIncomeWithNonTaxable = 0;
                         mandatoryDeduction = 0;
                         line.TotalNetSalaryAmount = 0;
-                        
+
                     }
                     else
                     {
@@ -1843,7 +1856,7 @@ namespace whris.Application.Library
                     line.GrossIncome = grossIncome;
                     line.GrossIncomeWithNonTaxable = grossIncomeWithNonTaxable;
                     line.NetIncome = grossIncomeWithNonTaxable - mandatoryDeduction - line.Tax - line.TotalOtherDeduction;
-                
+
                 }
 
                 await ctx.SaveChangesAsync();

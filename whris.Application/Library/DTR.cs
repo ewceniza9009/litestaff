@@ -299,7 +299,7 @@ namespace whris.Application.Library
                 {
                     if (line.TimeIn1 == null && line.TimeOut1 == null)
                     {
-                      
+
                         if (line.Employee.IsFlexBreak == false)
                         {
                             line.HalfdayAbsent = false;
@@ -314,7 +314,35 @@ namespace whris.Application.Library
 
                     if (line.TimeIn2 == null && line.TimeOut2 == null)
                     {
-                        
+
+                        if (line.Employee.IsFlexBreak == false)
+                        {
+                            line.HalfdayAbsent = false;
+                            return 0;
+                        }
+                        else
+                        {
+                            line.HalfdayAbsent = true;
+                            return shiftCodeDay.NumberOfHours / 2;
+                        }
+                    }
+
+                    if (line.TimeIn1 == null && line.TimeOut1 != null && line.TimeIn2 != null && line.TimeOut2 != null)
+                    {
+                        if (line.Employee.IsFlexBreak == false)
+                        {
+                            line.HalfdayAbsent = false;
+                            return 0;
+                        }
+                        else
+                        {
+                            line.HalfdayAbsent = true;
+                            return shiftCodeDay.NumberOfHours / 2;
+                        }
+                    }
+
+                    if (line.TimeIn1 != null && line.TimeOut1 == null && line.TimeIn2 != null && line.TimeOut2 != null)
+                    {
                         if (line.Employee.IsFlexBreak == false)
                         {
                             line.HalfdayAbsent = false;
@@ -407,22 +435,22 @@ namespace whris.Application.Library
                             return 0;
                         }
 
-                    if (line.DayTypeId > 1) // 2: Regular, 3: Special
-                    {
-                        if (isEligibleForHolidayPay)
+                        if (line.DayTypeId > 1) // 2: Regular, 3: Special
                         {
-                            if (line != null && line.RestDay && line.TimeIn1 == null && line.TimeOut1 == null && line.TimeIn2 == null && line.TimeOut2 == null)
+                            if (isEligibleForHolidayPay)
                             {
-                                return 0;
-                            }
+                                if (line != null && line.RestDay && line.TimeIn1 == null && line.TimeOut1 == null && line.TimeIn2 == null && line.TimeOut2 == null)
+                                {
+                                    return 0;
+                                }
 
-                            return shiftCodeDay.NumberOfHours;
+                                return shiftCodeDay.NumberOfHours;
+                            }
+                            else
+                            {
+                                return 0; // Ineligible for holiday pay (worked/not worked)
+                            }
                         }
-                        else
-                        {
-                            return 0; // Ineligible for holiday pay (worked/not worked)
-                        }
-                    }
                     }
                 }
             }
@@ -1035,7 +1063,7 @@ namespace whris.Application.Library
                 }
                 else
                 {
-                    if(line?.Employee.IsFlexBreak == true)
+                    if (line?.Employee.IsFlexBreak == true)
                     {
                         return 0;
                     }
@@ -1155,7 +1183,7 @@ namespace whris.Application.Library
                     }
 
                     numberOfHours = shiftNumberOfHours - (actualNumberOfHours - deductHours);
-                    if(numberOfHours < 0)
+                    if (numberOfHours < 0)
                     {
                         numberOfHours = 0;
                     }
@@ -2951,10 +2979,10 @@ namespace whris.Application.Library
                                                             if (currentOut?.LogDateTime is DateTime dt1)
                                                             {
                                                                 var currentIn = currentDayLogs.Where(a => a.LogType == "1").FirstOrDefault();
-                                                                    if (currentIn?.LogDateTime is DateTime dt2)
-                                                                    {
-                                                                        empDLine.TimeIn2 = currentIn.LogDateTime;
-                                                                    }
+                                                                if (currentIn?.LogDateTime is DateTime dt2)
+                                                                {
+                                                                    empDLine.TimeIn2 = currentIn.LogDateTime;
+                                                                }
                                                                 empDLine.TimeOut2 = currentOut.LogDateTime;
                                                             }
 
@@ -4173,7 +4201,7 @@ namespace whris.Application.Library
 
                             if (line.HalfdayAbsent)
                             {
-                                if(line.Employee.IsFlexBreak == false)
+                                if (line.Employee.IsFlexBreak == false)
                                 {
                                     if (line.TardyLateHours > line.TardyUndertimeHours)
                                     {
