@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model DetailModel
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -138,6 +138,7 @@
         .ToolBar(x =>
         {
             x.Custom().Text("Add Day").IconClass("k-icon k-i-plus").HtmlAttributes(new { onclick = "CmdAddDayTypeDay(); return false;" });
+            x.Custom().Text("Bulk Add").IconClass("k-icon k-i-plus-outline").HtmlAttributes(new { onclick = "CmdOpenBulkAddModal(); return false;" });
         })
         .Columns(columns =>
         {
@@ -149,11 +150,10 @@
             columns.ForeignKey(column => column.BranchId, x => x.Read(b => b.Url("/MstDayType/Detail?handler=Branches")), "Id", "Branch")
                 .Width(400)
                 .Title("Branches")
-                .Filterable(false)
                 .HtmlAttributes(new { onchange = "onBranchChange()" });
-            columns.Bound(column => column.Date).Width(150);
-            columns.Bound(column => column.DateBefore).Width(175).Title("Working Date Before");
-            columns.Bound(column => column.DateAfter).Width(175).Title("Working Date After");
+            columns.Bound(column => column.Date).Width(150).Format("{0:MM/dd/yyyy}");
+            columns.Bound(column => column.DateBefore).Width(175).Title("Working Date Before").Format("{0:MM/dd/yyyy}");
+            columns.Bound(column => column.DateAfter).Width(175).Title("Working Date After").Format("{0:MM/dd/yyyy}");
             columns.Bound(x => x.ExcludedInFixed)
                 .Title("Excluded in Fixed")
                 .ClientTemplate("<input type='checkbox' #= ExcludedInFixed ? checked='checked' : '' # />")
@@ -172,6 +172,7 @@
         })
         .Editable(editable => editable.Mode(GridEditMode.InCell))
         .Sortable()
+        .Filterable()
         .Navigatable()
         .Selectable(x => x.Mode(GridSelectionMode.Single))
         .Pageable()
@@ -181,9 +182,9 @@
         {
             model.Id(p => p.Id);
             model.Field(p => p.BranchId);
-            model.Field(p => p.Date);
-            model.Field(p => p.DateBefore);
-            model.Field(p => p.DateAfter);
+            model.Field(p => p.Date).DefaultValue(DateTime.Now);
+            model.Field(p => p.DateBefore).DefaultValue(DateTime.Now);
+            model.Field(p => p.DateAfter).DefaultValue(DateTime.Now);
             model.Field(p => p.ExcludedInFixed);
             model.Field(p => p.WithAbsentInFixed);
             model.Field(p => p.Remarks);
@@ -193,6 +194,21 @@
         .PageSize(20)
         ))
 </form>
+
+@(Html.Kendo().Dialog()
+    .Name("bulkAddDialog")
+    .Title("Bulk Add Day")
+    .Content("<div class='form-group row' style='margin: 10px;'><label class='col-md-4' style='padding-top: 5px; font-weight: bold;'>Date: </label><div class='col-md-8'><input id='bulkDate' style='width: 100%' /></div></div>" +
+             "<div class='form-group row' style='margin: 10px;'><label class='col-md-4' style='padding-top: 5px; font-weight: bold;'>Working Date Before: </label><div class='col-md-8'><input id='bulkDateBefore' style='width: 100%' /></div></div>" +
+             "<div class='form-group row' style='margin: 10px;'><label class='col-md-4' style='padding-top: 5px; font-weight: bold;'>Working Date After: </label><div class='col-md-8'><input id='bulkDateAfter' style='width: 100%' /></div></div>")
+    .Width(400)
+    .Modal(true)
+    .Visible(false)
+    .Actions(actions =>
+    {
+        actions.Add().Text("Cancel");
+        actions.Add().Text("OK").Action("onConfirmBulkAdd").Primary(true);
+    }))
 
 <script>
     $("#frmDetail").keydown(function (e) {

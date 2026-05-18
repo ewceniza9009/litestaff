@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using whris.Application.Dtos;
 using whris.Data.Data;
 
