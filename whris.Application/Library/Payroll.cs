@@ -1356,7 +1356,7 @@ namespace whris.Application.Library
                             }
                             else
                             {
-                                totalSalaryAmount = amount > 0 ? addRegularWorkingAmount == 0 ? line.Key.PayrollRate + addRegularWorkingAmount : addRegularWorkingAmount : 0;
+                                totalSalaryAmount = amount > 0 ? addRegularWorkingAmount == 0 ? line.Key.PayrollRate + addRegularWorkingAmount : totalRegularRestdayAmount : 0;
                             }
                         }
                         else
@@ -1582,7 +1582,7 @@ namespace whris.Application.Library
 
                                 if (line.Key.PayrollTypeId == 3)
                                 {
-                                    newPayrollLine.TotalSalaryAmount = dblPayrollRate + (addRegularWorkingAmount - newPayrollLine.TotalRegularRestdayAmount);
+                                    newPayrollLine.TotalSalaryAmount = dblPayrollRate ;
                                     newPayrollLine.TotalNetSalaryAmount = newPayrollLine.TotalSalaryAmount - (newPayrollLine.TotalTardyAmount + newPayrollLine.TotalAbsentAmount);
                                 }
                             }

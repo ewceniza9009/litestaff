@@ -4055,13 +4055,13 @@ namespace whris.Application.Library
                             var lineDate = line?.Date;
                             var empStartDate = empLines.FirstOrDefault()?.Date;
 
-                            if (lineDate == empStartDate && lineDate != command.DateStart)
-                            {
-                                if (string.IsNullOrEmpty(line?.Dtrremarks?.Trim()))
-                                {
-                                    continue;
-                                }
-                            }
+                            //if (lineDate == empStartDate && lineDate != command.DateStart)
+                            //{
+                            //    if (string.IsNullOrEmpty(line?.Dtrremarks?.Trim()))
+                            //    {
+                            //        continue;
+                            //    }
+                            //}
                         }
 
                         var dateOnTimeIn1 = line?.Date ?? DateTime.Now;
