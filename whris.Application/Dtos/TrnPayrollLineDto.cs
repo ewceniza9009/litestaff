@@ -239,6 +239,8 @@ namespace whris.Application.Dtos
         [Column(TypeName = "decimal(18, 5)")]
         public decimal SSSWISP { get; set; }
 
+        public string? LineRemarks { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
         [Column(TypeName = "decimal(18, 5)")]

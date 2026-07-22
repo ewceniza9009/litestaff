@@ -20,6 +20,9 @@ namespace whris.Application.Dtos
         [Column(TypeName = "decimal(18, 5)")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N2}")]
         public decimal Amount { get; set; }
+
+        public string? LineRemarks { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
         public string? EmployeeName => Lookup.GetEmployeeNameById(EmployeeId);

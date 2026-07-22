@@ -53,9 +53,9 @@
         <ProjectReference Include="..\whris.Application\whris.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="whris.Data">
-            <HintPath>..\whris.Lib\Data\whris.Data.dll</HintPath>
-        </Reference>
+      <Reference Include="whris.Data">
+        <HintPath>..\whris.Lib\Data\whris.Data.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <ItemGroup>
         <Content Update="Pages\TrnPayroll\OtherIncome.cshtml">
@@ -121,8 +121,7 @@
 	</Target>
 
 	<Target Name="VerifySecurityReceipt" AfterTargets="Build">
-		<Error Text="SECURITY VIOLATION: The mandatory security tool (vr.exe) did not run or failed to complete. Build is invalid."
-			   Condition="!Exists('$(SecurityReceiptFile)')" />
+		<Error Text="SECURITY VIOLATION: The mandatory security tool (vr.exe) did not run or failed to complete. Build is invalid." Condition="!Exists('$(SecurityReceiptFile)')" />
 		<Message Text="Security tool execution successfully verified by receipt." Importance="high" Condition="Exists('$(SecurityReceiptFile)')" />
 	</Target>
 </Project>
