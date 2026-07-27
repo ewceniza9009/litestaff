@@ -35,6 +35,7 @@
                 {
                     columns.Bound(column => column.OtherIncomeText).Title("Other Income");
                     columns.Bound(column => column.Amount).Title("Amount").Width(170);
+                    columns.Bound(column => column.LineRemarks).Title("Remarks").Width(500);
                     columns.Bound(column => column.Id).Visible(false).Title("Id");
                     
                 })
@@ -47,7 +48,8 @@
                 {
                     model.Id(p => p.Id);
                     model.Field(p => p.OtherIncomeText).Editable(false);
-                    model.Field(p => p.Amount).Editable(true);
+                    model.Field(p => p.Amount).Editable(false);
+                    model.Field(p => p.LineRemarks).Editable(false);
                 })))
         </div>
     </div>

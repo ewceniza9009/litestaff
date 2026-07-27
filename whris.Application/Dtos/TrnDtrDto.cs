@@ -36,5 +36,6 @@ namespace whris.Application.Dtos
         public string Remarks { get; set; } = null!;
 
         public bool IsLocked { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

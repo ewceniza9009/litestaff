@@ -282,6 +282,7 @@
             columns.Bound(x => x.EmployeeId).Title("Employee").Filterable(false).EditorTemplateName("FKForPOIEmployee").ClientTemplate("#= GetEmployeeText(data) #").Width(300);
             columns.Bound(x => x.OtherIncomeId).Title("Other Income").Filterable(false).EditorTemplateName("FKForPOIOtherIncome").ClientTemplate("#= GetIncomeText(data) #").Width(250);
             columns.Bound(x => x.Amount).Title("Amount").Filterable(false).Width(130).HtmlAttributes(new { @style = "text-align: end;" });
+            columns.Bound(x => x.LineRemarks).Title("Remarks").Width(500);
             columns.Bound(x => x.EmployeeName)
                 .Title("Filter Employee")
                 .Filterable(true)

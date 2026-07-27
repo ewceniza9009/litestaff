@@ -304,6 +304,7 @@
                         .Width(130)
                         .HtmlAttributes(new { @style = "text-align: end;" })
                         .ClientFooterTemplate("<div style='text-align: end'>#=kendo.format(\"{0:n2}\", kendo.parseFloat(sum))#</div>");
+                    columns.Bound(x => x.LineRemarks).Title("Remarks").Width(500);
                     columns.Bound(x => x.EmployeeName)
                         .Title("Filter Employee")
                         .Filterable(true)

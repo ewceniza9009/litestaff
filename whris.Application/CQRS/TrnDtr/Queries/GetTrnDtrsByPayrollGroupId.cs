@@ -43,6 +43,7 @@ namespace whris.Application.CQRS.TrnDtr.Queries
                         DateEnd = x.DateEnd,
                         Remarks = x.Remarks,
                         IsLocked = x.IsLocked,
+                        IsApproved = x.IsApproved
                     })
                     .ToDataSourceResultAsync(request.Request);
 

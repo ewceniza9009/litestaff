@@ -38,5 +38,6 @@ namespace whris.Application.Dtos
         public int? ApprovedBy { get; set; }
 
         public bool IsLocked { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

@@ -1160,33 +1160,61 @@ function GetDayTypeText(data) {
 
 function ExcelExport(e) {
     var sheet = e.workbook.sheets[0];
+
+    // Isa ra ka loop para ma-agian tanan rows
     for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
-        var sheet = e.workbook.sheets[0];
-        for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
-            var row = sheet.rows[rowIndex];
-            //row.cells[1].format = "[Blue]#,##0.0_);[Red](#,##0.0);0.0;"
+        var row = sheet.rows[rowIndex];
 
-            for (let ctr = 0; ctr < $employees.length; ctr++) {
-                if ($employees[ctr].Id == row.cells[0].value) {
-                    row.cells[0].value = $employees[ctr].FullName;
+        // I-check kung dili ba siya footer/header una ilisan ang Employee, Shift, ug DayType
+        if (row.type !== "footer" && row.type !== "header") {
 
-                    break;
+            // Employee ID to FullName
+            if (row.cells[1] && row.cells[1].value != null) {
+                for (let ctr = 0; ctr < $employees.length; ctr++) {
+                    if ($employees[ctr].Id == row.cells[1].value) {
+                        row.cells[1].value = $employees[ctr].FullName;
+                        break;
+                    }
                 }
             }
 
-            for (let ctr = 0; ctr < $shiftCodes.length; ctr++) {
-                if ($shiftCodes[ctr].Id == row.cells[1].value) {
-                    row.cells[1].value = $shiftCodes[ctr].ShiftCode;
-
-                    break;
+            // ShiftCode ID to ShiftCode Name
+            if (row.cells[2] && row.cells[2].value != null) {
+                for (let ctr = 0; ctr < $shiftCodes.length; ctr++) {
+                    if ($shiftCodes[ctr].Id == row.cells[2].value) {
+                        row.cells[2].value = $shiftCodes[ctr].ShiftCode;
+                        break;
+                    }
                 }
             }
 
-            for (let ctr = 0; ctr < $dayTypes.length; ctr++) {
-                if ($dayTypes[ctr].Id == row.cells[3].value) {
-                    row.cells[3].value = $dayTypes[ctr].DayType;
+            // DayType ID to DayType Name
+            if (row.cells[4] && row.cells[4].value != null) {
+                for (let ctr = 0; ctr < $dayTypes.length; ctr++) {
+                    if ($dayTypes[ctr].Id == row.cells[4].value) {
+                        row.cells[4].value = $dayTypes[ctr].DayType;
+                        break;
+                    }
+                }
+            }
+        }
 
-                    break;
+        // Kung footer ang row, limpyohan ang HTML tags ug i-format as number
+        if (row.type === "footer") {
+            for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
+                var cell = row.cells[cellIndex];
+
+                if (cell.value && typeof cell.value === "string") {
+                    var cleanText = cell.value.replace(/<[^>]*>/g, "").trim();
+                    var num = parseFloat(cleanText.replace(/,/g, ''));
+
+                    if (!isNaN(num)) {
+                        cell.value = num;
+                        cell.format = "#,##0.00";
+                        cell.hAlign = "right";
+                    } else {
+                        cell.value = cleanText;
+                    }
                 }
             }
         }

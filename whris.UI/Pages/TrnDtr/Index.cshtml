@@ -21,7 +21,7 @@
     #modal-dialog-missingPunches {
         max-width: 60vw;
     }
-    
+
     #modal-dialog-editDetail {
         max-width: 800px;
     }
@@ -37,23 +37,23 @@
 
 <div class="lookUpPanel">
     <div class="row">
-     @(Html.Kendo().ComboBox()
-        .Name("payrollGroupCmb")
-        .Placeholder("Search payroll group...")
-        .DataValueField("Id")
-        .DataTextField("PayrollGroup")
-        .Suggest(true)
-        .SelectedIndex(0)
-        .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
-        .BindTo(Model.allPayrollGroups)
-        .Events(e => { e.Change("onPayrollGroupChange"); })
-        .Value("51"))
-    @(Html.Kendo().Button()
-        .Name("clearPayrollGroup")
-        .ThemeColor(ThemeColor.Light)
-        .Content("<i class='fa fa-xmark'></i>")
-        .HtmlAttributes(new { style = "width: 2.5%" })
-        .Events(e => e.Click("onClearPayrollGroupClick")))
+        @(Html.Kendo().ComboBox()
+                .Name("payrollGroupCmb")
+                .Placeholder("Search payroll group...")
+                .DataValueField("Id")
+                .DataTextField("PayrollGroup")
+                .Suggest(true)
+                .SelectedIndex(0)
+                .HtmlAttributes(new { style = "width:97%; margin-right: 5px;" })
+                .BindTo(Model.allPayrollGroups)
+                .Events(e => { e.Change("onPayrollGroupChange"); })
+                .Value("51"))
+        @(Html.Kendo().Button()
+                .Name("clearPayrollGroup")
+                .ThemeColor(ThemeColor.Light)
+                .Content("<i class='fa fa-xmark'></i>")
+                .HtmlAttributes(new { style = "width: 2.5%" })
+                .Events(e => e.Click("onClearPayrollGroupClick")))
     </div>
 </div>
 
@@ -88,7 +88,7 @@
                             <i class="fa fa-plus-square"></i>
                         </span>
                         Add
-                    </button>                    
+                    </button>
                 </div>
             </div>
         </div>
@@ -96,48 +96,54 @@
 
     <div class="row">
         @(Html.Kendo().Grid<TrnDtrDto>()
-            .Name("grid")
-            .Columns(columns =>
-            {
-                columns.Command(command => command.Custom("Detail")
-                .Click("CmdDetail")
-                .IconClass("k-icon k-i-track-changes-enable"))
-                .Width(120);
-                columns.Bound(column => column.Dtrdate).Title("Date").Width(150);
-                columns.Bound(column => column.Dtrnumber).Title("DTR Number").Width(170);
-                columns.Bound(column => column.DateStart).Title("Date Start").Width(150);
-                columns.Bound(column => column.DateEnd).Title("Date End").Width(150);
-                columns.Bound(column => column.Remarks).Title("Remarks");
-                columns.Bound(x => x.IsLocked)
-                .Title("L")
-                .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
-                .Filterable(false)
-                .Width(50);
-            })
-            .Filterable()
-            .Selectable(x => x.Mode(GridSelectionMode.Single))
-            .Pageable()
-            .Sortable()
-            .Editable(editable => editable.Mode(GridEditMode.InCell))
-            .Scrollable()
-            .DataSource(dataSource => dataSource
-            .Ajax()
-            .Model(model =>
-            {
-                model.Id(p => p.Id);
-                model.Field(p => p.Dtrdate).Editable(false);
-                model.Field(p => p.Dtrnumber).Editable(false);
-                model.Field(p => p.DateStart).Editable(false);
-                model.Field(p => p.DateEnd).Editable(false);
-                model.Field(p => p.Remarks).Editable(false);
-                model.Field(p => p.IsLocked).Editable(false);
-            })
-            .ServerOperation(true)
-            .PageSize(20)
-            .Read(read => read.Url("/TrnDtr/Index?handler=ReadDtrList")
-            .Data("forgeryToken")))
-            .Events(events => events.DataBound("onGridDatabound"))
-            )
+                .Name("grid")
+                .Columns(columns =>
+                {
+                    columns.Command(command => command.Custom("Detail")
+                    .Click("CmdDetail")
+                    .IconClass("k-icon k-i-track-changes-enable"))
+                    .Width(120);
+                    columns.Bound(column => column.Dtrdate).Title("Date").Width(150);
+                    columns.Bound(column => column.Dtrnumber).Title("DTR Number").Width(170);
+                    columns.Bound(column => column.DateStart).Title("Date Start").Width(150);
+                    columns.Bound(column => column.DateEnd).Title("Date End").Width(150);
+                    columns.Bound(column => column.Remarks).Title("Remarks");
+                    columns.Bound(x => x.IsLocked)
+                    .Title("L")
+                    .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
+                    .Filterable(false)
+                    .Width(50);
+                    columns.Bound(x => x.IsApproved)
+                    .Title("A")
+                    .ClientTemplate("<input type='checkbox' disabled #= IsApproved ? checked='checked' : '' # />")
+                    .Filterable(false)
+                    .Width(50);
+                })
+                .Filterable()
+                .Selectable(x => x.Mode(GridSelectionMode.Single))
+                .Pageable()
+                .Sortable()
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Scrollable()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                {
+                    model.Id(p => p.Id);
+                    model.Field(p => p.Dtrdate).Editable(false);
+                    model.Field(p => p.Dtrnumber).Editable(false);
+                    model.Field(p => p.DateStart).Editable(false);
+                    model.Field(p => p.DateEnd).Editable(false);
+                    model.Field(p => p.Remarks).Editable(false);
+                    model.Field(p => p.IsLocked).Editable(false);
+                    model.Field(p => p.IsApproved).Editable(false);
+                })
+                .ServerOperation(true)
+                .PageSize(20)
+                .Read(read => read.Url("/TrnDtr/Index?handler=ReadDtrList")
+                .Data("forgeryToken")))
+                .Events(events => events.DataBound("onGridDatabound"))
+                )
     </div>
 </div>
 

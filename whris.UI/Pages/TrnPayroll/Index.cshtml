@@ -129,6 +129,11 @@
                 .ClientTemplate("<input type='checkbox' disabled #= IsLocked ? checked='checked' : '' # />")
                 .Filterable(false)
                 .Width(50);
+                columns.Bound(x => x.IsApproved)
+                .Title("A")
+                .ClientTemplate("<input type='checkbox' disabled #= IsApproved ? checked='checked' : '' # />")
+                .Filterable(false)
+                .Width(50);
             })
             .Filterable()
             .Selectable(x => x.Mode(GridSelectionMode.Single))
@@ -145,6 +150,7 @@
                 model.Field(p => p.PayrollNumber).Editable(false);
                 model.Field(p => p.Remarks).Editable(false);
                 model.Field(p => p.IsLocked).Editable(false);
+                model.Field(p => p.IsApproved).Editable(false);
             })
             .ServerOperation(true)
             .PageSize(20)

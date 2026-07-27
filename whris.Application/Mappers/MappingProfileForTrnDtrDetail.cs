@@ -64,7 +64,8 @@ namespace whris.Application.Mappers
     {
         public TrnDtrLineProfile()
         {
-            CreateMap<Data.Models.TrnDtrline, TrnDtrLineDto>();
+            CreateMap<Data.Models.TrnDtrline, TrnDtrLineDto>()
+                .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Employee.Branch.Branch)); ;
             //.ForMember(dest => dest.TrnDtrlines, conf => conf.MapFrom(value => value.TrnDtrlines));
             //CreateMap<Data.Models.TrnDtrline, TrnDtrLineDto>();
         }

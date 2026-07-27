@@ -46,6 +46,7 @@ namespace whris.Application.CQRS.TrnDtr.Queries
                 {
                     dtrLines = await _context.TrnDtrlines
                         .Include(x => x.Employee)
+                            .ThenInclude(x => x.Branch)
                         .Where(x => x.Dtrid == request.Id && x.Employee.IsLocked && x.Employee.FullName.Contains(filterEmployee))
                         .OrderBy(x => x.Employee.FullName)
                         .ThenBy(x => x.Date)
@@ -62,6 +63,7 @@ namespace whris.Application.CQRS.TrnDtr.Queries
                 {
                     dtrLines = await _context.TrnDtrlines
                         .Include(x => x.Employee)
+                            .ThenInclude(x => x.Branch)
                         .Where(x => x.Dtrid == request.Id && x.Employee.IsLocked)
                         .OrderBy(x => x.Employee.FullName)
                         .ThenBy(x => x.Date)

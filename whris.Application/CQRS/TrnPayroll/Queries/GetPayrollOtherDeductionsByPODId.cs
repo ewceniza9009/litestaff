@@ -35,6 +35,7 @@ namespace whris.Application.CQRS.TrnPayroll.Queries
                         EmployeeId= x.EmployeeId,
                         OtherDeductionId = x.OtherDeductionId,
                         Amount= x.Amount,
+                        LineRemarks = x.LineRemarks
                     })
                     .ToListAsync()
                     ?? new List<TrnPayrollOtherDeductionLineDto>();

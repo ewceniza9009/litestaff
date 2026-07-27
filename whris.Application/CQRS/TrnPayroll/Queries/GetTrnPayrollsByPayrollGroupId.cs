@@ -41,6 +41,7 @@ namespace whris.Application.CQRS.TrnPayroll.Queries
                         PayrollGroupId = request.PayrollGroupId,
                         Remarks = x.Remarks,
                         IsLocked = x.IsLocked,
+                        IsApproved = x.IsApproved
                     })
                     .ToDataSourceResultAsync(request.Request);
 

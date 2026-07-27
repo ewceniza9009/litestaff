@@ -177,6 +177,8 @@ namespace whris.Application.Dtos
         [StringLength(255)]
         public string? ShiftDates { get; set; }
 
+        public string? Branch { get; set; }
+
         public bool IsDeleted { get; set; } = false;
         public bool IsEdited { get; set; } = false;
 
