@@ -2151,3 +2151,97 @@ iframe { /* For embedded content like maps from external source */
         color: #aaa; /* Lighter color for placeholder text */
         opacity: 1; /* Ensures placeholder is fully visible (Firefox fix) */
     }
+
+/* ==========================================================================
+   Executive Advisor & Action Plan Enhancements
+   ========================================================================== */
+
+.executive-quick-starters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.quick-starter-btn {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 6px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quick-starter-btn:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+    color: #0f172a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.executive-insights {
+    padding: 16px 18px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0284c7;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.executive-insights h4 {
+    margin: 0 0 12px 0;
+    color: #0369a1;
+    font-size: 1.02rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.executive-insight-header {
+    margin-top: 14px;
+    margin-bottom: 8px;
+}
+
+.executive-insight-header:first-child {
+    margin-top: 2px;
+}
+
+.insight-badge {
+    display: inline-block;
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.insight-bullet-list {
+    margin: 6px 0 12px 22px;
+    padding: 0;
+    color: #334155;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.insight-bullet-list li {
+    margin-bottom: 6px;
+}
+
+.insight-paragraph {
+    margin: 6px 0 10px 0;
+    color: #334155;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}

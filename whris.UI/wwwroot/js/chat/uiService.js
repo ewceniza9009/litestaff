@@ -1,3 +1,42 @@
+﻿export function formatExecutiveInsights(rawInsights) {
+    if (!rawInsights) return '';
+
+    let formatted = rawInsights.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const lines = formatted.split('\n');
+    let inList = false;
+    let html = [];
+
+    for (let line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('### ') || trimmed.startsWith('## ')) {
+            if (inList) {
+                html.push('</ul>');
+                inList = false;
+            }
+            const headerText = trimmed.replace(/^#{2,3}\s*/, '');
+            html.push(`<div class="executive-insight-header"><span class="insight-badge">${headerText}</span></div>`);
+        } else if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+            if (!inList) {
+                html.push('<ul class="insight-bullet-list">');
+                inList = true;
+            }
+            html.push(`<li>${trimmed.substring(2)}</li>`);
+        } else {
+            if (inList) {
+                html.push('</ul>');
+                inList = false;
+            }
+            if (trimmed) {
+                html.push(`<p class="insight-paragraph">${trimmed}</p>`);
+            }
+        }
+    }
+    if (inList) {
+        html.push('</ul>');
+    }
+
+    return html.join('');
+}
 import { chatHistoryEl, chatInput, sendButton, conversationListEl } from './domElements.js';
 import { formatTimestamp, getRandomPrompts, exportD3ChartAsPNG, exportMermaidDiagramAsImage } from './utils.js';
 import { allExamplePrompts } from './config.js';
@@ -73,8 +112,8 @@ export function appendMessage(sender, data) {
 
         if (data.insights) {
             const insightsDiv = document.createElement('div');
-            insightsDiv.className = 'insights-container';
-            insightsDiv.innerHTML = `<h4><svg viewBox="0 0 24 24" class="section-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>AI Insights</h4>${data.insights.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>')}`;
+            insightsDiv.className = 'insights-container executive-insights';
+            insightsDiv.innerHTML = `<h4><svg viewBox="0 0 24 24" class="section-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Executive Advisor Analysis &amp; Action Plan</h4><div class="insight-content-body">${formatExecutiveInsights(data.insights)}</div>`;
             dataPayloadContainer.appendChild(insightsDiv);
             hasDataToCollapse = true;
             if (!(chartDataForMessage || tableDataForMessage || treeDataForMessage)) {
@@ -334,8 +373,8 @@ export function displayWelcomeMessage() {
                 <path d="M12 0 L15 9 L24 12 L15 15 L12 24 L9 15 L0 12 L9 9 Z" />
             </svg>
         </div>
-        <h2>Hi, I'm your AI Assistant!</h2>
-        <p>I can help you query your database. Try one of these examples or ask your own question:</p>
+        <h2>Welcome! I'm your Executive Business &amp; HR Advisor</h2>
+        <p>I help business owners and executives analyze workforce metrics, audit payroll and overtime, and plan strategic operations. Ask a question or explore an executive inquiry below:</p>
         <div class="example-prompts-container">
             ${promptsHtml}
         </div>

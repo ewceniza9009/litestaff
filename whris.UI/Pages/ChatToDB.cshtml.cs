@@ -39,7 +39,7 @@ namespace whris.UI.Pages
         public string Question { get; set; }
         public List<ChatMessage> History { get; set; }
         public string LastSqlQuery { get; set; }
-        public bool EnableInsights { get; set; }
+        public bool EnableInsights { get; set; } = true;
     }
 
     public class GeocodingResult
@@ -131,6 +131,7 @@ namespace whris.UI.Pages
         private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         private static readonly HttpClient _geocodingHttpClient = new HttpClient();
 
+        private const string IntentAdvisory = "ADVISORY";
         private const string IntentGeneralKnowledge = "GENERAL_KNOWLEDGE";
         private const string IntentChat = "CHAT";
         private const string IntentMap = "MAP";
@@ -207,6 +208,7 @@ namespace whris.UI.Pages
 
             switch (intent)
             {
+                case IntentAdvisory:
                 case IntentGeneralKnowledge:
                 case IntentChat:
                     responseData = await HandleGeneralChatIntentAsync(request);

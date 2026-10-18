@@ -1,4 +1,10 @@
-export const allExamplePrompts = [
+﻿export const allExamplePrompts = [
+    "Analyze our total payroll and overtime expenses by department for the last payroll",
+    "How can I optimize our workforce budget and overtime costs next quarter without hurting morale?",
+    "Show employees with high tardiness or unexcused absences",
+    "Show headcount and average monthly rate per department",
+    "List each department and the total amount of overtime pay claimed last month",
+    "What should I review before approving this cut-off's payroll to prevent cost overruns?",
     "Show me all employees in the accounting department that are locked",
     "Create a bar chart of employees by city",
     "What is the average employee salary?",

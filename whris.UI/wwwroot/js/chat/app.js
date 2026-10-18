@@ -1,4 +1,4 @@
-import { initializeConfig } from './config.js';
+﻿import { initializeConfig } from './config.js';
 import {
     chatInput, sendButton, newChatButton, exportChatPdfButton,
     conversationSearchInput, singleChatSearchInput, initializeTooltip,
@@ -43,6 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (exportChatPdfButton) exportChatPdfButton.addEventListener('click', exportChatToPDFHandler);
     if (conversationSearchInput) conversationSearchInput.addEventListener('input', handleConversationSearch);
     if (singleChatSearchInput) singleChatSearchInput.addEventListener('input', handleSingleChatSearch);
+
+    const quickStarterBtns = document.querySelectorAll('.quick-starter-btn');
+    quickStarterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const prompt = btn.getAttribute('data-prompt');
+            if (prompt && chatInput) {
+                chatInput.value = prompt;
+                autoResizeChatInputHandler();
+                sendMessageHandler();
+            }
+        });
+    });
 
     if (aiInsightsToggle && aiInsightsToggleLabel) {
         aiInsightsToggle.checked = state.aiInsightsEnabled;                             

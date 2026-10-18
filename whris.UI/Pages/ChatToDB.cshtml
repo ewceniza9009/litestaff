@@ -39,8 +39,8 @@
     </div>
     <div class="main-content">
         <div class="chat-title-container">
-            <h4 style="margin-top: 10px;">AI Chat Assistant</h4>
-            <p style="margin-top: -5px; margin-bottom: 11.5px">Ask questions and get answers directly from your database.</p>
+            <h4 style="margin-top: 10px;">Executive Business & HR Advisor</h4>
+            <p style="margin-top: -5px; margin-bottom: 11.5px">Workforce analytics, strategic insights, and operational guidance for business owners.</p>
             <div class="ai-insights-toggle-container" style="position: absolute; top: 50%; right: 200px; transform: translateY(-50%); display: flex; align-items: center; gap: 8px; z-index: 10;">
                 <span id="aiInsightsToggleTextLabel" style="font-size: 0.85rem; color: var(--text-color-muted); white-space: nowrap; user-select: none;">AI Insights: ON</span>
                 <label class="switch-style-label" for="aiInsightsToggle" title="Toggle AI Insights On/Off">
@@ -83,6 +83,9 @@
                     <p><strong>'TREE_VIEW'</strong>: Display data in a hierarchical or nested list.</p>
                     <ul><li><em>"show employees by department, then by position"</em></li><li><em>"display a hierarchical list of staff by office, then by team"</em></li></ul>
 
+                    <p><strong>'ADVISORY'</strong>: Strategic workforce planning, labor cost optimization, and owner mentorship.</p>
+                    <ul><li><em>"how can I reduce overtime and labor costs next quarter?"</em></li><li><em>"what should I prepare before processing 13th month pay?"</em></li><li><em>"how do I handle frequent employee tardiness and absenteeism?"</em></li></ul>
+
                     <p><strong>'GENERAL_KNOWLEDGE'</strong>: Ask a general question.</p>
                     <ul><li><em>"what are the current mandatory sss contributions?"</em></li><li><em>"what is the capital of Japan?"</em></li></ul>
 
@@ -95,6 +98,12 @@
         <div class="chat-container">
             <div class="chat-history" id="chatHistory"></div>
             <div class="chat-input-container">
+                <div class="executive-quick-starters" id="quickStartersContainer">
+                    <button type="button" class="quick-starter-btn" data-prompt="Analyze total payroll and overtime expenses by department for the last payroll">💼 Overtime &amp; Payroll Audit</button>
+                    <button type="button" class="quick-starter-btn" data-prompt="Show employees with high tardiness or unexcused absences">⚠️ Attendance &amp; Tardiness Check</button>
+                    <button type="button" class="quick-starter-btn" data-prompt="Show headcount and average monthly rate per department">👥 Headcount &amp; Compensation</button>
+                    <button type="button" class="quick-starter-btn" data-prompt="How can I optimize our workforce budget and overtime costs next quarter without hurting morale?">🎯 Labor Cost Strategy</button>
+                </div>
                 <div class="input-wrapper">
                     <textarea id="chatInput" class="chat-input" placeholder="Type your question..." rows="1"></textarea>
                     <button id="sendButton" class="send-button" aria-label="Send Message">
