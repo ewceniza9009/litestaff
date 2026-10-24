@@ -1,4 +1,4 @@
-﻿using DevExpress.AspNetCore;
+using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.Security.Resources;
 using MediatR;
@@ -185,8 +185,7 @@ else
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "text/html";
             await context.Response.WriteAsync("<h1>Fatal Error</h1>");
-            await context.Response.WriteAsync("<p>An unexpected error occurred.</p>");
-            // Log the exception here if needed
+            await context.Response.WriteAsync($"<pre style='background:#f8f9fa;color:#c00;padding:15px;border:1px solid #ddd;overflow:auto;white-space:pre-wrap;'>{System.Net.WebUtility.HtmlEncode(ex.ToString())}</pre>");
         }
     });
 

@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../whris_liteclerk_data/whris.Data"
+		}
+	],
+	"settings": {}
+}

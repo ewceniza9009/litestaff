@@ -1,15 +1,28 @@
-const getInitialInsightsState = () => {
+function safeGetItem(key, defaultValue) {
     try {
-        const storedState = localStorage.getItem('aiInsightsEnabled');
-        if (storedState === null) {                                         
-            localStorage.setItem('aiInsightsEnabled', 'true');
-            return true;
+        if (typeof window !== 'undefined' && 'localStorage' in window) {
+            const val = window.localStorage.getItem(key);
+            return val !== null ? val : defaultValue;
         }
-        return storedState === 'true';                     
-    } catch (e) {
-        console.error("Error accessing localStorage for AI Insights state:", e);
-        return true;
+    } catch {
+        // Storage access blocked or restricted in current context
     }
+    return defaultValue;
+}
+
+function safeSetItem(key, value) {
+    try {
+        if (typeof window !== 'undefined' && 'localStorage' in window) {
+            window.localStorage.setItem(key, value);
+        }
+    } catch {
+        // Storage access blocked or restricted in current context
+    }
+}
+
+const getInitialInsightsState = () => {
+    const storedState = safeGetItem('aiInsightsEnabled', 'true');
+    return storedState === 'true';
 };
 
 export const state = {
@@ -47,11 +60,7 @@ export function setIsSavingNewConversation(saving) {
 
 export function setAiInsightsEnabled(enabled) {
     state.aiInsightsEnabled = enabled;
-    try {
-        localStorage.setItem('aiInsightsEnabled', enabled ? 'true' : 'false');
-    } catch (e) {
-        console.error("Error saving AI Insights state to localStorage:", e);
-    }
+    safeSetItem('aiInsightsEnabled', enabled ? 'true' : 'false');
 }
 
 export function findMessageByTimestamp(timestamp) {
