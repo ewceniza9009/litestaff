@@ -74,12 +74,13 @@ namespace whris.UI.Pages.TrnDtr
                 // Add headers
                 worksheet.Cells[1, 1].Value = "Biometric Id Number";
                 worksheet.Cells[1, 2].Value = "Employee";
-                worksheet.Cells[1, 3].Value = "Log Date Time";
-                worksheet.Cells[1, 4].Value = "Log Type";
-                worksheet.Cells[1, 5].Value = "Department";
+                worksheet.Cells[1, 3].Value = "Branch";
+                worksheet.Cells[1, 4].Value = "Log Date Time";
+                worksheet.Cells[1, 5].Value = "Log Type";
+                worksheet.Cells[1, 6].Value = "Department";
 
                 // Make headers bold
-                using (var range = worksheet.Cells[1, 1, 1, 22])
+                using (var range = worksheet.Cells[1, 1, 1, 6])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -93,15 +94,16 @@ namespace whris.UI.Pages.TrnDtr
                     var logResult = logsResult[i];
                     worksheet.Cells[i + 2, 1].Value = logResult.BiometricIdNumber;
                     worksheet.Cells[i + 2, 2].Value = logResult.EmployeeName;
-                    worksheet.Cells[i + 2, 3].Value = logResult.LogDateTime;
-                    worksheet.Cells[i + 2, 4].Value = logResult.LogTypeString;
-                    worksheet.Cells[i + 2, 5].Value = logResult.Department;
+                    worksheet.Cells[i + 2, 3].Value = logResult.BranchName;
+                    worksheet.Cells[i + 2, 4].Value = logResult.LogDateTime;
+                    worksheet.Cells[i + 2, 5].Value = logResult.LogTypeString;
+                    worksheet.Cells[i + 2, 6].Value = logResult.Department;
                 }
 
                 // Auto-fit columns
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-                worksheet.Column(3).Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss AM/PM";
+                worksheet.Column(4).Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss AM/PM";
 
                 var stream = new MemoryStream();
                 package.SaveAs(stream);

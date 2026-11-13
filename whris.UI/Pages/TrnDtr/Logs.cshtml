@@ -1,4 +1,4 @@
-﻿@page
+@page
 @using whris.Application.Queries.TrnDtr;
 @model LogsModel
 @{
@@ -71,8 +71,9 @@
                             .Width(110);
                         columns.Bound(x => x.Id).Width(120).Title("Id").Visible(false);
                         columns.Bound(x => x.BiometricIdNumber).Width(120).Title("Biometric Id");
-                        columns.Bound(x => x.EmployeeName).Width(500).Title("Employee");
-                        columns.Bound(x => x.LogDateTime).Format("{0:MM/dd/yyyy hh:mm tt}").Width(300).Title("Log");
+                        columns.Bound(x => x.EmployeeName).Width(400).Title("Employee");
+                        columns.Bound(x => x.BranchName).Width(180).Title("Branch");
+                        columns.Bound(x => x.LogDateTime).Format("{0:MM/dd/yyyy hh:mm tt}").Width(250).Title("Log");
                         columns.Bound(x => x.LogTypeString).Width(120).Title("Log Type");
 
                     })
@@ -87,6 +88,7 @@
                         model.Field(p => p.Id).Editable(false);
                         model.Field(p => p.BiometricIdNumber).Editable(false);
                         model.Field(p => p.EmployeeName).Editable(false);
+                        model.Field(p => p.BranchName).Editable(false);
                         model.Field(p => p.LogDateTime).Editable(false);
                         model.Field(p => p.LogType).Editable(false);
                     })

@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,10 +33,13 @@ namespace whris.Application.Queries.TrnDtr
                            e.FullName AS EmployeeName, 
                            t.LogDateTime, 
                            t.LogType,
-                           d.Department
+                           d.Department,
+                           ISNULL(b.BranchCode, 'NA') AS BranchCode,
+                           ISNULL(b.BranchName, 'NA') AS BranchName
                     FROM TrnLogs t
                     INNER JOIN MstEmployee e ON t.BiometricIdNumber = e.BiometricIdNumber
                     INNER JOIN MstDepartment d ON e.DepartmentId = d.Id
+                    LEFT JOIN TrnLogBranch b ON t.Id = b.LogId
                     WHERE t.LogDateTime >= @StartDate AND t.LogDateTime < @EndDatePlusOne
                 ";
 
@@ -60,6 +63,8 @@ namespace whris.Application.Queries.TrnDtr
             public int Id { get; set; }
             public string? BiometricIdNumber { get; set; }
             public string? EmployeeName { get; set; }
+            public string? BranchCode { get; set; }
+            public string? BranchName { get; set; }
             public DateTime LogDateTime { get; set; }
             public string? LogType { get; set; }
             public string? LogTypeString 

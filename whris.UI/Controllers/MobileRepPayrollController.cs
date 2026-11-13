@@ -89,13 +89,19 @@ namespace whris.UI.Controllers
                 LogType = request.LogType
             };
 
+            logEntry.TrnLogBranches.Add(new TrnLogBranch
+            {
+                BranchCode = string.IsNullOrWhiteSpace(request.BranchCode) ? "NA" : request.BranchCode,
+                BranchName = string.IsNullOrWhiteSpace(request.BranchName) ? "NA" : request.BranchName
+            });
+
             _context.TrnLogs.Add(logEntry);
 
             try
             {
                 // Use async save for better performance
                 await _context.SaveChangesAsync();
-                return Ok(new { Message = "Log entry saved successfully." });
+                return Ok(new { Message = "Log entry saved successfully.", Id = logEntry.Id });
             }
             catch (Exception ex)
             {
@@ -115,12 +121,23 @@ namespace whris.UI.Controllers
             }
 
             // YOUR LOGIC UNCHANGED: This projects all logs using your exact time rule.
-            var logEntries = request.Select(item => new TrnLog
+            var logEntries = request.Select(item =>
             {
-                BiometricIdNumber = item.BiometricIdNumber,
-                LogDateTime = item.LogDateTime?.DateTime ?? DateTime.Now,
-                LogType = item.LogType
-            });
+                var entry = new TrnLog
+                {
+                    BiometricIdNumber = item.BiometricIdNumber,
+                    LogDateTime = item.LogDateTime?.DateTime ?? DateTime.Now,
+                    LogType = item.LogType
+                };
+
+                entry.TrnLogBranches.Add(new TrnLogBranch
+                {
+                    BranchCode = string.IsNullOrWhiteSpace(item.BranchCode) ? "NA" : item.BranchCode,
+                    BranchName = string.IsNullOrWhiteSpace(item.BranchName) ? "NA" : item.BranchName
+                });
+
+                return entry;
+            }).ToList();
 
             // 1. PERFORMANCE UPGRADE: Add all logs to the context in memory first.
             _context.TrnLogs.AddRange(logEntries);
@@ -129,7 +146,7 @@ namespace whris.UI.Controllers
             {
                 // 2. PERFORMANCE UPGRADE: Save all logs in a single database transaction.
                 await _context.SaveChangesAsync();
-                return Ok(new { Message = "All log entries saved successfully." });
+                return Ok(new { Message = "All log entries saved successfully.", Ids = logEntries.Select(x => x.Id).ToList() });
             }
             catch (Exception ex)
             {
@@ -144,5 +161,7 @@ namespace whris.UI.Controllers
         public string? BiometricIdNumber { get; set; }
         public DateTimeOffset? LogDateTime { get; set; }
         public string? LogType { get; set; }
+        public string? BranchCode { get; set; }
+        public string? BranchName { get; set; }
     }
 }
