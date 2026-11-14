@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -158,6 +158,22 @@
             </div>
 
             <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Position: </label>
+                <div class="col-md-10">
+                    <kendo-combobox name="PositionId" style="width: 300px"
+                                    datatextfield="Position"
+                                    datavaluefield="Id"
+                                    min-length="3"
+                                    height="520"
+                                    filter="FilterType.Contains"
+                                    placeholder="Position"
+                                    bind-to="@Model.ComboboxDatasources.PostionCmbDs">
+
+                    </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
                 <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Payroll Group: </label>
                 <div class="col-md-10">
                     <kendo-combobox name="PayrollGroupId" style="width: 300px"
@@ -171,6 +187,20 @@
                                     bind-to="@Model.PayrollGroupCmbDs">
 
                     </kendo-combobox>
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date Start: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateStart" placeholder="Date Start" style="width: 200px; text-align:end;" on-change="DateChange" />
+                </div>
+            </div>
+
+            <div class="form-group row" style="margin-top: 10px">
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Date End: </label>
+                <div class="col-md-10">
+                    <kendo-datepicker name="DateEnd" placeholder="Date End" style="width: 200px; text-align:end;" on-change="DateChange" />
                 </div>
             </div>
 
@@ -192,17 +222,17 @@
             </div>
 
             <div class="form-group row" style="margin-top: 10px">
-                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">Year: </label>
+                <label class="col-md-2" style="padding-top: 5px; font-weight: bold;">End Month: </label>
                 <div class="col-md-10">
-                    <kendo-combobox name="PeriodId" style="width: 300px"
-                                    datatextfield="Period"
+                    <kendo-combobox name="EndMonthId" style="width: 300px"
+                                    datatextfield="Month"
                                     datavaluefield="Id"
-                                    value="@Model.DefaultPeriod"
                                     min-length="3"
                                     height="520"
                                     filter="FilterType.Contains"
-                                    placeholder="Year"
-                                    bind-to="@Model.PeriodCmbDs">
+                                    placeholder="End Month"
+                                    bind-to="@Model.MonthCmbDs">
+
                     </kendo-combobox>
                 </div>
             </div>

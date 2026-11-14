@@ -1,7 +1,8 @@
 $selectedReportId = 0;
 
-$("#DateStart").val(new Date().toLocaleDateString());
-$("#DateEnd").val(new Date().toLocaleDateString());
+var currentYear = new Date().getFullYear();
+$("#DateStart").val(new Date(currentYear, 0, 1).toLocaleDateString());
+$("#DateEnd").val(new Date(currentYear, 11, 31).toLocaleDateString());
 
 function CmdHome() {
     window.open(window.location.origin).focus();
@@ -129,7 +130,15 @@ function CmdPreview()
     }
 
     if ($selectedReportId == 6) {
-        window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramEmploymentType=" + $("#EmploymentType").val() + "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() + "&paramPeriod=" + $("#PeriodId").val() + "&paramDepartmentId=" + $("#DepartmentId").val() + "&paramEmployeeId" + $("#EmployeeId").val(), '_blank').focus();
+        window.open(window.location.origin + "/RptPayroll/RepMonthlyPayroll?paramEmploymentType=" + $("#EmploymentType").val() + "&paramPayrollGroupId=" + $("#PayrollGroupId").val() + "&paramCompanyId=" + $("#CompanyId").val() + "&paramBranchId=" + $("#BranchId").val() + "&paramMonthId=" + $("#MonthId").val() + "&paramPeriod=0&paramDepartmentId=" + $("#DepartmentId").val() + "&paramEmployeeId=" + $("#EmployeeId").val(), '_blank').focus();
+    }
+
+    if ($selectedReportId == 7.1) {
+        exportMonthlySummaryExcel("ExportMonthlyRateToExcel", "MonthlyRateSummaryReport.xlsx");
+    }
+
+    if ($selectedReportId == 7.2) {
+        exportMonthlySummaryExcel("ExportActualMonthlySalaryToExcel", "ActualMonthlySalaryReport_Net.xlsx");
     }
 
     if ($selectedReportId == 9) {
@@ -147,6 +156,57 @@ function CmdPreview()
     if ($selectedReportId == 13) {
         window.open(window.location.origin + "/RptPayroll/Rep13thMonthPaySummary?paramStartPayNo=" + $("#PayrollId").val() + "&ParamEndPayNo=" + $("#EndPayNo").val() + "&ParamEmployeeId=" + $("#EmployeeId").val() + "&ParamPayrollGroupId=" + $("#PayrollGroupId").val() + "&ParamCompanyId=" + $("#CompanyId").val() + "&ParamBranchId=" + $("#BranchId").val() + "&ParamDepartmentId=" + $("#DepartmentId").val(), '_blank').focus();
     }
+}
+
+function exportMonthlySummaryExcel(handlerName, defaultFilename) {
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
+    const formData = new FormData();
+    formData.append("ParamDateStart", $("#DateStart").val() || "");
+    formData.append("ParamDateEnd", $("#DateEnd").val() || "");
+    formData.append("ParamStartMonthId", $("#MonthId").val() || 0);
+    formData.append("ParamEndMonthId", $("#EndMonthId").val() || 0);
+    formData.append("ParamDepartmentId", $("#DepartmentId").val() || 0);
+    formData.append("ParamPositionId", $("#PositionId").val() || 0);
+    formData.append("ParamCompanyId", $("#CompanyId").val() || 0);
+    formData.append("ParamBranchId", $("#BranchId").val() || 0);
+    formData.append("ParamPayrollGroupId", $("#PayrollGroupId").val() || 0);
+    formData.append("ParamEmploymentType", $("#EmploymentType").val() || "");
+    formData.append("ParamEmployeeId", $("#EmployeeId").val() || 0);
+
+    fetch('/RptPayroll/Index?handler=' + handlerName, {
+        method: 'POST',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const disposition = response.headers.get('content-disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                return response.blob();
+            }
+            return null;
+        })
+        .then(blob => {
+            if (!blob) return;
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = defaultFilename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
 }
 
 function ListBoxChange(e)

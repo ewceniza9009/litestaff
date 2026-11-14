@@ -34,6 +34,65 @@ namespace whris.UI.Pages.RptPayroll
 
             public int ParamCompanyId { get; set; }
         }
+
+        public class MonthlySummaryExcelRequestModel
+        {
+            public DateTime? ParamDateStart { get; set; }
+
+            public DateTime? ParamDateEnd { get; set; }
+
+            public int ParamStartMonthId { get; set; }
+
+            public int ParamEndMonthId { get; set; }
+
+            public int ParamDepartmentId { get; set; }
+
+            public int ParamPositionId { get; set; }
+
+            public int ParamCompanyId { get; set; }
+
+            public int ParamBranchId { get; set; }
+
+            public int ParamPayrollGroupId { get; set; }
+
+            public string? ParamEmploymentType { get; set; }
+
+            public int ParamEmployeeId { get; set; }
+        }
+
+        private class MonthlySummaryRow
+        {
+            public int EmployeeId { get; set; }
+
+            public string Department { get; set; } = string.Empty;
+
+            public string Position { get; set; } = string.Empty;
+
+            public string LastName { get; set; } = string.Empty;
+
+            public string FirstName { get; set; } = string.Empty;
+
+            public decimal? Allowance { get; set; }
+
+            public string MiddleName { get; set; } = string.Empty;
+
+            public int MonthId { get; set; }
+
+            public decimal MonthlyRateAmount { get; set; }
+
+            public decimal ActualNetSalaryAmount { get; set; }
+        }
+
+        private static readonly string[] MonthHeaders =
+        {
+            string.Empty, "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+        };
+
+        private static readonly System.Drawing.Color RateChangeColor = System.Drawing.Color.FromArgb(255, 242, 204);
+        private static readonly System.Drawing.Color FirstZeroColor = System.Drawing.Color.FromArgb(255, 192, 0);
+        private static readonly System.Drawing.Color ConsecutiveZeroColor = System.Drawing.Color.FromArgb(217, 217, 217);
+        private static readonly System.Drawing.Color InactiveNameColor = System.Drawing.Color.FromArgb(191, 191, 191);
+        private static readonly System.Drawing.Color CellBorderColor = System.Drawing.Color.FromArgb(208, 208, 208);
         public List<ReportList> Reports { get; set; } = new List<ReportList>();
         public MstEmployeeComboboxDatasources ComboboxDatasources = MstEmployeeComboboxDatasources.Instance;
         public List<TrnPayrollDto> PayrollNumbers => (List<TrnPayrollDto>)(Common.GetPayrollNumbers()?.Value ?? new List<TrnPayrollDto>());
@@ -70,6 +129,9 @@ namespace whris.UI.Pages.RptPayroll
                 new ReportList(){ Value = "5", Text = "Payroll Worksheet w/ Departments" },
                 new ReportList(){ Value = "5.1", Text = "" },
                 new ReportList(){ Value = "6", Text = "Monthly Payroll Worksheet" },
+                new ReportList(){ Value = "6.1", Text = "" },
+                new ReportList(){ Value = "7.1", Text = "Monthly Rate Summary Report (Excel)" },
+                new ReportList(){ Value = "7.2", Text = "Actual Monthly Salary Report - Net (Excel)" },
                 new ReportList(){ Value = "8", Text = "" },
                 new ReportList(){ Value = "9", Text = "Other Deduction Detail Report" },
                 new ReportList(){ Value = "10", Text = "Other Income Detail Report" },
@@ -568,6 +630,384 @@ namespace whris.UI.Pages.RptPayroll
                     @ParamEmploymentType = @ParamEmploymentType,
                     @ParamBranchId = @ParamBranchId,
                     @ParamCompanyId = @ParamCompanyId;";
+        }
+
+        public async Task<IActionResult> OnPostExportMonthlyRateToExcelAsync(MonthlySummaryExcelRequestModel request)
+        {
+            return await GenerateMonthlySummaryExcelAsync(request, isActualNetSalary: false);
+        }
+
+        public async Task<IActionResult> OnPostExportActualMonthlySalaryToExcelAsync(MonthlySummaryExcelRequestModel request)
+        {
+            return await GenerateMonthlySummaryExcelAsync(request, isActualNetSalary: true);
+        }
+
+        private async Task<IActionResult> GenerateMonthlySummaryExcelAsync(MonthlySummaryExcelRequestModel request, bool isActualNetSalary)
+        {
+            var (startMonth, endMonth) = ResolveMonthRange(request.ParamStartMonthId, request.ParamEndMonthId);
+
+            using var connection = new SqlConnection(Config.ConnectionString);
+
+            var parameters = new
+            {
+                ParamDateStart = request.ParamDateStart?.Date,
+                ParamDateEnd = request.ParamDateEnd?.Date.AddDays(1).AddSeconds(-1),
+                ParamStartMonthId = startMonth,
+                ParamEndMonthId = endMonth,
+                request.ParamDepartmentId,
+                request.ParamPositionId,
+                request.ParamCompanyId,
+                request.ParamBranchId,
+                request.ParamPayrollGroupId,
+                request.ParamEmployeeId,
+                ParamEmploymentType = string.IsNullOrEmpty(request.ParamEmploymentType) ? null : request.ParamEmploymentType
+            };
+
+            var rows = (await connection.QueryAsync<MonthlySummaryRow>(GetMonthlySummarySqlScript(), parameters)).ToList();
+
+            var dataTable = BuildMonthlySummaryDataTable(rows, startMonth, endMonth, isActualNetSalary);
+
+            var worksheetName = isActualNetSalary ? "Actual Monthly Salary (Net)" : "Monthly Rate";
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage(stream))
+            {
+                var worksheet = package.Workbook.Worksheets.Add(worksheetName);
+                worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+
+                var totalColumns = dataTable.Columns.Count;
+                using (var headerRange = worksheet.Cells[1, 1, 1, totalColumns])
+                {
+                    headerRange.Style.Font.Bold = true;
+                    headerRange.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    headerRange.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                    headerRange.AutoFilter = true;
+                }
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    var lastDataRow = 1 + dataTable.Rows.Count;
+                    worksheet.Cells[2, 5, lastDataRow, 5].Style.Numberformat.Format = "#,##0.00";
+                    worksheet.Cells[2, 7, lastDataRow, totalColumns].Style.Numberformat.Format = "#,##0.00";
+
+                    ApplyMonthlySummaryColorCoding(worksheet, rows, startMonth, endMonth, isActualNetSalary);
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                package.SaveAs(stream);
+                stream.Position = 0;
+            }
+
+            var filePrefix = isActualNetSalary ? "ActualMonthlySalaryReport_Net" : "MonthlyRateSummaryReport";
+            var excelName = $"{filePrefix}_{DateTime.Now:yyyyMMdd}.xlsx";
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private static (int startMonth, int endMonth) ResolveMonthRange(int paramStartMonthId, int paramEndMonthId)
+        {
+            if (paramStartMonthId > 0 && paramEndMonthId > 0)
+            {
+                var start = Math.Clamp(Math.Min(paramStartMonthId, paramEndMonthId), 1, 12);
+                var end = Math.Clamp(Math.Max(paramStartMonthId, paramEndMonthId), 1, 12);
+                return (start, end);
+            }
+
+            if (paramStartMonthId > 0)
+            {
+                return (1, Math.Clamp(paramStartMonthId, 1, 12));
+            }
+
+            if (paramEndMonthId > 0)
+            {
+                return (1, Math.Clamp(paramEndMonthId, 1, 12));
+            }
+
+            return (1, 12);
+        }
+
+        private static DataTable BuildMonthlySummaryDataTable(
+            List<MonthlySummaryRow> rows,
+            int startMonth,
+            int endMonth,
+            bool isActualNetSalary)
+        {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("DEPARTMENT", typeof(string));
+            dataTable.Columns.Add("POSITION", typeof(string));
+            dataTable.Columns.Add("FAMILY NAME", typeof(string));
+            dataTable.Columns.Add("GIVEN NAME", typeof(string));
+            dataTable.Columns.Add("Allowance", typeof(decimal));
+            dataTable.Columns.Add("MIDDLE NAME", typeof(string));
+
+            for (var month = startMonth; month <= endMonth; month++)
+            {
+                dataTable.Columns.Add(MonthHeaders[month], typeof(decimal));
+            }
+
+            foreach (var empGroup in rows.GroupBy(r => r.EmployeeId))
+            {
+                var first = empGroup.First();
+                var dataRow = dataTable.NewRow();
+
+                dataRow["DEPARTMENT"] = first.Department;
+                dataRow["POSITION"] = first.Position;
+                dataRow["FAMILY NAME"] = first.LastName;
+                dataRow["GIVEN NAME"] = first.FirstName;
+                dataRow["Allowance"] = first.Allowance.HasValue && first.Allowance.Value != 0
+                    ? first.Allowance.Value
+                    : DBNull.Value;
+                dataRow["MIDDLE NAME"] = first.MiddleName;
+
+                var monthLookup = BuildMonthLookup(empGroup);
+
+                for (var month = startMonth; month <= endMonth; month++)
+                {
+                    var colName = MonthHeaders[month];
+                    if (monthLookup.TryGetValue(month, out var monthRow))
+                    {
+                        dataRow[colName] = isActualNetSalary
+                            ? monthRow.ActualNetSalaryAmount
+                            : monthRow.MonthlyRateAmount;
+                    }
+                    else
+                    {
+                        dataRow[colName] = DBNull.Value;
+                    }
+                }
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            return dataTable;
+        }
+
+        private static Dictionary<int, MonthlySummaryRow> BuildMonthLookup(IGrouping<int, MonthlySummaryRow> empGroup)
+        {
+            return empGroup
+                .GroupBy(r => r.MonthId)
+                .ToDictionary(g => g.Key, g => g.First());
+        }
+
+        /// <summary>
+        /// Highlights onboarding months, rate changes, partial pay (&lt;= 5,000), return-to-work, and zero/inactive months.
+        /// </summary>
+        private static void ApplyMonthlySummaryColorCoding(
+            ExcelWorksheet worksheet,
+            List<MonthlySummaryRow> rows,
+            int startMonth,
+            int endMonth,
+            bool isActualNetSalary)
+        {
+            var monthCount = endMonth - startMonth + 1;
+            var excelRow = 2;
+
+            foreach (var empGroup in rows.GroupBy(r => r.EmployeeId))
+            {
+                var monthLookup = BuildMonthLookup(empGroup);
+                var displayValues = new decimal?[monthCount];
+                var rateValues = new decimal?[monthCount];
+
+                for (var i = 0; i < monthCount; i++)
+                {
+                    var month = startMonth + i;
+                    if (monthLookup.TryGetValue(month, out var monthRow))
+                    {
+                        displayValues[i] = isActualNetSalary
+                            ? monthRow.ActualNetSalaryAmount
+                            : monthRow.MonthlyRateAmount;
+                        rateValues[i] = monthRow.MonthlyRateAmount;
+                    }
+                }
+
+                var firstPositiveIdx = Array.FindIndex(displayValues, v => v.HasValue && v.Value > 0m);
+
+                if (firstPositiveIdx == -1)
+                {
+                    SetCellFill(worksheet.Cells[excelRow, 3, excelRow, 6], InactiveNameColor);
+
+                    for (var i = 0; i < monthCount; i++)
+                    {
+                        if (displayValues[i] == 0m)
+                        {
+                            SetCellFill(worksheet.Cells[excelRow, 7 + i], ConsecutiveZeroColor);
+                        }
+                    }
+
+                    excelRow++;
+                    continue;
+                }
+
+                if (firstPositiveIdx > 0)
+                {
+                    var joinColor = GetMonthHighlightColor(startMonth + firstPositiveIdx);
+                    SetCellFill(worksheet.Cells[excelRow, 3, excelRow, 6], joinColor);
+                    SetCellFill(worksheet.Cells[excelRow, 7 + firstPositiveIdx], joinColor);
+
+                    for (var i = 0; i < firstPositiveIdx; i++)
+                    {
+                        if (displayValues[i] == 0m)
+                        {
+                            SetCellFill(worksheet.Cells[excelRow, 7 + i], ConsecutiveZeroColor);
+                        }
+                    }
+                }
+                else if (displayValues[0] <= 5000m)
+                {
+                    SetCellFill(worksheet.Cells[excelRow, 7], GetMonthHighlightColor(startMonth));
+                }
+
+                for (var i = firstPositiveIdx + 1; i < monthCount; i++)
+                {
+                    var fillColor = GetSubsequentMonthColor(
+                        startMonth + i,
+                        displayValues[i],
+                        displayValues[i - 1],
+                        rateValues[i],
+                        rateValues[i - 1]);
+
+                    if (fillColor.HasValue)
+                    {
+                        SetCellFill(worksheet.Cells[excelRow, 7 + i], fillColor.Value);
+                    }
+                }
+
+                excelRow++;
+            }
+        }
+
+        private static System.Drawing.Color? GetSubsequentMonthColor(
+            int month,
+            decimal? curr,
+            decimal? prev,
+            decimal? currRate,
+            decimal? prevRate)
+        {
+            if (!curr.HasValue)
+            {
+                return null;
+            }
+
+            if (curr.Value == 0m)
+            {
+                return prev.HasValue && prev.Value > 0m
+                    ? FirstZeroColor
+                    : ConsecutiveZeroColor;
+            }
+
+            if (curr.Value <= 0m)
+            {
+                return null;
+            }
+
+            if (!prev.HasValue || prev.Value <= 0m)
+            {
+                return GetMonthHighlightColor(month);
+            }
+
+            if (curr.Value <= 5000m && prev.Value > 5000m)
+            {
+                return GetMonthHighlightColor(month);
+            }
+
+            if (prev.Value <= 5000m && curr.Value > 5000m)
+            {
+                return RateChangeColor;
+            }
+
+            // Use base monthly rate rather than net salary so normal OT/holiday/tardy variance is not flagged.
+            if (currRate.HasValue && prevRate.HasValue
+                && currRate.Value > 0m && prevRate.Value > 0m
+                && currRate.Value != prevRate.Value)
+            {
+                return RateChangeColor;
+            }
+
+            return null;
+        }
+
+        private static System.Drawing.Color GetMonthHighlightColor(int month) => month switch
+        {
+            1 => System.Drawing.Color.FromArgb(218, 227, 243),
+            2 => System.Drawing.Color.FromArgb(255, 192, 0),
+            3 => System.Drawing.Color.FromArgb(226, 239, 218),
+            4 => System.Drawing.Color.FromArgb(255, 242, 204),
+            5 => System.Drawing.Color.FromArgb(252, 228, 214),
+            6 => System.Drawing.Color.FromArgb(255, 255, 0),
+            7 => System.Drawing.Color.FromArgb(255, 242, 204),
+            8 => System.Drawing.Color.FromArgb(221, 235, 247),
+            9 => System.Drawing.Color.FromArgb(226, 239, 218),
+            10 => System.Drawing.Color.FromArgb(218, 227, 243),
+            11 => System.Drawing.Color.FromArgb(255, 242, 204),
+            12 => System.Drawing.Color.FromArgb(221, 235, 247),
+            _ => System.Drawing.Color.White
+        };
+
+        private static void SetCellFill(ExcelRange range, System.Drawing.Color color)
+        {
+            range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            range.Style.Fill.BackgroundColor.SetColor(color);
+
+            range.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            range.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            range.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+            range.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+            range.Style.Border.Top.Color.SetColor(CellBorderColor);
+            range.Style.Border.Bottom.Color.SetColor(CellBorderColor);
+            range.Style.Border.Left.Color.SetColor(CellBorderColor);
+            range.Style.Border.Right.Color.SetColor(CellBorderColor);
+        }
+
+        private static string GetMonthlySummarySqlScript()
+        {
+            return @"
+                SELECT
+                    e.Id AS EmployeeId,
+                    ISNULL(d.Department, '') AS Department,
+                    ISNULL(pos.Position, '') AS Position,
+                    ISNULL(e.LastName, '') AS LastName,
+                    ISNULL(e.FirstName, '') AS FirstName,
+                    e.Allowance,
+                    ISNULL(e.MiddleName, '') AS MiddleName,
+                    tp.MonthId,
+                    MAX(CASE WHEN tpl.TotalSalaryAmount > 0 OR tpl.NetIncome > 0
+                             THEN ISNULL(NULLIF(tpl.PayrollRate * 2, 0), e.MonthlyRate)
+                             ELSE 0 END) AS MonthlyRateAmount,
+                    SUM(tpl.NetIncome) AS ActualNetSalaryAmount
+                FROM TrnPayrollLine tpl
+                INNER JOIN TrnPayroll tp ON tpl.PayrollId = tp.Id
+                INNER JOIN MstEmployee e ON tpl.EmployeeId = e.Id
+                LEFT JOIN MstDepartment d ON e.DepartmentId = d.Id
+                LEFT JOIN MstPosition pos ON e.PositionId = pos.Id
+                WHERE tp.IsLocked = 1
+                  AND e.IsLocked = 1
+                  AND (@ParamDateStart IS NULL OR tp.PayrollDate >= @ParamDateStart)
+                  AND (@ParamDateEnd IS NULL OR tp.PayrollDate <= @ParamDateEnd)
+                  AND tp.MonthId BETWEEN @ParamStartMonthId AND @ParamEndMonthId
+                  AND (@ParamDepartmentId = 0 OR e.DepartmentId = @ParamDepartmentId)
+                  AND (@ParamPositionId = 0 OR e.PositionId = @ParamPositionId)
+                  AND (@ParamCompanyId = 0 OR e.CompanyId = @ParamCompanyId)
+                  AND (@ParamBranchId = 0 OR e.BranchId = @ParamBranchId)
+                  AND (@ParamPayrollGroupId = 0 OR tp.PayrollGroupId = @ParamPayrollGroupId)
+                  AND (@ParamEmployeeId = 0 OR e.Id = @ParamEmployeeId)
+                  AND ISNULL(CAST(e.EmploymentType AS NVARCHAR(50)), '1') LIKE ISNULL(@ParamEmploymentType, '%')
+                GROUP BY
+                    e.Id,
+                    d.Department,
+                    pos.Position,
+                    e.LastName,
+                    e.FirstName,
+                    e.Allowance,
+                    e.MiddleName,
+                    tp.MonthId
+                ORDER BY
+                    e.LastName,
+                    e.FirstName,
+                    e.MiddleName,
+                    tp.MonthId;";
         }
     }
 }
